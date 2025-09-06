@@ -1,69 +1,87 @@
-# React + TypeScript + Vite
+# ThoughtShare
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A platform that allows users to share their thoughts like Twitter (X).
 
-Currently, two official plugins are available:
+## Project Team
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+**Team Name:** [Your Team Name]
 
-## Expanding the ESLint configuration
+**Team Members:**
+- [Member 1 Name]
+- [Member 2 Name]
+- [Member 3 Name]
+- [Add more members as needed]
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+## Project General Description
 
-```js
-export default tseslint.config([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+ThoughtShare is a social platform designed to help users express and share their thoughts with a community.
 
-      // Remove tseslint.configs.recommended and replace with this
-      ...tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      ...tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      ...tseslint.configs.stylisticTypeChecked,
+### High-Level User Stories
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+1. **As a user, I want to be able to view a feed of thoughts from other users, so that I can discover interesting content and perspectives from the community.**
+
+2. **As a user, I want to be able to post my own thoughts with text content, so that I can share my ideas and experiences with others.**
+
+3. **As a user, I want to be able to like thoughts from other users, so that I can show appreciation for content that resonates with me.**
+
+## Getting Started
+
+### Prerequisites
+- Node.js (v16 or higher)
+- npm or yarn
+
+### Installation
+
+1. Clone the repository
+```bash
+git clone [your-repo-url]
+cd thoughtshare
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
-
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
-
-export default tseslint.config([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+2. Install dependencies
+```bash
+npm install
 ```
+
+3. Run the development server
+```bash
+npm run dev
+```
+
+4. Open your browser and navigate to `http://localhost:5173`
+
+## Technologies Used
+
+- **Frontend Framework:** React 18 with TypeScript
+- **Build Tool:** Vite
+- **Styling:** CSS3 with custom styles
+- **Development:** TypeScript for type safety
+
+## Project Structure
+
+```
+src/
+├── components/
+│   └── thought-list/
+│       ├── ThoughtList.tsx
+│       └── ThoughtList.css
+├── types/
+│   └── index.ts
+├── App.tsx
+├── App.css
+└── main.tsx
+```
+
+## Available Scripts
+
+- `npm run dev` - Start development server
+- `npm run build` - Build for production
+- `npm run preview` - Preview production build
+- `npm run lint` - Run ESLint
+
+## Contributing
+
+1. Create a feature branch from `develop`
+2. Make your changes
+3. Create a pull request to `develop`
+4. Get approval from at least one team member before merging
