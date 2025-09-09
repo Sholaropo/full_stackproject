@@ -5,7 +5,6 @@ import Footer from './components/footer/Footer';
 import './App.css';
 
 const App: React.FC = () => {
-  // You can customize these values for your team
   const teamName = "ThoughtShare Team";
   const teamMembers = [
     "Olusola Ropo",
