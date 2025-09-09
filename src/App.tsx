@@ -5,7 +5,7 @@ import Footer from './components/footer/Footer';
 import './App.css';
 
 const App: React.FC = () => {
-  const teamName = "ThoughtShare Team";
+  const teamName = "ThoughtShare Team.";
   const teamMembers = [
     "Olusola Ropo",
     "Vandana Bhangu", 
