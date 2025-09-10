@@ -8,8 +8,8 @@ interface FooterProps {
 }
 
 const Footer: React.FC<FooterProps> = ({ 
-  teamName = "Your Team Name", 
-  teamMembers = ["Member 1", "Member 2", "Member 3"] 
+  teamName = "The page turners", 
+  teamMembers = ["Olusola Ropo","Vandana Bhangu", "Amandeep Kaur"] 
 }) => {
   const currentYear = new Date().getFullYear();
 

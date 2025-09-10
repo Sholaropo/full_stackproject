@@ -4,7 +4,6 @@ import type { Thought } from '../../types';
 import './ThoughtList.css';
 
 const ThoughtList: React.FC = () => {
-  // Initialize mock data for thoughts
   const thoughts: Thought[] = [
     {
       id: '1',
