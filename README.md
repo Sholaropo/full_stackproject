@@ -4,13 +4,12 @@ A platform that allows users to share their thoughts like Twitter (X).
 
 ## Project Team
 
-**Team Name:** The page turners
+**Team Name:** [The Page Turners]
 
 **Team Members:**
-- [Member 1 Olusola Ropo]
+- [Member 1 OLuosola Ropo]
 - [Member 2 Amandeep Kaur]
 - [Member 3 Vandana Bhangu]
-- [Add more members as needed]
 
 ## Project General Description
 
