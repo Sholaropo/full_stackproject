@@ -75,7 +75,7 @@ const Footer: React.FC<FooterProps> = ({
       
       <div className="footer-bottom">
         <p className="copyright">
-          © {currentYear} {teamName}. Made with ❤️ for sharing thoughts.
+          © {currentYear} {teamName}. Made with for sharing thoughts.
         </p>
       </div>
     </footer>
