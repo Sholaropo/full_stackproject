@@ -4,13 +4,12 @@ A platform that allows users to share their thoughts like Twitter (X).
 
 ## Project Team
 
-**Team Name:** [Your Team Name]
+**Team Name:** [The Page Turners]
 
 **Team Members:**
-- [Member 1 Name]
-- [Member 2 Name]
-- [Member 3 Name]
-- [Add more members as needed]
+- [Member 1 OLuosola Ropo]
+- [Member 2 Amandeep Kaur]
+- [Member 3 Vandana Bhangu]
 
 ## Project General Description
 
@@ -34,7 +33,7 @@ ThoughtShare is a social platform designed to help users express and share their
 
 1. Clone the repository
 ```bash
-git clone [your-repo-url]
+git clone [https://github.com/Sholaropo/full_stackproject.git]
 cd thoughtshare
 ```
 
