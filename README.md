@@ -39,28 +39,6 @@ cd thoughtshare
 
 # React + TypeScript + Vite
 
-## Project Team
-
-- **Team Name**: THE PAGE TURNERS
-- **Members**:
-  - Member 1: Vandana Bhangu
-  - Member 2: Amandeep Kaur
-  - Member 3: Olusola Ropo
-
-## Project General Description
-
-A web application for readers to discover books, track reading progress, and share insights with a community of fellow book lovers.
-
-### High-level User Stories
-
-- As a reader, I want to create and manage my reading list, so that I can track books I plan to read and those I've finished.
-- As a user, I want to log my reading progress on each book, so that I can see how far I’ve read and stay motivated.
-- As a user, I want to write ratings and reviews for books, so that I can share my thoughts with others.
-- As a community member, I want to follow other readers and view their public reading activity, so that I can discover new books.
-- As a user, I want to search and filter books by genre, author, and rating, so that I can quickly find titles that interest me.
-
-> Note: If these user stories change during development, update this README to reflect the latest scope.
-
 This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
 
 Currently, two official plugins are available:
