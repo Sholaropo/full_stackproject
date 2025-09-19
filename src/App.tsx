@@ -1,6 +1,7 @@
 // src/App.tsx
 import React from 'react';
 import ThoughtList from './components/thought-list/ThoughtList';
+import ThoughtsFeed from './components/thoughts-feed/ThoughtsFeed';
 import Footer from './components/footer/Footer';
 import './App.css';
 
@@ -21,6 +22,7 @@ const App: React.FC = () => {
 
       <main className="app-main">
         <ThoughtList />
+        <ThoughtsFeed />
       </main>
 
       <Footer 
