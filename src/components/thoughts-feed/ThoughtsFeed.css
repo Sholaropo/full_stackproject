@@ -1,0 +1,329 @@
+/* src/components/thoughts-feed/ThoughtsFeed.css */
+
+.thoughts-feed {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 2rem 1rem;
+  background-color: #ffffff;
+  border-radius: 1rem;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+}
+
+.feed-header {
+  text-align: center;
+  margin-bottom: 2rem;
+  padding-bottom: 1.5rem;
+  border-bottom: 2px solid #e2e8f0;
+}
+
+.feed-title {
+  color: #1a365d;
+  font-size: 2rem;
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+  letter-spacing: -0.025em;
+}
+
+.feed-subtitle {
+  color: #718096;
+  font-size: 1.1rem;
+  font-weight: 400;
+  margin: 0;
+}
+
+.feed-content {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.feed-item {
+  background-color: #f7fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 0.75rem;
+  padding: 1.5rem;
+  transition: all 0.3s ease;
+  position: relative;
+}
+
+.feed-item:hover {
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+  transform: translateY(-2px);
+  border-color: #3182ce;
+}
+
+.item-header {
+  margin-bottom: 1rem;
+}
+
+.author-info {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.author-name {
+  color: #2d3748;
+  font-size: 1rem;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.author-name:hover {
+  color: #3182ce;
+  text-decoration: underline;
+}
+
+.post-time {
+  color: #718096;
+  font-size: 0.875rem;
+  font-weight: 400;
+}
+
+.item-content {
+  margin-bottom: 1.5rem;
+}
+
+.thought-text {
+  color: #2d3748;
+  font-size: 1rem;
+  line-height: 1.6;
+  margin: 0;
+  word-wrap: break-word;
+}
+
+.item-actions {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding-top: 1rem;
+  border-top: 1px solid #e2e8f0;
+}
+
+.action-button {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: none;
+  border: 1px solid transparent;
+  border-radius: 0.5rem;
+  padding: 0.5rem 1rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.like-btn {
+  color: #e53e3e;
+  border-color: #fed7d7;
+}
+
+.like-btn:hover {
+  background-color: #fed7d7;
+  border-color: #e53e3e;
+  transform: scale(1.05);
+}
+
+.share-btn {
+  color: #3182ce;
+  border-color: #bee3f8;
+}
+
+.share-btn:hover {
+  background-color: #bee3f8;
+  border-color: #3182ce;
+  transform: scale(1.05);
+}
+
+.action-icon {
+  font-size: 1rem;
+}
+
+.action-count,
+.action-text {
+  font-weight: 600;
+}
+
+.feed-footer {
+  margin-top: 2rem;
+  padding-top: 1.5rem;
+  border-top: 2px solid #e2e8f0;
+  text-align: center;
+}
+
+.feed-info {
+  color: #718096;
+  font-size: 0.875rem;
+  font-weight: 400;
+  margin: 0;
+}
+
+/* Focus states for accessibility */
+.action-button:focus {
+  outline: 2px solid #3182ce;
+  outline-offset: 2px;
+}
+
+.like-btn:focus {
+  outline-color: #e53e3e;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .thoughts-feed {
+    padding: 1rem 0.75rem;
+    margin: 0 0.5rem;
+  }
+  
+  .feed-title {
+    font-size: 1.5rem;
+  }
+  
+  .feed-subtitle {
+    font-size: 1rem;
+  }
+  
+  .feed-item {
+    padding: 1rem;
+  }
+  
+  .author-info {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.25rem;
+  }
+  
+  .item-actions {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.75rem;
+  }
+  
+  .action-button {
+    justify-content: center;
+  }
+}
+
+@media (max-width: 480px) {
+  .thoughts-feed {
+    padding: 0.75rem 0.5rem;
+    margin: 0 0.25rem;
+  }
+  
+  .feed-item {
+    padding: 0.75rem;
+  }
+  
+  .thought-text {
+    font-size: 0.9rem;
+  }
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+  .thoughts-feed {
+    border: 2px solid #000000;
+  }
+  
+  .feed-item {
+    border: 2px solid #000000;
+  }
+  
+  .feed-title {
+    color: #000000;
+  }
+  
+  .author-name {
+    color: #000000;
+  }
+  
+  .thought-text {
+    color: #000000;
+  }
+  
+  .action-button {
+    border: 2px solid #000000;
+  }
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+  .feed-item,
+  .action-button {
+    transition: none;
+  }
+  
+  .feed-item:hover {
+    transform: none;
+  }
+  
+  .action-button:hover {
+    transform: none;
+  }
+}
+
+/* Dark mode support */
+@media (prefers-color-scheme: dark) {
+  .thoughts-feed {
+    background-color: #1a202c;
+    color: #e2e8f0;
+  }
+  
+  .feed-item {
+    background-color: #2d3748;
+    border-color: #4a5568;
+  }
+  
+  .feed-item:hover {
+    border-color: #63b3ed;
+  }
+  
+  .feed-title {
+    color: #e2e8f0;
+  }
+  
+  .feed-subtitle {
+    color: #a0aec0;
+  }
+  
+  .author-name {
+    color: #e2e8f0;
+  }
+  
+  .author-name:hover {
+    color: #63b3ed;
+  }
+  
+  .post-time {
+    color: #a0aec0;
+  }
+  
+  .thought-text {
+    color: #e2e8f0;
+  }
+  
+  .like-btn {
+    color: #fc8181;
+    border-color: #742a2a;
+  }
+  
+  .like-btn:hover {
+    background-color: #742a2a;
+    border-color: #fc8181;
+  }
+  
+  .share-btn {
+    color: #63b3ed;
+    border-color: #2a4365;
+  }
+  
+  .share-btn:hover {
+    background-color: #2a4365;
+    border-color: #63b3ed;
+  }
+  
+  .feed-info {
+    color: #a0aec0;
+  }
+}
