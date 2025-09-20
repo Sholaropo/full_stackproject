@@ -1,0 +1,151 @@
+/* src/components/thoughts-feed/ThoughtsFeed.css */
+
+.thoughts-feed {
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.feed-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+  padding-bottom: 15px;
+  border-bottom: 2px solid #e2e8f0;
+}
+
+.thoughts-feed h2 {
+  color: #1a365d;
+  font-size: 24px;
+  margin: 0;
+}
+
+.sort-controls {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.sort-controls label {
+  color: #718096;
+  font-size: 14px;
+}
+
+.sort-controls select {
+  padding: 5px 10px;
+  border: 1px solid #e2e8f0;
+  border-radius: 4px;
+  background-color: white;
+  color: #2d3748;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.feed-content {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.feed-item {
+  background-color: white;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  padding: 15px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.item-header {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 10px;
+}
+
+.author {
+  color: #2d3748;
+  font-weight: bold;
+  font-size: 14px;
+}
+
+.time {
+  color: #718096;
+  font-size: 12px;
+}
+
+.content {
+  margin-bottom: 15px;
+}
+
+.content p {
+  color: #2d3748;
+  line-height: 1.5;
+  margin: 0;
+  font-size: 14px;
+}
+
+.actions {
+  border-top: 1px solid #f7fafc;
+  padding-top: 10px;
+}
+
+.like-btn {
+  background: none;
+  border: none;
+  color: #e53e3e;
+  cursor: pointer;
+  font-size: 14px;
+  padding: 5px 10px;
+  border-radius: 4px;
+}
+
+.like-btn:hover {
+  background-color: #fed7d7;
+}
+
+.share-btn {
+  background: none;
+  border: none;
+  color: #3182ce;
+  cursor: pointer;
+  font-size: 14px;
+  padding: 5px 10px;
+  border-radius: 4px;
+  margin-left: 10px;
+}
+
+.share-btn:hover {
+  background-color: #bee3f8;
+}
+
+/* basic responsive */
+@media (max-width: 768px) {
+  .thoughts-feed {
+    padding: 15px;
+  }
+  
+  .feed-item {
+    padding: 12px;
+  }
+  
+  
+  .feed-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+  }
+  
+  .item-header {
+    flex-direction: column;
+    gap: 5px;
+  }
+  
+  .actions {
+    display: flex;
+    gap: 10px;
+  }
+  
+  .share-btn {
+    margin-left: 0;
+  }
+}
