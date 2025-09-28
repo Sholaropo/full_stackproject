@@ -1,4 +1,3 @@
-// src/components/thought-list/ThoughtList.tsx
 import React from 'react';
 import type { Thought } from '../../types';
 import './ThoughtList.css';
@@ -59,20 +58,20 @@ const ThoughtList: React.FC = () => {
     <section className="thought-list">
       <h2>Latest Thoughts</h2>
       <div className="thoughts-container">
-        {thoughts.map((thought) => (
-          <article key={thought.id} className="thought-card">
+        {thoughts.map((Thought) => (
+          <article key={Thought.id} className="thought-card">
             <header className="thought-header">
-              <h3 className="thought-author">@{thought.author}</h3>
-              <time className="thought-timestamp" dateTime={thought.timestamp.toISOString()}>
-                {formatTimestamp(thought.timestamp)}
+              <h3 className="thought-author">@{Thought.author}</h3>
+              <time className="thought-timestamp" dateTime={Thought.timestamp.toISOString()}>
+                {formatTimestamp(Thought.timestamp)}
               </time>
             </header>
             <div className="thought-content">
-              <p>{thought.content}</p>
+              <p>{Thought.content}</p>
             </div>
             <footer className="thought-footer">
-              <button className="like-button" type="button" aria-label={`Like thought by ${thought.author}`}>
-                ❤️ {thought.likes}
+              <button className="like-button" type="button" aria-label={`Like thought by ${Thought.author}`}>
+                ❤️ {Thought.likes}
               </button>
             </footer>
           </article>
