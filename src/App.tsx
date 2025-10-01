@@ -31,6 +31,9 @@ const Layout: React.FC = () => {
       </header>
       <main className="app-main">
         <Outlet />
+        <ThoughtList />
+        <PostThoughts /> 
+        <ThoughtsFeed />
       </main>
       <Footer />
     </div>
