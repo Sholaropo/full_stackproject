@@ -4,16 +4,54 @@ A platform that allows users to share their thoughts like Twitter (X).
 
 ## Project Team
 
-**Team Name:** [The Page Turners]
+**Team Name:** The Page Turners
 
 **Team Members:**
-- [Member 1 OLuosola Ropo]
-- [Member 2 Amandeep Kaur]
-- [Member 3 Vandana Bhangu]
+- Olusola Ropo
+- Amandeep Kaur  
+- Vandana Bhangu
+
+## Team Member Contributions
+
+### Olusola Ropo
+- **T.1 Git Repository Setup (P0)**: Set up the project Git repository with proper branch protection rules
+  - Configured repository with main and develop branch protection
+  - Implemented branch rules preventing direct pushes to main and develop branches
+  - Set up pull request requirements with team member approval workflow
+  - Added all team members and instructor as collaborators
+- **Component Development**: Created core UI components
+  - **ThoughtList Component**: Built the main thoughts display component with sample data
+  - **Footer Component**: Developed the application footer with team information and social links
+
+### Amandeep Kaur
+- **T.4 App Integration (P2)**: Implemented the main application component integration
+  - Created and configured the main App.tsx component
+  - Integrated all required components (ThoughtList, Footer, Thoughts Feed)
+  - Implemented application title display in header
+  - Added group member names display in footer
+  - Ensured HTML follows accessibility principles with no Axe DevTools warnings
+- **Component Development**: Created user interaction components
+  - **Post Thoughts Component**: Built the functionality for users to create and submit new thoughts
+
+### Vandana Bhangu
+- **T.3 Project README (P1)**: Created and maintained project documentation
+  - Developed comprehensive README.md with proper markdown structure
+  - Documented team information and project description
+  - Defined high-level user stories for project functionality
+  - Maintained project documentation and setup instructions
+- **Component Development**: Created content display components
+  - **Thoughts Feed Component**: Built the main feed functionality for displaying and managing thoughts
+
+### Collaborative Work
+- **T.5 App Stylesheet (P2)**: All team members contributed to styling
+  - Developed cohesive color palette and design system
+  - Implemented responsive design across all components
+  - Created modern, accessible UI components
+  - Ensured consistent styling and user experience
 
 ## Project General Description
 
-ThoughtShare is a social platform designed to help users express and share their thoughts with a community.
+ThoughtShare is a social platform designed to help users express and share their thoughts with a community. The application provides a Twitter-like experience where users can post, view, and interact with thoughts from other community members.
 
 ### High-Level User Stories
 
@@ -35,6 +73,47 @@ ThoughtShare is a social platform designed to help users express and share their
 ```bash
 git clone [https://github.com/Sholaropo/full_stackproject.git]
 cd thoughtshare
+
+# React + TypeScript + Vite
+
+This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+
+Currently, two official plugins are available:
+
+- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
+- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+
+## Expanding the ESLint configuration
+
+If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+
+```js
+export default tseslint.config([
+  globalIgnores(['dist']),
+  {
+    files: ['**/*.{ts,tsx}'],
+    extends: [
+      // Other configs...
+
+      // Remove tseslint.configs.recommended and replace with this
+      ...tseslint.configs.recommendedTypeChecked,
+      // Alternatively, use this for stricter rules
+      ...tseslint.configs.strictTypeChecked,
+      // Optionally, add this for stylistic rules
+      ...tseslint.configs.stylisticTypeChecked,
+
+      // Other configs...
+    ],
+    languageOptions: {
+      parserOptions: {
+        project: ['./tsconfig.node.json', './tsconfig.app.json'],
+        tsconfigRootDir: import.meta.dirname,
+      },
+      // other options...
+    },
+  },
+])
+ main
 ```
 
 2. Install dependencies
@@ -61,14 +140,24 @@ npm run dev
 ```
 src/
 ├── components/
-│   └── thought-list/
-│       ├── ThoughtList.tsx
-│       └── ThoughtList.css
-├── types/
+│   ├── thought-list/          # Olusola's Component
+│   │   ├── ThoughtList.tsx
+│   │   └── ThoughtList.css
+│   ├── footer/                # Olusola's Component
+│   │   ├── Footer.tsx
+│   │   └── Footer.css
+│   ├── thoughts-feed/         # Vandana's Component
+│   │   ├── ThoughtsFeed.tsx
+│   │   └── ThoughtsFeed.css
+│   └── post-thoughts/         # Amandeep's Component
+│       ├── PostThoughts.tsx
+│       └── PostThoughts.css
+├── types/                     # Shared TypeScript definitions
 │   └── index.ts
-├── App.tsx
-├── App.css
-└── main.tsx
+├── App.tsx                    # Main app integration (Amandeep)
+├── App.css                    # Main app styling (Collaborative)
+├── index.css                  # Global styles (Collaborative)
+└── main.tsx                   # Application entry point
 ```
 
 ## Available Scripts
