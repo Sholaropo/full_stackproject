@@ -1,5 +1,1 @@
-declare namespace JSX {
-  interface IntrinsicElements {
-    [elemName: string]: any;
-  }
-}
+/// <reference types="vite/client" />
