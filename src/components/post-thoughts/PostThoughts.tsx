@@ -2,7 +2,14 @@ import React, { useState } from "react";
 import type { Thought } from "../../types";
 import "./PostThoughts.css";
 
-const PostThoughts: React.FC = () => {
+interface Props {
+  sharedCounter: number;
+  setSharedCounter: (n: number) => void;
+  sharedMessage: string;
+  setSharedMessage: (s: string) => void;
+}
+
+const PostThoughts: React.FC<Props> = ({ sharedCounter, setSharedCounter, sharedMessage, setSharedMessage }) => {
   const [thoughts, setThoughts] = useState<Thought[]>([]);
   const [content, setContent] = useState("");
 
@@ -25,6 +32,15 @@ const PostThoughts: React.FC = () => {
   return (
     <section className="post-thoughts">
       <h2>Share Your Thoughts</h2>
+
+      <div style={{ padding: '10px', background: '#f0f0f0', marginBottom: '20px' }}>
+        <p>Message: {sharedMessage}</p>
+        <input 
+          value={sharedMessage} 
+          onChange={(e) => setSharedMessage(e.target.value)} 
+          placeholder="Update shared message"
+        />
+      </div>
 
       <form className="thought-form" onSubmit={handleSubmit}>
         <textarea
