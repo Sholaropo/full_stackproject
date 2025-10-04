@@ -1,6 +1,5 @@
-// src/App.tsx
-import React from 'react';
-import { Routes, Route, Link } from 'react-router-dom'; // Import routing tools
+import React, { useState } from 'react';
+import { Routes, Route, Link } from 'react-router-dom';
 import ThoughtList from './components/thought-list/ThoughtList';
 import PostThoughts from './components/post-thoughts/PostThoughts';
 import ThoughtsFeed from './components/thoughts-feed/ThoughtsFeed';
@@ -14,6 +13,9 @@ const App: React.FC = () => {
     "Vandana Bhangu", 
     "Amandeep Kaur"
   ];
+
+  const [sharedCounter, setSharedCounter] = useState(0);
+  const [sharedMessage, setSharedMessage] = useState('Welcome!');
 
   return (
     <div className="app">
@@ -32,9 +34,39 @@ const App: React.FC = () => {
       {/*  Define the routes */}
       <main className="app-main">
         <Routes>
-          <Route path="/" element={<ThoughtList />} />
-          <Route path="/post" element={<PostThoughts />} />
-          <Route path="/feed" element={<ThoughtsFeed />} />
+          <Route 
+            path="/" 
+            element={
+              <ThoughtList 
+                sharedCounter={sharedCounter}
+                setSharedCounter={setSharedCounter}
+                sharedMessage={sharedMessage}
+                setSharedMessage={setSharedMessage}
+              />
+            } 
+          />
+          <Route 
+            path="/post" 
+            element={
+              <PostThoughts 
+                sharedCounter={sharedCounter}
+                setSharedCounter={setSharedCounter}
+                sharedMessage={sharedMessage}
+                setSharedMessage={setSharedMessage}
+              />
+            } 
+          />
+          <Route 
+            path="/feed" 
+            element={
+              <ThoughtsFeed 
+                sharedCounter={sharedCounter}
+                setSharedCounter={setSharedCounter}
+                sharedMessage={sharedMessage}
+                setSharedMessage={setSharedMessage}
+              />
+            } 
+          />
         </Routes>
       </main>
 

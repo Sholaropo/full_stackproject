@@ -2,7 +2,14 @@ import React, { useState } from 'react';
 import { Thought } from '../../types';
 import './ThoughtsFeed.css';
 
-function ThoughtsFeed() {
+interface Props {
+  sharedCounter: number;
+  setSharedCounter: (n: number) => void;
+  sharedMessage: string;
+  setSharedMessage: (s: string) => void;
+}
+
+function ThoughtsFeed({ sharedCounter, setSharedCounter, sharedMessage, setSharedMessage }: Props) {
   const [sortBy, setSortBy] = useState('popular');
   
   // community posts data
@@ -87,6 +94,12 @@ function ThoughtsFeed() {
           </select>
         </div>
       </div>
+
+      <div style={{ padding: '10px', background: '#f0f0f0', marginBottom: '20px' }}>
+        <p>Counter: {sharedCounter} | Message: {sharedMessage}</p>
+        <button onClick={() => setSharedCounter(sharedCounter + 1)}>+</button>
+        <button onClick={() => setSharedCounter(sharedCounter - 1)}>-</button>
+      </div>
       
       <div className="feed-content">
         {sortedPosts.map((thought) => (
@@ -113,6 +126,6 @@ function ThoughtsFeed() {
       </div>
     </section>
   );
-};
+}
 
 export default ThoughtsFeed;
