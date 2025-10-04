@@ -1,6 +1,7 @@
 // src/App.tsx
-import React from 'react';
+import React from "react";
 import ThoughtList from './components/thought-list/ThoughtList';
+import { Routes, Route, Link } from 'react-router-dom'; // Import routing tools
 import PostThoughts from './components/post-thoughts/PostThoughts';
 import ThoughtsFeed from './components/thoughts-feed/ThoughtsFeed';
 import Footer from './components/footer/Footer';
@@ -21,11 +22,11 @@ const App: React.FC = () => {
         <p>Share your thoughts with the world</p>
       </header>
 
-      <main className="app-main">
-        <ThoughtList />
-        <PostThoughts /> 
-        <ThoughtsFeed />
-      </main>
+      <Routes>
+          <Route path="/" element={<ThoughtList />} />
+          <Route path="/post" element={<PostThoughts />} />
+          <Route path="/feed" element={<ThoughtsFeed />} />
+        </Routes>
 
       <Footer 
         teamName={teamName}
