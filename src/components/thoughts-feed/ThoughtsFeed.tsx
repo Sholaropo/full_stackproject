@@ -4,6 +4,7 @@ import './ThoughtsFeed.css';
 
 function ThoughtsFeed() {
   const [sortBy, setSortBy] = useState('popular');
+  const [likedPosts, setLikedPosts] = useState<Set<string>>(new Set());
   
   // community posts data
   const posts = [
@@ -65,6 +66,27 @@ function ThoughtsFeed() {
     }
   }
 
+  function handleLike(postId: string) {
+    setLikedPosts(prev => {
+      const newLikedPosts = new Set(prev);
+      if (newLikedPosts.has(postId)) {
+        newLikedPosts.delete(postId);
+      } else {
+        newLikedPosts.add(postId);
+      }
+      return newLikedPosts;
+    });
+  }
+
+  function handleShare(content: string, author: string) {
+    const shareText = `"${content}" - @${author}`;
+    navigator.clipboard.writeText(shareText).then(() => {
+      alert('Post copied to clipboard!');
+    }).catch(() => {
+      alert('Unable to copy. Please try again.');
+    });
+  }
+
   // sort posts
   const sortedPosts = [...posts].sort((a, b) => {
     if (sortBy === 'popular') {
@@ -101,11 +123,18 @@ function ThoughtsFeed() {
             </div>
             
             <div className="actions">
-              <button className="like-btn">
-                {thought.likes}
+              <button 
+                className={`like-btn ${likedPosts.has(thought.id) ? 'liked' : ''}`}
+                onClick={() => handleLike(thought.id)}
+              >
+                <span className="heart-icon">{likedPosts.has(thought.id) ? '❤️' : '🤍'}</span>
+                <span className="like-count">{thought.likes + (likedPosts.has(thought.id) ? 1 : 0)}</span>
               </button>
-              <button className="share-btn">
-                Share
+              <button 
+                className="share-btn"
+                onClick={() => handleShare(thought.content, thought.author)}
+              >
+                📤 Share
               </button>
             </div>
           </div>
