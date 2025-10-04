@@ -2,30 +2,39 @@ import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import './Navigation.css';
 
-const Navigation: React.FC = () => {
+const Navigation = () => {
   const location = useLocation();
-
-  const navItems = [
-    { path: '/', label: 'Latest Thoughts', icon: '📝' },
-    { path: '/post', label: 'Post Thoughts', icon: '✍️' },
-    { path: '/feed', label: 'Community Feed', icon: '🌐' }
-  ];
 
   return (
     <nav className="main-navigation">
       <ul className="nav-list">
-        {navItems.map((item) => (
-          <li key={item.path} className="nav-item">
-            <Link 
-              to={item.path} 
-              className={`nav-link ${location.pathname === item.path ? 'active' : ''}`}
-              aria-current={location.pathname === item.path ? 'page' : undefined}
-            >
-              <span className="nav-icon">{item.icon}</span>
-              <span className="nav-label">{item.label}</span>
-            </Link>
-          </li>
-        ))}
+        <li className="nav-item">
+          <Link 
+            to="/" 
+            className={location.pathname === '/' ? 'nav-link active' : 'nav-link'}
+          >
+            <span className="nav-icon">📝</span>
+            <span className="nav-label">Latest Thoughts</span>
+          </Link>
+        </li>
+        <li className="nav-item">
+          <Link 
+            to="/post" 
+            className={location.pathname === '/post' ? 'nav-link active' : 'nav-link'}
+          >
+            <span className="nav-icon">✍️</span>
+            <span className="nav-label">Post Thoughts</span>
+          </Link>
+        </li>
+        <li className="nav-item">
+          <Link 
+            to="/feed" 
+            className={location.pathname === '/feed' ? 'nav-link active' : 'nav-link'}
+          >
+            <span className="nav-icon">🌐</span>
+            <span className="nav-label">Community Feed</span>
+          </Link>
+        </li>
       </ul>
     </nav>
   );
