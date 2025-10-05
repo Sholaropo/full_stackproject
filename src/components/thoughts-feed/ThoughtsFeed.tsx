@@ -4,6 +4,8 @@ import './ThoughtsFeed.css';
 
 function ThoughtsFeed() {
   const [sortBy, setSortBy] = useState('popular');
+  const [searchTerm, setSearchTerm] = useState('');
+  const [selectedAuthor, setSelectedAuthor] = useState('all');
   
   // community posts data
   const posts = [
@@ -65,8 +67,14 @@ function ThoughtsFeed() {
     }
   }
 
-  // sort posts
-  const sortedPosts = [...posts].sort((a, b) => {
+  // filter and sort posts
+  const filteredPosts = posts.filter(post => {
+    const matchesSearch = post.content.toLowerCase().includes(searchTerm.toLowerCase());
+    const matchesAuthor = selectedAuthor === 'all' || post.author === selectedAuthor;
+    return matchesSearch && matchesAuthor;
+  });
+
+  const sortedPosts = [...filteredPosts].sort((a, b) => {
     if (sortBy === 'popular') {
       return b.likes - a.likes;
     } else if (sortBy === 'recent') {
@@ -75,16 +83,49 @@ function ThoughtsFeed() {
     return 0;
   });
 
+  // get unique authors for filter dropdown
+  const authors = ['all', ...new Set(posts.map(post => post.author))];
+
   return (
     <section className="thoughts-feed">
       <div className="feed-header">
         <h2>Community Feed</h2>
-        <div className="sort-controls">
-          <label>Sort:</label>
-          <select value={sortBy} onChange={(e) => setSortBy(e.target.value)}>
-            <option value="popular">Popular</option>
-            <option value="recent">Recent</option>
-          </select>
+        
+        <div className="search-filter-form">
+          <div className="search-box">
+            <input
+              type="text"
+              placeholder="Search posts..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              className="search-input"
+            />
+          </div>
+          
+          <div className="filter-controls">
+            <div className="filter-group">
+              <label>Author:</label>
+              <select 
+                value={selectedAuthor} 
+                onChange={(e) => setSelectedAuthor(e.target.value)}
+                className="author-filter"
+              >
+                {authors.map(author => (
+                  <option key={author} value={author}>
+                    {author === 'all' ? 'All Authors' : author}
+                  </option>
+                ))}
+              </select>
+            </div>
+            
+            <div className="sort-group">
+              <label>Sort:</label>
+              <select value={sortBy} onChange={(e) => setSortBy(e.target.value)}>
+                <option value="popular">Popular</option>
+                <option value="recent">Recent</option>
+              </select>
+            </div>
+          </div>
         </div>
       </div>
       
