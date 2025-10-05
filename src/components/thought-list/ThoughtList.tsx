@@ -1,5 +1,5 @@
 // src/components/thought-list/ThoughtList.tsx
-import React from 'react';
+import React, { useState } from 'react';
 import type { Thought } from '../../types';
 import './ThoughtList.css';
 
@@ -11,6 +11,23 @@ interface Props {
 }
 
 const ThoughtList: React.FC<Props> = ({ sharedCounter, setSharedCounter, sharedMessage, setSharedMessage }) => {
+  // INDIVIDUAL TASK: Task Manager State
+  const [tasks, setTasks] = useState<string[]>([]);
+  const [taskInput, setTaskInput] = useState('');
+
+  // INDIVIDUAL TASK: Add Task Handler
+  const handleAddTask = () => {
+    if (taskInput.trim()) {
+      setTasks([...tasks, taskInput]);
+      setTaskInput('');
+    }
+  };
+
+  // INDIVIDUAL TASK: Remove Task Handler
+  const handleRemoveTask = (index: number) => {
+    setTasks(tasks.filter((_, i) => i !== index));
+  };
+
   const thoughts: Thought[] = [
     {
       id: '1',
@@ -72,6 +89,80 @@ const ThoughtList: React.FC<Props> = ({ sharedCounter, setSharedCounter, sharedM
         <button onClick={() => setSharedCounter(sharedCounter + 1)}>Increment</button>
         <button onClick={() => setSharedCounter(sharedCounter - 1)}>Decrement</button>
         <p>Message: {sharedMessage}</p>
+      </div>
+
+      {/* INDIVIDUAL TASK: Task Manager Feature */}
+      <div style={{ 
+        padding: '20px', 
+        background: '#fff', 
+        marginBottom: '20px', 
+        borderRadius: '8px', 
+        border: '2px solid #007bff' 
+      }}>
+        <h3>My Task Manager</h3>
+        <div style={{ marginBottom: '15px' }}>
+          <input 
+            type="text"
+            value={taskInput}
+            onChange={(e) => setTaskInput(e.target.value)}
+            placeholder="Enter a new task..."
+            style={{ 
+              padding: '8px', 
+              marginRight: '10px', 
+              width: '300px' 
+            }}
+          />
+          <button 
+            onClick={handleAddTask} 
+            style={{ 
+              padding: '8px 16px', 
+              background: '#007bff', 
+              color: 'white', 
+              border: 'none', 
+              cursor: 'pointer',
+              borderRadius: '4px'
+            }}
+          >
+            Add Task
+          </button>
+        </div>
+        
+        <div>
+          <h4>Tasks ({tasks.length})</h4>
+          {tasks.length === 0 ? (
+            <p>No tasks yet. Add one above!</p>
+          ) : (
+            tasks.map((task, index) => (
+              <div 
+                key={index} 
+                style={{ 
+                  padding: '10px', 
+                  background: '#f9f9f9', 
+                  marginBottom: '5px', 
+                  display: 'flex', 
+                  justifyContent: 'space-between', 
+                  alignItems: 'center', 
+                  borderRadius: '4px' 
+                }}
+              >
+                <span>{task}</span>
+                <button 
+                  onClick={() => handleRemoveTask(index)} 
+                  style={{ 
+                    background: '#dc3545', 
+                    color: 'white', 
+                    border: 'none', 
+                    padding: '5px 10px', 
+                    cursor: 'pointer', 
+                    borderRadius: '4px' 
+                  }}
+                >
+                  Remove
+                </button>
+              </div>
+            ))
+          )}
+        </div>
       </div>
 
       <div className="thoughts-container">
