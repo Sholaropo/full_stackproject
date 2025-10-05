@@ -3,7 +3,14 @@ import React from 'react';
 import type { Thought } from '../../types';
 import './ThoughtList.css';
 
-const ThoughtList: React.FC = () => {
+interface Props {
+  sharedCounter: number;
+  setSharedCounter: (n: number) => void;
+  sharedMessage: string;
+  setSharedMessage: (s: string) => void;
+}
+
+const ThoughtList: React.FC<Props> = ({ sharedCounter, setSharedCounter, sharedMessage, setSharedMessage }) => {
   const thoughts: Thought[] = [
     {
       id: '1',
@@ -58,6 +65,15 @@ const ThoughtList: React.FC = () => {
   return (
     <section className="thought-list">
       <h2>Latest Thoughts</h2>
+      
+      {/* Shared state display and controls */}
+      <div style={{ padding: '10px', background: '#f0f0f0', marginBottom: '20px' }}>
+        <p>Counter: {sharedCounter}</p>
+        <button onClick={() => setSharedCounter(sharedCounter + 1)}>Increment</button>
+        <button onClick={() => setSharedCounter(sharedCounter - 1)}>Decrement</button>
+        <p>Message: {sharedMessage}</p>
+      </div>
+
       <div className="thoughts-container">
         {thoughts.map((thought) => (
           <article key={thought.id} className="thought-card">
