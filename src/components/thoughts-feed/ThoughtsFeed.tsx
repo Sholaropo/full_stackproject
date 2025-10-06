@@ -1,16 +1,7 @@
-// src/components/thoughts-feed/ThoughtsFeed.tsx
 import React, { useState } from 'react';
-import type { Thought } from '../../types';
+import { Thought } from '../../types';
 import './ThoughtsFeed.css';
 
-interface ThoughtsFeedProps {
-  thoughts?: Thought[]; 
-}
-
-const ThoughtsFeed: React.FC<ThoughtsFeedProps> = ({ thoughts }) => {
-  const [sortBy, setSortBy] = useState('popular');
-
-  const staticPosts: Thought[] = [
 interface Props {
   sharedCounter: number;
   setSharedCounter: (n: number) => void;
@@ -70,24 +61,9 @@ function ThoughtsFeed({ sharedCounter, setSharedCounter, sharedMessage, setShare
     }
   ];
 
-  // Merge static posts with shared thoughts (if any)
-  const allPosts = thoughts ? [...thoughts, ...staticPosts] : staticPosts;
-
-  // Format timestamp
-  const formatTime = (timestamp: Date) => {
+  function formatTime(timestamp: Date) {
     const now = new Date();
     const diff = now.getTime() - timestamp.getTime();
-    const totalMinutes = Math.floor(diff / (1000 * 60));
-    const hours = Math.floor(totalMinutes / 60);
-    const minutes = totalMinutes % 60;
-
-    return hours > 0 ? `${hours}h ${minutes}m ago` : `${minutes}m ago`;
-  };
-
-  // Sort posts
-  const sortedPosts = [...allPosts].sort((a, b) => {
-    if (sortBy === 'popular') return b.likes - a.likes;
-    if (sortBy === 'recent') return b.timestamp.getTime() - a.timestamp.getTime();
     const days = Math.floor(diff / (1000 * 60 * 60 * 24));
     
     if (days === 0) {
@@ -183,12 +159,13 @@ function ThoughtsFeed({ sharedCounter, setSharedCounter, sharedMessage, setShare
           </div>
         </div>
       </div>
+
       <div style={{ padding: '10px', background: '#f0f0f0', marginBottom: '20px' }}>
         <p>Counter: {sharedCounter} | Message: {sharedMessage}</p>
         <button onClick={() => setSharedCounter(sharedCounter + 1)}>+</button>
         <button onClick={() => setSharedCounter(sharedCounter - 1)}>-</button>
       </div>
-     
+      
       <div className="feed-content">
         {sortedPosts.map((thought) => (
           <div key={thought.id} className="feed-item">
@@ -196,14 +173,12 @@ function ThoughtsFeed({ sharedCounter, setSharedCounter, sharedMessage, setShare
               <span className="author">@{thought.author}</span>
               <span className="time">{formatTime(thought.timestamp)}</span>
             </div>
-
+            
             <div className="content">
               <p>{thought.content}</p>
             </div>
-
+            
             <div className="actions">
-              <button className="like-btn">{thought.likes}</button>
-              <button className="share-btn">Share</button>
               <button 
                 className={`like-btn ${likedPosts.has(thought.id) ? 'liked' : ''}`}
                 onClick={() => handleLike(thought.id)}
@@ -217,7 +192,6 @@ function ThoughtsFeed({ sharedCounter, setSharedCounter, sharedMessage, setShare
               >
                 📤 Share
               </button>
-
             </div>
           </div>
         ))}
