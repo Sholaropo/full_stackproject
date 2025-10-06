@@ -1,10 +1,13 @@
-// src/components/thought-list/ThoughtList.tsx
 import React from 'react';
 import type { Thought } from '../../types';
 import './ThoughtList.css';
 
-const ThoughtList: React.FC = () => {
-  const thoughts: Thought[] = [
+interface ThoughtListProps {
+  thoughts?: Thought[];
+}
+
+const ThoughtList: React.FC<ThoughtListProps> = ({ thoughts }) => {
+  const staticThoughts: Thought[] = [
     {
       id: '1',
       content: 'Just had the most amazing coffee this morning! ☕ Nothing beats a good start to the day.',
@@ -42,24 +45,21 @@ const ThoughtList: React.FC = () => {
     }
   ];
 
-  const formatTimestamp = (timestamp: Date): string => {
+  const allThoughts = thoughts ? [...thoughts, ...staticThoughts] : staticThoughts;
+
+  const formatTimestamp = (timestamp: Date) => {
     const now = new Date();
     const diffInMinutes = Math.floor((now.getTime() - timestamp.getTime()) / (1000 * 60));
-    
-    if (diffInMinutes < 60) {
-      return `${diffInMinutes}m ago`;
-    } else if (diffInMinutes < 1440) {
-      return `${Math.floor(diffInMinutes / 60)}h ago`;
-    } else {
-      return `${Math.floor(diffInMinutes / 1440)}d ago`;
-    }
+    if (diffInMinutes < 60) return `${diffInMinutes}m ago`;
+    if (diffInMinutes < 1440) return `${Math.floor(diffInMinutes / 60)}h ago`;
+    return `${Math.floor(diffInMinutes / 1440)}d ago`;
   };
 
   return (
     <section className="thought-list">
       <h2>Latest Thoughts</h2>
       <div className="thoughts-container">
-        {thoughts.map((thought) => (
+        {allThoughts.map((thought) => (
           <article key={thought.id} className="thought-card">
             <header className="thought-header">
               <h3 className="thought-author">@{thought.author}</h3>

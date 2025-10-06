@@ -1,12 +1,16 @@
+// src/components/thoughts-feed/ThoughtsFeed.tsx
 import React, { useState } from 'react';
-import { Thought } from '../../types';
+import type { Thought } from '../../types';
 import './ThoughtsFeed.css';
 
-function ThoughtsFeed() {
+interface ThoughtsFeedProps {
+  thoughts?: Thought[]; 
+}
+
+const ThoughtsFeed: React.FC<ThoughtsFeedProps> = ({ thoughts }) => {
   const [sortBy, setSortBy] = useState('popular');
-  
-  // community posts data
-  const posts = [
+
+  const staticPosts: Thought[] = [
     {
       id: '1',
       content: 'Just discovered an amazing productivity technique! The Pomodoro method really works for coding sessions.',
@@ -51,27 +55,24 @@ function ThoughtsFeed() {
     }
   ];
 
-  function formatTime(timestamp: Date) {
+  // Merge static posts with shared thoughts (if any)
+  const allPosts = thoughts ? [...thoughts, ...staticPosts] : staticPosts;
+
+  // Format timestamp
+  const formatTime = (timestamp: Date) => {
     const now = new Date();
     const diff = now.getTime() - timestamp.getTime();
     const totalMinutes = Math.floor(diff / (1000 * 60));
     const hours = Math.floor(totalMinutes / 60);
     const minutes = totalMinutes % 60;
-    
-    if (hours > 0) {
-      return hours + 'hour' + minutes + 'min ago';
-    } else {
-      return minutes + 'min ago';
-    }
-  }
 
-  // sort posts
-  const sortedPosts = [...posts].sort((a, b) => {
-    if (sortBy === 'popular') {
-      return b.likes - a.likes;
-    } else if (sortBy === 'recent') {
-      return b.timestamp.getTime() - a.timestamp.getTime();
-    }
+    return hours > 0 ? `${hours}h ${minutes}m ago` : `${minutes}m ago`;
+  };
+
+  // Sort posts
+  const sortedPosts = [...allPosts].sort((a, b) => {
+    if (sortBy === 'popular') return b.likes - a.likes;
+    if (sortBy === 'recent') return b.timestamp.getTime() - a.timestamp.getTime();
     return 0;
   });
 
@@ -87,7 +88,7 @@ function ThoughtsFeed() {
           </select>
         </div>
       </div>
-      
+
       <div className="feed-content">
         {sortedPosts.map((thought) => (
           <div key={thought.id} className="feed-item">
@@ -95,18 +96,14 @@ function ThoughtsFeed() {
               <span className="author">@{thought.author}</span>
               <span className="time">{formatTime(thought.timestamp)}</span>
             </div>
-            
+
             <div className="content">
               <p>{thought.content}</p>
             </div>
-            
+
             <div className="actions">
-              <button className="like-btn">
-                {thought.likes}
-              </button>
-              <button className="share-btn">
-                Share
-              </button>
+              <button className="like-btn">{thought.likes}</button>
+              <button className="share-btn">Share</button>
             </div>
           </div>
         ))}
