@@ -1,4 +1,6 @@
 // src/App.tsx
+import React, { useState } from 'react';
+import { Routes, Route, Link } from 'react-router-dom';
 
 import React from "react";
 import React, { useState } from 'react';
@@ -11,14 +13,10 @@ import ThoughtsFeed from './components/thoughts-feed/ThoughtsFeed';
 import Footer from './components/footer/Footer';
 import Navigation from './components/navigation/Navigation';
 import './App.css';
+import type { Thought } from './types';
 
 const App: React.FC = () => {
-  const teamName = "The page turners";
-  const teamMembers = [
-    "Olusola Ropo",
-    "Vandana Bhangu", 
-    "Amandeep Kaur"
-  ];
+  const [thoughts, setThoughts] = useState<Thought[]>([]); 
 
   const [sharedCounter, setSharedCounter] = useState(0);
   const [sharedMessage, setSharedMessage] = useState('Welcome!');
@@ -39,6 +37,7 @@ const App: React.FC = () => {
         </Routes>
 
         {/* Navigation links */}
+      
         <nav>
           <Link to="/">Home</Link> |{" "}
           <Link to="/post">Post</Link> |{" "}
@@ -46,11 +45,19 @@ const App: React.FC = () => {
         </nav>
       </header>
 
-      {/*  Define the routes */}
       <main className="app-main">
         <Routes>
           <Route 
             path="/" 
+            element={<ThoughtList thoughts={thoughts} />} 
+          />
+          <Route 
+            path="/post" 
+            element={<PostThoughts thoughts={thoughts} setThoughts={setThoughts} />} 
+          />
+          <Route 
+            path="/feed" 
+            element={<ThoughtsFeed thoughts={thoughts} />} 
             element={
               <ThoughtList 
                 sharedCounter={sharedCounter}
@@ -84,11 +91,6 @@ const App: React.FC = () => {
           />
         </Routes>
       </main>
-
-      <Footer 
-        teamName={teamName}
-        teamMembers={teamMembers}
-      />
     </div>
   );
 };

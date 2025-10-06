@@ -1,6 +1,6 @@
-import React, { useState } from "react";
-import type { Thought } from "../../types";
-import "./PostThoughts.css";
+import React, { useState } from 'react';
+import type { Thought } from '../../types';
+import './PostThoughts.css';
 
 interface Props {
   sharedCounter: number;
@@ -20,13 +20,13 @@ const PostThoughts: React.FC<Props> = ({ sharedCounter, setSharedCounter, shared
     const newThought: Thought = {
       id: (thoughts.length + 1).toString(),
       content,
-      author: "You", 
+      author: 'You',
       timestamp: new Date(),
       likes: 0,
     };
 
     setThoughts([newThought, ...thoughts]);
-    setContent("");
+    setContent('');
   };
 
   return (
@@ -41,30 +41,35 @@ const PostThoughts: React.FC<Props> = ({ sharedCounter, setSharedCounter, shared
           placeholder="Update shared message"
         />
       </div>
-
       <form className="thought-form" onSubmit={handleSubmit}>
         <textarea
           value={content}
           onChange={(e) => setContent(e.target.value)}
           placeholder="What's on your mind?"
           aria-label="Write a new thought"
-          rows={3}
+          rows={5}
         />
         <button type="submit">Post</button>
       </form>
 
-      <div className="posted-thoughts">
-        {thoughts.length > 0 && <h3>Your Posts</h3>}
-        {thoughts.map((thought) => (
-          <article key={thought.id} className="thought-card">
-            <header className="thought-header">
-              <h4>@{thought.author}</h4>
-              <time>{thought.timestamp.toLocaleString()}</time>
-            </header>
-            <p>{thought.content}</p>
-          </article>
-        ))}
-      </div>
+      {thoughts.length > 0 && (
+        <div className="posted-thoughts">
+          <h3>Recent Thoughts</h3>
+          {thoughts.map((thought) => (
+            <div key={thought.id} className="thought-card">
+              <div className="thought-header">
+                <span className="thought-author">@{thought.author}</span>
+                <span className="thought-timestamp">
+                  {thought.timestamp.toLocaleString()}
+                </span>
+              </div>
+              <div className="thought-content">
+                <p>{thought.content}</p>
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
     </section>
   );
 };

@@ -1,3 +1,13 @@
+import React from 'react';
+import type { Thought } from '../../types';
+import './ThoughtList.css';
+
+interface ThoughtListProps {
+  thoughts?: Thought[];
+}
+
+const ThoughtList: React.FC<ThoughtListProps> = ({ thoughts }) => {
+  const staticThoughts: Thought[] = [
 // src/components/thought-list/ThoughtList.tsx
 import React, { useState } from 'react';
 import type { Thought } from '../../types';
@@ -29,6 +39,7 @@ const ThoughtList: React.FC<Props> = ({ sharedCounter, setSharedCounter, sharedM
   };
 
   const thoughts: Thought[] = [
+
     {
       id: '1',
       content: 'Just had the most amazing coffee this morning! ☕ Nothing beats a good start to the day.',
@@ -66,17 +77,14 @@ const ThoughtList: React.FC<Props> = ({ sharedCounter, setSharedCounter, sharedM
     }
   ];
 
-  const formatTimestamp = (timestamp: Date): string => {
+  const allThoughts = thoughts ? [...thoughts, ...staticThoughts] : staticThoughts;
+
+  const formatTimestamp = (timestamp: Date) => {
     const now = new Date();
     const diffInMinutes = Math.floor((now.getTime() - timestamp.getTime()) / (1000 * 60));
-    
-    if (diffInMinutes < 60) {
-      return `${diffInMinutes}m ago`;
-    } else if (diffInMinutes < 1440) {
-      return `${Math.floor(diffInMinutes / 60)}h ago`;
-    } else {
-      return `${Math.floor(diffInMinutes / 1440)}d ago`;
-    }
+    if (diffInMinutes < 60) return `${diffInMinutes}m ago`;
+    if (diffInMinutes < 1440) return `${Math.floor(diffInMinutes / 60)}h ago`;
+    return `${Math.floor(diffInMinutes / 1440)}d ago`;
   };
 
   return (
@@ -166,7 +174,7 @@ const ThoughtList: React.FC<Props> = ({ sharedCounter, setSharedCounter, sharedM
       </div>
 
       <div className="thoughts-container">
-        {thoughts.map((thought) => (
+        {allThoughts.map((thought) => (
           <article key={thought.id} className="thought-card">
             <header className="thought-header">
               <h3 className="thought-author">@{thought.author}</h3>
