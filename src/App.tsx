@@ -1,10 +1,11 @@
+// src/App.tsx
 import React, { useState } from 'react';
 import { Routes, Route, Link } from 'react-router-dom';
 import ThoughtList from './components/thought-list/ThoughtList';
 import PostThoughts from './components/post-thoughts/PostThoughts';
-import ThoughtsFeed from './components/thoughts-feed/ThoughtsFeed'; 
-import type { Thought } from './types';
+import ThoughtsFeed from './components/thoughts-feed/ThoughtsFeed';
 import './App.css';
+import type { Thought } from './types';
 
 const App: React.FC = () => {
   const [thoughts, setThoughts] = useState<Thought[]>([]); 
@@ -23,9 +24,18 @@ const App: React.FC = () => {
 
       <main className="app-main">
         <Routes>
-          <Route path="/" element={<ThoughtList thoughts={thoughts} />} />
-          <Route path="/post" element={<PostThoughts thoughts={thoughts} setThoughts={setThoughts} />} />
-          <Route path="/feed" element={<ThoughtsFeed thoughts={thoughts} />} />
+          <Route 
+            path="/" 
+            element={<ThoughtList thoughts={thoughts} />} 
+          />
+          <Route 
+            path="/post" 
+            element={<PostThoughts thoughts={thoughts} setThoughts={setThoughts} />} 
+          />
+          <Route 
+            path="/feed" 
+            element={<ThoughtsFeed thoughts={thoughts} />} 
+          />
         </Routes>
       </main>
     </div>
