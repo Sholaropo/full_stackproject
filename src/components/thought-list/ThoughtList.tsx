@@ -4,16 +4,18 @@ import type { Thought } from '../../types';
 import './ThoughtList.css';
 
 interface Props {
+  thoughts: Thought[];                
   sharedCounter: number;
   setSharedCounter: (n: number) => void;
   sharedMessage: string;
   setSharedMessage: (s: string) => void;
 }
 
-const ThoughtList: React.FC<Props> = ({ sharedCounter, setSharedCounter, sharedMessage, setSharedMessage }) => {
+const ThoughtList: React.FC<Props> = ({ thoughts: sharedThoughts, sharedCounter, setSharedCounter, sharedMessage, setSharedMessage }) => {
   // INDIVIDUAL TASK: Task Manager State
   const [tasks, setTasks] = useState<string[]>([]);
   const [taskInput, setTaskInput] = useState('');
+  const [likedPosts, setLikedPosts] = useState<Set<string>>(new Set());
 
   // INDIVIDUAL TASK: Add Task Handler
   const handleAddTask = () => {
@@ -28,7 +30,18 @@ const ThoughtList: React.FC<Props> = ({ sharedCounter, setSharedCounter, sharedM
     setTasks(tasks.filter((_, i) => i !== index));
   };
 
-  const thoughts: Thought[] = [
+  // Like/unlike toggle
+  const handleLike = (id: string) => {
+    setLikedPosts(prev => {
+      const newSet = new Set(prev);
+      if (newSet.has(id)) newSet.delete(id);
+      else newSet.add(id);
+      return newSet;
+    });
+  };
+
+ 
+  const partnerPosts: Thought[] = [
     {
       id: '1',
       content: 'Just had the most amazing coffee this morning! ☕ Nothing beats a good start to the day.',
@@ -65,6 +78,8 @@ const ThoughtList: React.FC<Props> = ({ sharedCounter, setSharedCounter, sharedM
       likes: 18
     }
   ];
+
+  const allThoughts = [...partnerPosts, ...sharedThoughts];
 
   const formatTimestamp = (timestamp: Date): string => {
     const now = new Date();
@@ -106,22 +121,11 @@ const ThoughtList: React.FC<Props> = ({ sharedCounter, setSharedCounter, sharedM
             value={taskInput}
             onChange={(e) => setTaskInput(e.target.value)}
             placeholder="Enter a new task..."
-            style={{ 
-              padding: '8px', 
-              marginRight: '10px', 
-              width: '300px' 
-            }}
+            style={{ padding: '8px', marginRight: '10px', width: '300px' }}
           />
           <button 
             onClick={handleAddTask} 
-            style={{ 
-              padding: '8px 16px', 
-              background: '#007bff', 
-              color: 'white', 
-              border: 'none', 
-              cursor: 'pointer',
-              borderRadius: '4px'
-            }}
+            style={{ padding: '8px 16px', background: '#007bff', color: 'white', border: 'none', cursor: 'pointer', borderRadius: '4px' }}
           >
             Add Task
           </button>
@@ -135,27 +139,12 @@ const ThoughtList: React.FC<Props> = ({ sharedCounter, setSharedCounter, sharedM
             tasks.map((task, index) => (
               <div 
                 key={index} 
-                style={{ 
-                  padding: '10px', 
-                  background: '#f9f9f9', 
-                  marginBottom: '5px', 
-                  display: 'flex', 
-                  justifyContent: 'space-between', 
-                  alignItems: 'center', 
-                  borderRadius: '4px' 
-                }}
+                style={{ padding: '10px', background: '#f9f9f9', marginBottom: '5px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderRadius: '4px' }}
               >
                 <span>{task}</span>
                 <button 
                   onClick={() => handleRemoveTask(index)} 
-                  style={{ 
-                    background: '#dc3545', 
-                    color: 'white', 
-                    border: 'none', 
-                    padding: '5px 10px', 
-                    cursor: 'pointer', 
-                    borderRadius: '4px' 
-                  }}
+                  style={{ background: '#dc3545', color: 'white', border: 'none', padding: '5px 10px', cursor: 'pointer', borderRadius: '4px' }}
                 >
                   Remove
                 </button>
@@ -166,8 +155,8 @@ const ThoughtList: React.FC<Props> = ({ sharedCounter, setSharedCounter, sharedM
       </div>
 
       <div className="thoughts-container">
-        {thoughts.map((thought) => (
-          <article key={thought.id} className="thought-card">
+        {allThoughts.map((thought) => (
+          <article key={thought.id + thought.author} className="thought-card">
             <header className="thought-header">
               <h3 className="thought-author">@{thought.author}</h3>
               <time className="thought-timestamp" dateTime={thought.timestamp.toISOString()}>
@@ -178,8 +167,13 @@ const ThoughtList: React.FC<Props> = ({ sharedCounter, setSharedCounter, sharedM
               <p>{thought.content}</p>
             </div>
             <footer className="thought-footer">
-              <button className="like-button" type="button" aria-label={`Like thought by ${thought.author}`}>
-                ❤️ {thought.likes}
+              <button 
+                className="like-button" 
+                type="button" 
+                aria-label={`Like thought by ${thought.author}`}
+                onClick={() => handleLike(thought.id + thought.author)}
+              >
+                {likedPosts.has(thought.id + thought.author) ? '❤️' : '🤍'} {thought.likes + (likedPosts.has(thought.id + thought.author) ? 1 : 0)}
               </button>
             </footer>
           </article>
