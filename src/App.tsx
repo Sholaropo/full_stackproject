@@ -1,26 +1,26 @@
 // src/App.tsx
 import React from 'react';
-import { Routes, Route, Link } from 'react-router-dom'; // Import routing tools
+import { Routes, Route, Link } from 'react-router-dom'; 
 import ThoughtList from './components/thought-list/ThoughtList';
 import PostThoughts from './components/post-thoughts/PostThoughts';
 import ThoughtsFeed from './components/thoughts-feed/ThoughtsFeed';
 import Footer from './components/footer/Footer';
 import './App.css';
-
+ 
 const App: React.FC = () => {
   const teamName = "The page turners";
   const teamMembers = [
     "Olusola Ropo",
-    "Vandana Bhangu", 
+    "Vandana Bhangu",
     "Amandeep Kaur"
   ];
-
+ 
   return (
     <div className="app">
       <header className="app-header">
         <h1>ThoughtShare</h1>
         <p>Share your thoughts with the world</p>
-
+ 
         {/* Navigation links */}
         <nav>
           <Link to="/">Home</Link> |{" "}
@@ -28,7 +28,7 @@ const App: React.FC = () => {
           <Link to="/feed">Feed</Link>
         </nav>
       </header>
-
+ 
       {/*  Define the routes */}
       <main className="app-main">
         <Routes>
@@ -37,13 +37,15 @@ const App: React.FC = () => {
           <Route path="/feed" element={<ThoughtsFeed />} />
         </Routes>
       </main>
-
-      <Footer 
+ 
+      <Footer
         teamName={teamName}
         teamMembers={teamMembers}
       />
     </div>
   );
 };
-
+ 
 export default App;
+ 
+ 
