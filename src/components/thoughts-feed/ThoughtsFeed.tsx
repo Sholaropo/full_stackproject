@@ -19,6 +19,10 @@ function ThoughtsFeed({ thoughts, sharedCounter, setSharedCounter, sharedMessage
   const [selectedAuthor, setSelectedAuthor] = useState('all');
   const [minLikes, setMinLikes] = useState(0);
   const [likedPosts, setLikedPosts] = useState<Set<string>>(new Set());
+  
+  // New state for bookmark system
+  const [bookmarkedPosts, setBookmarkedPosts] = useState<Set<string>>(new Set());
+  const [showBookmarks, setShowBookmarks] = useState(false);
 
   const communityPosts: Thought[] = [
     {
@@ -84,7 +88,8 @@ function ThoughtsFeed({ thoughts, sharedCounter, setSharedCounter, sharedMessage
       post.author.toLowerCase().includes(searchTerm.toLowerCase());
     const matchesAuthor = selectedAuthor === 'all' || post.author === selectedAuthor;
     const matchesLikes = post.likes >= minLikes;
-    return matchesSearch && matchesAuthor && matchesLikes;
+    const matchesBookmark = showBookmarks ? bookmarkedPosts.has(post.id) : true;
+    return matchesSearch && matchesAuthor && matchesLikes && matchesBookmark;
   });
 
   const sortedPosts = [...filteredPosts].sort((a, b) => {
@@ -103,6 +108,19 @@ function ThoughtsFeed({ thoughts, sharedCounter, setSharedCounter, sharedMessage
     });
   }
 
+  // bookmark/unbookmark toggle
+  function handleBookmark(postId: string) {
+    setBookmarkedPosts(prev => {
+      const newBookmarkedPosts = new Set(prev);
+      if (newBookmarkedPosts.has(postId)) {
+        newBookmarkedPosts.delete(postId);
+      } else {
+        newBookmarkedPosts.add(postId);
+      }
+      return newBookmarkedPosts;
+    });
+  }
+
   // share post
   function handleShare(content: string, author: string) {
     const shareText = `"${content}" - @${author}`;
@@ -116,7 +134,10 @@ function ThoughtsFeed({ thoughts, sharedCounter, setSharedCounter, sharedMessage
   return (
     <section className="thoughts-feed">
       <div className="feed-header">
-        <h2>Community Feed</h2>
+        <h2>{showBookmarks ? 'My Bookmarks' : 'Community Feed'}</h2>
+        <button onClick={() => setShowBookmarks(!showBookmarks)}>
+          {showBookmarks ? 'Show All Posts' : 'Show Bookmarks'}
+        </button>
 
         <div className="search-filter-form">
           <div className="search-box">
@@ -182,14 +203,24 @@ function ThoughtsFeed({ thoughts, sharedCounter, setSharedCounter, sharedMessage
             </div>
 
             <div className="actions">
-              <button
-                className={`like-btn ${likedPosts.has(thought.id) ? 'liked' : ''}`}
-                onClick={() => handleLike(thought.id)}
-              >
-                <span className="heart-icon">{likedPosts.has(thought.id) ? '❤️' : '🤍'}</span>
-                <span className="like-count">{thought.likes + (likedPosts.has(thought.id) ? 1 : 0)}</span>
-              </button>
-              <button className="share-btn" onClick={() => handleShare(thought.content, thought.author)}>📤 Share</button>
+              <div className="left-actions">
+                <button
+                  className={`like-btn ${likedPosts.has(thought.id) ? 'liked' : ''}`}
+                  onClick={() => handleLike(thought.id)}
+                >
+                  {likedPosts.has(thought.id) ? '❤️' : '🤍'} {thought.likes + (likedPosts.has(thought.id) ? 1 : 0)}
+                </button>
+                
+                <button onClick={() => handleShare(thought.content, thought.author)}>Share</button>
+              </div>
+              
+              <div className="right-actions">
+                <button
+                  onClick={() => handleBookmark(thought.id)}
+                >
+                  {bookmarkedPosts.has(thought.id) ? 'Bookmarked' : 'Bookmark'}
+                </button>
+              </div>
             </div>
           </div>
         ))}

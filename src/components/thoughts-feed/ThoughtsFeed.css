@@ -98,6 +98,7 @@
 }
 
 
+
 .feed-content {
   display: flex;
   flex-direction: column;
@@ -143,6 +144,19 @@
 .actions {
   border-top: 1px solid #f7fafc;
   padding-top: 10px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.left-actions {
+  display: flex;
+  gap: 10px;
+}
+
+.right-actions {
+  display: flex;
+  gap: 10px;
 }
 
 .like-btn {
