@@ -1,11 +1,14 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import { Thought } from '../../types';
 import './ThoughtsFeed.css';
 
 function ThoughtsFeed() {
   const [sortBy, setSortBy] = useState('popular');
+  
+  // New state for search and filters
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedAuthor, setSelectedAuthor] = useState('all');
+  const [minLikes, setMinLikes] = useState(0);
   
   // community posts data
   const posts = [
@@ -69,9 +72,12 @@ function ThoughtsFeed() {
 
   // filter and sort posts
   const filteredPosts = posts.filter(post => {
-    const matchesSearch = post.content.toLowerCase().includes(searchTerm.toLowerCase());
+    const matchesSearch = searchTerm === '' || 
+      post.content.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      post.author.toLowerCase().includes(searchTerm.toLowerCase());
     const matchesAuthor = selectedAuthor === 'all' || post.author === selectedAuthor;
-    return matchesSearch && matchesAuthor;
+    const matchesLikes = post.likes >= minLikes;
+    return matchesSearch && matchesAuthor && matchesLikes;
   });
 
   const sortedPosts = [...filteredPosts].sort((a, b) => {
@@ -116,6 +122,18 @@ function ThoughtsFeed() {
                   </option>
                 ))}
               </select>
+            </div>
+            
+            <div className="filter-group">
+              <label>Min Likes:</label>
+              <input
+                type="number"
+                min="0"
+                value={minLikes}
+                onChange={(e) => setMinLikes(parseInt(e.target.value) || 0)}
+                className="likes-filter"
+                placeholder="0"
+              />
             </div>
             
             <div className="sort-group">

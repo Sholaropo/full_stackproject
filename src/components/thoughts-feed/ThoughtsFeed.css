@@ -7,9 +7,6 @@
 }
 
 .feed-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
   margin-bottom: 20px;
   padding-bottom: 15px;
   border-bottom: 2px solid #e2e8f0;
@@ -21,25 +18,83 @@
   margin: 0;
 }
 
-.sort-controls {
+/* Search and Filter Form Styles */
+.search-filter-form {
+  margin-top: 15px;
+  padding: 15px;
+  background-color: #f7fafc;
+  border-radius: 8px;
+  border: 1px solid #e2e8f0;
+}
+
+.search-box {
+  margin-bottom: 15px;
+}
+
+.search-input {
+  width: 100%;
+  padding: 10px 15px;
+  border: 2px solid #e2e8f0;
+  border-radius: 6px;
+  font-size: 14px;
+  background-color: white;
+  color: #2d3748;
+  transition: border-color 0.2s;
+}
+
+.search-input:focus {
+  outline: none;
+  border-color: #3182ce;
+  box-shadow: 0 0 0 3px rgba(49, 130, 206, 0.1);
+}
+
+.search-input::placeholder {
+  color: #a0aec0;
+}
+
+.filter-controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 15px;
+  align-items: center;
+}
+
+.filter-group, .sort-group {
   display: flex;
   align-items: center;
   gap: 8px;
 }
 
-.sort-controls label {
-  color: #718096;
+.filter-group label, .sort-group label {
+  color: #4a5568;
   font-size: 14px;
+  font-weight: 500;
+  white-space: nowrap;
 }
 
-.sort-controls select {
-  padding: 5px 10px;
+.author-filter, .likes-filter, .sort-group select {
+  padding: 6px 10px;
   border: 1px solid #e2e8f0;
   border-radius: 4px;
   background-color: white;
   color: #2d3748;
   font-size: 14px;
   cursor: pointer;
+  transition: border-color 0.2s;
+}
+
+.likes-filter {
+  width: 80px;
+  cursor: text;
+}
+
+.author-filter:focus, .likes-filter:focus, .sort-group select:focus {
+  outline: none;
+  border-color: #3182ce;
+}
+
+.author-filter:hover, .sort-group select:hover {
+  border-color: #cbd5e0;
 }
 
 .feed-content {
@@ -129,10 +184,18 @@
   }
   
   
-  .feed-header {
+  .filter-controls {
     flex-direction: column;
-    align-items: flex-start;
+    align-items: stretch;
     gap: 10px;
+  }
+  
+  .filter-group, .sort-group {
+    justify-content: space-between;
+  }
+  
+  .search-filter-form {
+    padding: 12px;
   }
   
   .item-header {
