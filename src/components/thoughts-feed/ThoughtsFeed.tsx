@@ -32,6 +32,10 @@ function ThoughtsFeed({ thoughts, sharedCounter, setSharedCounter, sharedMessage
   // New state for hide/show system
   const [hiddenPosts, setHiddenPosts] = useState<Set<string>>(new Set());
   const [showHiddenPosts, setShowHiddenPosts] = useState(false);
+  
+  // New state for rating system
+  const [postRatings, setPostRatings] = useState<{[postId: string]: number}>({});
+  const [userRatings, setUserRatings] = useState<{[postId: string]: number}>({});
 
   const communityPosts: Thought[] = [
     {
@@ -196,6 +200,22 @@ function ThoughtsFeed({ thoughts, sharedCounter, setSharedCounter, sharedMessage
     });
   }
 
+  // rate post
+  function handleRatePost(postId: string, rating: number) {
+    setUserRatings(prev => ({
+      ...prev,
+      [postId]: rating
+    }));
+  }
+
+  // calculate reading time
+  function calculateReadingTime(content: string) {
+    const wordsPerMinute = 200;
+    const words = content.split(' ').length;
+    const minutes = Math.ceil(words / wordsPerMinute);
+    return minutes;
+  }
+
   // share post
   function handleShare(content: string, author: string) {
     const shareText = `"${content}" - @${author}`;
@@ -282,6 +302,26 @@ function ThoughtsFeed({ thoughts, sharedCounter, setSharedCounter, sharedMessage
 
             <div className="content">
               <p>{thought.content}</p>
+              <div className="post-meta">
+                <span className="reading-time">📖 {calculateReadingTime(thought.content)} min read</span>
+                <div className="rating-display">
+                  <span className="rating-label">Rating:</span>
+                  <div className="stars">
+                    {[1, 2, 3, 4, 5].map((star) => (
+                      <span
+                        key={star}
+                        className={`star ${star <= (userRatings[thought.id] || postRatings[thought.id] || 0) ? 'filled' : ''}`}
+                        onClick={() => handleRatePost(thought.id, star)}
+                      >
+                        ⭐
+                      </span>
+                    ))}
+                    <span className="rating-number">
+                      ({(userRatings[thought.id] || postRatings[thought.id] || 0).toFixed(1)})
+                    </span>
+                  </div>
+                </div>
+              </div>
             </div>
 
             <div className="actions">

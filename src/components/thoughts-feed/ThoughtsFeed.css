@@ -271,6 +271,59 @@ button:hover {
   margin-bottom: 10px;
 }
 
+/* Post Meta Information */
+.post-meta {
+  margin-top: 10px;
+  padding-top: 10px;
+  border-top: 1px solid #eee;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.reading-time {
+  color: #666;
+  font-size: 12px;
+}
+
+.rating-display {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.rating-label {
+  font-size: 12px;
+  color: #666;
+}
+
+.stars {
+  display: flex;
+  gap: 2px;
+  align-items: center;
+}
+
+.star {
+  cursor: pointer;
+  font-size: 16px;
+  opacity: 0.3;
+  transition: opacity 0.2s;
+}
+
+.star.filled {
+  opacity: 1;
+}
+
+.star:hover {
+  opacity: 0.7;
+}
+
+.rating-number {
+  font-size: 12px;
+  color: #666;
+  margin-left: 5px;
+}
+
 /* basic responsive */
 @media (max-width: 768px) {
   .thoughts-feed {
