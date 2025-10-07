@@ -19,6 +19,9 @@ const App: React.FC = () => {
     "Amandeep Kaur"
   ];
 
+  const [sharedCounter, setSharedCounter] = useState(0);
+  const [sharedMessage, setSharedMessage] = useState('Welcome!');
+
   return (
     <div className="app">
       {/* App header section with title, subtitle, and navigation bar */}
