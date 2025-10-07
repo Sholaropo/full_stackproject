@@ -2,8 +2,23 @@ import React, { useState } from "react";
 import type { Thought } from "../../types";
 import "./PostThoughts.css";
 
-const PostThoughts: React.FC = () => {
-  const [thoughts, setThoughts] = useState<Thought[]>([]);
+interface Props {
+  thoughts: Thought[];
+  setThoughts: React.Dispatch<React.SetStateAction<Thought[]>>;
+  sharedCounter: number;
+  setSharedCounter: React.Dispatch<React.SetStateAction<number>>;
+  sharedMessage: string;
+  setSharedMessage: React.Dispatch<React.SetStateAction<string>>;
+}
+
+const PostThoughts: React.FC<Props> = ({
+  thoughts,
+  setThoughts,
+  sharedCounter,
+  setSharedCounter,
+  sharedMessage,
+  setSharedMessage,
+}) => {
   const [content, setContent] = useState("");
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -13,12 +28,16 @@ const PostThoughts: React.FC = () => {
     const newThought: Thought = {
       id: (thoughts.length + 1).toString(),
       content,
-      author: "You", 
+      author: "You",
       timestamp: new Date(),
       likes: 0,
     };
 
+    // update parent state
     setThoughts([newThought, ...thoughts]);
+    setSharedCounter(sharedCounter + 1);
+    setSharedMessage(content);
+
     setContent("");
   };
 
@@ -26,6 +45,18 @@ const PostThoughts: React.FC = () => {
     <section className="post-thoughts">
       <h2>Share Your Thoughts</h2>
 
+      {/* Shared area */}
+      <div style={{ padding: "10px", background: "#f0f0f0", marginBottom: "20px" }}>
+        <p><strong>Shared Message:</strong> {sharedMessage}</p>
+        <input
+          value={sharedMessage}
+          onChange={(e) => setSharedMessage(e.target.value)}
+          placeholder="Update shared message"
+        />
+        <p><strong>Total Shared Posts:</strong> {sharedCounter}</p>
+      </div>
+
+      {/* Form */}
       <form className="thought-form" onSubmit={handleSubmit}>
         <textarea
           value={content}
@@ -37,6 +68,7 @@ const PostThoughts: React.FC = () => {
         <button type="submit">Post</button>
       </form>
 
+      {/* List */}
       <div className="posted-thoughts">
         {thoughts.length > 0 && <h3>Your Posts</h3>}
         {thoughts.map((thought) => (
