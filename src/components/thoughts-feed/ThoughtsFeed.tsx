@@ -10,6 +10,7 @@ function ThoughtsFeed() {
   const [selectedAuthor, setSelectedAuthor] = useState('all');
   const [minLikes, setMinLikes] = useState(0);
   
+  
   // community posts data
   const posts = [
     {
@@ -69,6 +70,7 @@ function ThoughtsFeed() {
       return minutes + 'min ago';
     }
   }
+
 
   // filter and sort posts
   const filteredPosts = posts.filter(post => {

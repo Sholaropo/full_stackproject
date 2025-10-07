@@ -97,6 +97,7 @@
   border-color: #cbd5e0;
 }
 
+
 .feed-content {
   display: flex;
   flex-direction: column;
@@ -197,6 +198,7 @@
   .search-filter-form {
     padding: 12px;
   }
+  
   
   .item-header {
     flex-direction: column;
