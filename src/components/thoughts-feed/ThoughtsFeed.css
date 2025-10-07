@@ -264,6 +264,13 @@ button:hover {
   box-shadow: 0 4px 8px rgba(255, 107, 53, 0.4);
 }
 
+/* Toggle Buttons Container */
+.toggle-buttons {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+
 /* basic responsive */
 @media (max-width: 768px) {
   .thoughts-feed {

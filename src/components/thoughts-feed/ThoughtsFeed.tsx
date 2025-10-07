@@ -28,6 +28,10 @@ function ThoughtsFeed({ thoughts, sharedCounter, setSharedCounter, sharedMessage
   const [expandedComments, setExpandedComments] = useState<Set<string>>(new Set());
   const [comments, setComments] = useState<{[postId: string]: Array<{id: string, author: string, content: string}>}>({});
   const [newComment, setNewComment] = useState('');
+  
+  // New state for hide/show system
+  const [hiddenPosts, setHiddenPosts] = useState<Set<string>>(new Set());
+  const [showHiddenPosts, setShowHiddenPosts] = useState(false);
 
   const communityPosts: Thought[] = [
     {
@@ -107,7 +111,8 @@ function ThoughtsFeed({ thoughts, sharedCounter, setSharedCounter, sharedMessage
     const matchesAuthor = selectedAuthor === 'all' || post.author === selectedAuthor;
     const matchesLikes = post.likes >= minLikes;
     const matchesBookmark = showBookmarks ? bookmarkedPosts.has(post.id) : true;
-    return matchesSearch && matchesAuthor && matchesLikes && matchesBookmark;
+    const matchesHidden = showHiddenPosts ? hiddenPosts.has(post.id) : !hiddenPosts.has(post.id);
+    return matchesSearch && matchesAuthor && matchesLikes && matchesBookmark && matchesHidden;
   });
 
   const sortedPosts = [...filteredPosts].sort((a, b) => {
@@ -178,6 +183,19 @@ function ThoughtsFeed({ thoughts, sharedCounter, setSharedCounter, sharedMessage
     }));
   }
 
+  // hide/show post
+  function handleHidePost(postId: string) {
+    setHiddenPosts(prev => {
+      const newHidden = new Set(prev);
+      if (newHidden.has(postId)) {
+        newHidden.delete(postId);
+      } else {
+        newHidden.add(postId);
+      }
+      return newHidden;
+    });
+  }
+
   // share post
   function handleShare(content: string, author: string) {
     const shareText = `"${content}" - @${author}`;
@@ -191,10 +209,17 @@ function ThoughtsFeed({ thoughts, sharedCounter, setSharedCounter, sharedMessage
   return (
     <section className="thoughts-feed">
       <div className="feed-header">
-        <h2>{showBookmarks ? 'My Bookmarks' : 'Community Feed'}</h2>
-        <button onClick={() => setShowBookmarks(!showBookmarks)}>
-          {showBookmarks ? 'Show All Posts' : 'Show Bookmarks'}
-        </button>
+        <h2>
+          {showBookmarks ? 'My Bookmarks' : showHiddenPosts ? 'Hidden Posts' : 'Community Feed'}
+        </h2>
+        <div className="toggle-buttons">
+          <button onClick={() => setShowBookmarks(!showBookmarks)}>
+            {showBookmarks ? 'Show All Posts' : 'Show Bookmarks'}
+          </button>
+          <button onClick={() => setShowHiddenPosts(!showHiddenPosts)}>
+            {showHiddenPosts ? 'Show Visible Posts' : 'Show Hidden Posts'}
+          </button>
+        </div>
 
         <div className="search-filter-form">
           <div className="search-box">
@@ -280,6 +305,12 @@ function ThoughtsFeed({ thoughts, sharedCounter, setSharedCounter, sharedMessage
                   onClick={() => handleBookmark(thought.id)}
                 >
                   {bookmarkedPosts.has(thought.id) ? 'Bookmarked' : 'Bookmark'}
+                </button>
+                
+                <button
+                  onClick={() => handleHidePost(thought.id)}
+                >
+                  {hiddenPosts.has(thought.id) ? 'Show' : 'Hide'}
                 </button>
               </div>
             </div>
