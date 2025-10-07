@@ -1,4 +1,4 @@
-// src/App.tsx
+// src/App.tsx file
 import React from "react";
 import ThoughtList from './components/thought-list/ThoughtList';
 import { Routes, Route } from 'react-router-dom'; // Import routing tools
