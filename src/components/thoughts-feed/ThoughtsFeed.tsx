@@ -13,9 +13,29 @@ interface Props {
 
 function ThoughtsFeed({ thoughts, sharedCounter, setSharedCounter, sharedMessage, setSharedMessage }: Props) {
   const [sortBy, setSortBy] = useState('popular');
+  
+  // New state for search and filters
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedAuthor, setSelectedAuthor] = useState('all');
+  const [minLikes, setMinLikes] = useState(0);
   const [likedPosts, setLikedPosts] = useState<Set<string>>(new Set());
+  
+  // New state for bookmark system
+  const [bookmarkedPosts, setBookmarkedPosts] = useState<Set<string>>(new Set());
+  const [showBookmarks, setShowBookmarks] = useState(false);
+  
+  // New state for comment system
+  const [expandedComments, setExpandedComments] = useState<Set<string>>(new Set());
+  const [comments, setComments] = useState<{[postId: string]: Array<{id: string, author: string, content: string}>}>({});
+  const [newComment, setNewComment] = useState('');
+  
+  // New state for hide/show system
+  const [hiddenPosts, setHiddenPosts] = useState<Set<string>>(new Set());
+  const [showHiddenPosts, setShowHiddenPosts] = useState(false);
+  
+  // New state for rating system
+  const [postRatings, setPostRatings] = useState<{[postId: string]: number}>({});
+  const [userRatings, setUserRatings] = useState<{[postId: string]: number}>({});
 
   const communityPosts: Thought[] = [
     {
@@ -64,6 +84,29 @@ function ThoughtsFeed({ thoughts, sharedCounter, setSharedCounter, sharedMessage
 
   const allPosts = [...thoughts, ...communityPosts];
 
+  // Initialize sample comments and ratings
+  React.useEffect(() => {
+    setComments({
+      '1': [
+        { id: 'c1', author: 'TechGuru', content: 'Great tip! I use this technique too.' },
+        { id: 'c2', author: 'CodeMaster', content: 'Thanks for sharing!' }
+      ],
+      '2': [
+        { id: 'c3', author: 'DevLearner', content: 'Congratulations! What tech stack did you use?' }
+      ]
+    });
+    
+    // Sample ratings
+    setPostRatings({
+      '1': 4.2,
+      '2': 3.8,
+      '3': 4.5,
+      '4': 3.2,
+      '5': 4.0,
+      '6': 3.9
+    });
+  }, []);
+
   function formatTime(timestamp: Date) {
     const now = new Date();
     const diff = now.getTime() - timestamp.getTime();
@@ -74,10 +117,16 @@ function ThoughtsFeed({ thoughts, sharedCounter, setSharedCounter, sharedMessage
     return `${days} days ago`;
   }
 
+  // filter and sort posts
   const filteredPosts = allPosts.filter(post => {
-    const matchesSearch = post.content.toLowerCase().includes(searchTerm.toLowerCase());
+    const matchesSearch = searchTerm === '' || 
+      post.content.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      post.author.toLowerCase().includes(searchTerm.toLowerCase());
     const matchesAuthor = selectedAuthor === 'all' || post.author === selectedAuthor;
-    return matchesSearch && matchesAuthor;
+    const matchesLikes = post.likes >= minLikes;
+    const matchesBookmark = showBookmarks ? bookmarkedPosts.has(post.id) : true;
+    const matchesHidden = showHiddenPosts ? hiddenPosts.has(post.id) : !hiddenPosts.has(post.id);
+    return matchesSearch && matchesAuthor && matchesLikes && matchesBookmark && matchesHidden;
   });
 
   const sortedPosts = [...filteredPosts].sort((a, b) => {
@@ -96,6 +145,87 @@ function ThoughtsFeed({ thoughts, sharedCounter, setSharedCounter, sharedMessage
     });
   }
 
+  // bookmark/unbookmark toggle
+  function handleBookmark(postId: string) {
+    setBookmarkedPosts(prev => {
+      const newBookmarkedPosts = new Set(prev);
+      if (newBookmarkedPosts.has(postId)) {
+        newBookmarkedPosts.delete(postId);
+      } else {
+        newBookmarkedPosts.add(postId);
+      }
+      return newBookmarkedPosts;
+    });
+  }
+
+  // toggle comments section
+  function toggleComments(postId: string) {
+    setExpandedComments(prev => {
+      const newExpanded = new Set(prev);
+      if (newExpanded.has(postId)) {
+        newExpanded.delete(postId);
+      } else {
+        newExpanded.add(postId);
+      }
+      return newExpanded;
+    });
+  }
+
+  // add new comment
+  function addComment(postId: string) {
+    if (newComment.trim()) {
+      const comment = {
+        id: Date.now().toString(),
+        author: 'You',
+        content: newComment.trim()
+      };
+      
+      setComments(prev => ({
+        ...prev,
+        [postId]: [...(prev[postId] || []), comment]
+      }));
+      
+      setNewComment('');
+    }
+  }
+
+  // remove comment
+  function removeComment(postId: string, commentId: string) {
+    setComments(prev => ({
+      ...prev,
+      [postId]: prev[postId]?.filter(comment => comment.id !== commentId) || []
+    }));
+  }
+
+  // hide/show post
+  function handleHidePost(postId: string) {
+    setHiddenPosts(prev => {
+      const newHidden = new Set(prev);
+      if (newHidden.has(postId)) {
+        newHidden.delete(postId);
+      } else {
+        newHidden.add(postId);
+      }
+      return newHidden;
+    });
+  }
+
+  // rate post
+  function handleRatePost(postId: string, rating: number) {
+    setUserRatings(prev => ({
+      ...prev,
+      [postId]: rating
+    }));
+  }
+
+  // calculate reading time
+  function calculateReadingTime(content: string) {
+    const wordsPerMinute = 200;
+    const words = content.split(' ').length;
+    const minutes = Math.ceil(words / wordsPerMinute);
+    return minutes;
+  }
+
   // share post
   function handleShare(content: string, author: string) {
     const shareText = `"${content}" - @${author}`;
@@ -109,7 +239,17 @@ function ThoughtsFeed({ thoughts, sharedCounter, setSharedCounter, sharedMessage
   return (
     <section className="thoughts-feed">
       <div className="feed-header">
-        <h2>Community Feed</h2>
+        <h2>
+          {showBookmarks ? 'My Bookmarks' : showHiddenPosts ? 'Hidden Posts' : 'Community Feed'}
+        </h2>
+        <div className="toggle-buttons">
+          <button onClick={() => setShowBookmarks(!showBookmarks)}>
+            {showBookmarks ? 'Show All Posts' : 'Show Bookmarks'}
+          </button>
+          <button onClick={() => setShowHiddenPosts(!showHiddenPosts)}>
+            {showHiddenPosts ? 'Show Visible Posts' : 'Show Hidden Posts'}
+          </button>
+        </div>
 
         <div className="search-filter-form">
           <div className="search-box">
@@ -160,18 +300,87 @@ function ThoughtsFeed({ thoughts, sharedCounter, setSharedCounter, sharedMessage
 
             <div className="content">
               <p>{thought.content}</p>
+              <div className="post-meta">
+                <span className="reading-time">📖 {calculateReadingTime(thought.content)} min read</span>
+                <div className="rating-display">
+                  <span className="rating-label">Rating:</span>
+                  <div className="stars">
+                    {[1, 2, 3, 4, 5].map((star) => (
+                      <span
+                        key={star}
+                        className={`star ${star <= (userRatings[thought.id] || postRatings[thought.id] || 0) ? 'filled' : ''}`}
+                        onClick={() => handleRatePost(thought.id, star)}
+                      >
+                        ⭐
+                      </span>
+                    ))}
+                    <span className="rating-number">
+                      ({(userRatings[thought.id] || postRatings[thought.id] || 0).toFixed(1)})
+                    </span>
+                  </div>
+                </div>
+              </div>
             </div>
 
             <div className="actions">
-              <button
-                className={`like-btn ${likedPosts.has(thought.id) ? 'liked' : ''}`}
-                onClick={() => handleLike(thought.id)}
-              >
-                <span className="heart-icon">{likedPosts.has(thought.id) ? '❤️' : '🤍'}</span>
-                <span className="like-count">{thought.likes + (likedPosts.has(thought.id) ? 1 : 0)}</span>
-              </button>
-              <button className="share-btn" onClick={() => handleShare(thought.content, thought.author)}>📤 Share</button>
+              <div className="left-actions">
+                <button
+                  className={`like-btn ${likedPosts.has(thought.id) ? 'liked' : ''}`}
+                  onClick={() => handleLike(thought.id)}
+                >
+                  {likedPosts.has(thought.id) ? '❤️' : '🤍'} {thought.likes + (likedPosts.has(thought.id) ? 1 : 0)}
+                </button>
+                
+                <button onClick={() => toggleComments(thought.id)}>
+                  💬 ({comments[thought.id]?.length || 0})
+                </button>
+                
+                <button onClick={() => handleShare(thought.content, thought.author)}>Share</button>
+              </div>
+              
+              <div className="right-actions">
+                <button
+                  onClick={() => handleBookmark(thought.id)}
+                >
+                  {bookmarkedPosts.has(thought.id) ? 'Bookmarked' : 'Bookmark'}
+                </button>
+                
+                <button
+                  onClick={() => handleHidePost(thought.id)}
+                >
+                  {hiddenPosts.has(thought.id) ? 'Show' : 'Hide'}
+                </button>
+              </div>
             </div>
+
+            {expandedComments.has(thought.id) && (
+              <div className="comments-section">
+                <h4>Comments</h4>
+                {comments[thought.id]?.map(comment => (
+                  <div key={comment.id} className="comment">
+                    <div className="comment-header">
+                      <span>@{comment.author}</span>
+                      {comment.author === 'You' && (
+                        <button onClick={() => removeComment(thought.id, comment.id)}>
+                          Delete
+                        </button>
+                      )}
+                    </div>
+                    <p>{comment.content}</p>
+                  </div>
+                ))}
+                
+                <div className="add-comment">
+                  <input
+                    type="text"
+                    placeholder="Add a comment..."
+                    value={newComment}
+                    onChange={(e) => setNewComment(e.target.value)}
+                  />
+                  <button onClick={() => addComment(thought.id)}>Post</button>
+                </div>
+              </div>
+            )}
           </div>
         ))}
       </div>

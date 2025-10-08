@@ -29,12 +29,6 @@ const App: React.FC = () => {
         <p>Share your thoughts with the world</p>
         <Navigation />
 
-        {/* Navigation links */}
-        <nav>
-          <Link to="/">Home</Link> |{" "}
-          <Link to="/post">Post</Link> |{" "}
-          <Link to="/feed">Feed</Link>
-        </nav>
       </header>
 
       {/* Define the routes */}
