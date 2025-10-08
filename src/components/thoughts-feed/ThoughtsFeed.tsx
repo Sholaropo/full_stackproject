@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import type { Thought } from '../../types';
+import { Thought } from '../../types';
 import './ThoughtsFeed.css';
 
 interface Props {
