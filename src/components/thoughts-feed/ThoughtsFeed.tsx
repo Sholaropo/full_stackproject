@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import { Thought } from '../../types';
 import './ThoughtsFeed.css';
+import type { Thought } from '../../types';
 
 interface Props {
   thoughts: Thought[];  
@@ -106,7 +106,6 @@ function ThoughtsFeed({ thoughts, sharedCounter, setSharedCounter, sharedMessage
       '6': 3.9
     });
   }, []);
-
   function formatTime(timestamp: Date) {
     const now = new Date();
     const diff = now.getTime() - timestamp.getTime();
@@ -233,7 +232,6 @@ function ThoughtsFeed({ thoughts, sharedCounter, setSharedCounter, sharedMessage
       .then(() => alert('Post copied to clipboard!'))
       .catch(() => alert('Unable to copy. Please try again.'));
   }
-
   const authors = ['all', ...new Set(allPosts.map(post => post.author))];
 
   return (

@@ -28,13 +28,13 @@ const App: React.FC = () => {
         <p>Share your thoughts with the world</p>
         <Navigation />
       </header>
-
       <main className="app-main">
         <Routes>
           <Route 
             path="/" 
             element={
               <ThoughtList 
+                thoughts={thoughts}                 
                 sharedCounter={sharedCounter}
                 setSharedCounter={setSharedCounter}
                 sharedMessage={sharedMessage}
@@ -46,6 +46,8 @@ const App: React.FC = () => {
             path="/post" 
             element={
               <PostThoughts 
+                thoughts={thoughts}              
+                setThoughts={setThoughts}           
                 sharedCounter={sharedCounter}
                 setSharedCounter={setSharedCounter}
                 sharedMessage={sharedMessage}
@@ -69,10 +71,7 @@ const App: React.FC = () => {
         </Routes>
       </main>
 
-      <Footer 
-        teamName={teamName}
-        teamMembers={teamMembers}
-      />
+      <Footer teamName={teamName} teamMembers={teamMembers} />
     </div>
   );
 };
