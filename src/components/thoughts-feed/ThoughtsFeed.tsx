@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import { Thought } from '../../types';
 import './ThoughtsFeed.css';
+import type { Thought } from '../../types';
 
 interface Props {
   thoughts: Thought[];  
@@ -112,6 +112,8 @@ function ThoughtsFeed({ thoughts, sharedCounter, setSharedCounter, sharedMessage
     const matchesSearch = searchTerm === '' || 
       post.content.toLowerCase().includes(searchTerm.toLowerCase()) ||
       post.author.toLowerCase().includes(searchTerm.toLowerCase());
+  const filteredPosts = allPosts.filter(post => {
+    const matchesSearch = post.content.toLowerCase().includes(searchTerm.toLowerCase());
     const matchesAuthor = selectedAuthor === 'all' || post.author === selectedAuthor;
     const matchesLikes = post.likes >= minLikes;
     const matchesBookmark = showBookmarks ? bookmarkedPosts.has(post.id) : true;
@@ -135,87 +137,6 @@ function ThoughtsFeed({ thoughts, sharedCounter, setSharedCounter, sharedMessage
     });
   }
 
-  // bookmark/unbookmark toggle
-  function handleBookmark(postId: string) {
-    setBookmarkedPosts(prev => {
-      const newBookmarkedPosts = new Set(prev);
-      if (newBookmarkedPosts.has(postId)) {
-        newBookmarkedPosts.delete(postId);
-      } else {
-        newBookmarkedPosts.add(postId);
-      }
-      return newBookmarkedPosts;
-    });
-  }
-
-  // toggle comments section
-  function toggleComments(postId: string) {
-    setExpandedComments(prev => {
-      const newExpanded = new Set(prev);
-      if (newExpanded.has(postId)) {
-        newExpanded.delete(postId);
-      } else {
-        newExpanded.add(postId);
-      }
-      return newExpanded;
-    });
-  }
-
-  // add new comment
-  function addComment(postId: string) {
-    if (newComment.trim()) {
-      const comment = {
-        id: Date.now().toString(),
-        author: 'You',
-        content: newComment.trim()
-      };
-      
-      setComments(prev => ({
-        ...prev,
-        [postId]: [...(prev[postId] || []), comment]
-      }));
-      
-      setNewComment('');
-    }
-  }
-
-  // remove comment
-  function removeComment(postId: string, commentId: string) {
-    setComments(prev => ({
-      ...prev,
-      [postId]: prev[postId]?.filter(comment => comment.id !== commentId) || []
-    }));
-  }
-
-  // hide/show post
-  function handleHidePost(postId: string) {
-    setHiddenPosts(prev => {
-      const newHidden = new Set(prev);
-      if (newHidden.has(postId)) {
-        newHidden.delete(postId);
-      } else {
-        newHidden.add(postId);
-      }
-      return newHidden;
-    });
-  }
-
-  // rate post
-  function handleRatePost(postId: string, rating: number) {
-    setUserRatings(prev => ({
-      ...prev,
-      [postId]: rating
-    }));
-  }
-
-  // calculate reading time
-  function calculateReadingTime(content: string) {
-    const wordsPerMinute = 200;
-    const words = content.split(' ').length;
-    const minutes = Math.ceil(words / wordsPerMinute);
-    return minutes;
-  }
-
   // share post
   function handleShare(content: string, author: string) {
     const shareText = `"${content}" - @${author}`;
@@ -229,17 +150,7 @@ function ThoughtsFeed({ thoughts, sharedCounter, setSharedCounter, sharedMessage
   return (
     <section className="thoughts-feed">
       <div className="feed-header">
-        <h2>
-          {showBookmarks ? 'My Bookmarks' : showHiddenPosts ? 'Hidden Posts' : 'Community Feed'}
-        </h2>
-        <div className="toggle-buttons">
-          <button onClick={() => setShowBookmarks(!showBookmarks)}>
-            {showBookmarks ? 'Show All Posts' : 'Show Bookmarks'}
-          </button>
-          <button onClick={() => setShowHiddenPosts(!showHiddenPosts)}>
-            {showHiddenPosts ? 'Show Visible Posts' : 'Show Hidden Posts'}
-          </button>
-        </div>
+        <h2>Community Feed</h2>
 
         <div className="search-filter-form">
           <div className="search-box">
@@ -261,19 +172,7 @@ function ThoughtsFeed({ thoughts, sharedCounter, setSharedCounter, sharedMessage
                 ))}
               </select>
             </div>
-            
-            <div className="filter-group">
-              <label>Min Likes:</label>
-              <input
-                type="number"
-                min="0"
-                value={minLikes}
-                onChange={(e) => setMinLikes(parseInt(e.target.value) || 0)}
-                className="likes-filter"
-                placeholder="0"
-              />
-            </div>
-            
+
             <div className="sort-group">
               <label>Sort:</label>
               <select value={sortBy} onChange={e => setSortBy(e.target.value)}>
@@ -325,34 +224,14 @@ function ThoughtsFeed({ thoughts, sharedCounter, setSharedCounter, sharedMessage
             </div>
 
             <div className="actions">
-              <div className="left-actions">
-                <button
-                  className={`like-btn ${likedPosts.has(thought.id) ? 'liked' : ''}`}
-                  onClick={() => handleLike(thought.id)}
-                >
-                  {likedPosts.has(thought.id) ? '❤️' : '🤍'} {thought.likes + (likedPosts.has(thought.id) ? 1 : 0)}
-                </button>
-                
-                <button onClick={() => toggleComments(thought.id)}>
-                  💬 ({comments[thought.id]?.length || 0})
-                </button>
-                
-                <button onClick={() => handleShare(thought.content, thought.author)}>Share</button>
-              </div>
-              
-              <div className="right-actions">
-                <button
-                  onClick={() => handleBookmark(thought.id)}
-                >
-                  {bookmarkedPosts.has(thought.id) ? 'Bookmarked' : 'Bookmark'}
-                </button>
-                
-                <button
-                  onClick={() => handleHidePost(thought.id)}
-                >
-                  {hiddenPosts.has(thought.id) ? 'Show' : 'Hide'}
-                </button>
-              </div>
+              <button
+                className={`like-btn ${likedPosts.has(thought.id) ? 'liked' : ''}`}
+                onClick={() => handleLike(thought.id)}
+              >
+                <span className="heart-icon">{likedPosts.has(thought.id) ? '❤️' : '🤍'}</span>
+                <span className="like-count">{thought.likes + (likedPosts.has(thought.id) ? 1 : 0)}</span>
+              </button>
+              <button className="share-btn" onClick={() => handleShare(thought.content, thought.author)}>📤 Share</button>
             </div>
 
             {expandedComments.has(thought.id) && (
