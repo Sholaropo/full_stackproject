@@ -6,6 +6,7 @@ import PostThoughts from './components/post-thoughts/PostThoughts';
 import ThoughtsFeed from './components/thoughts-feed/ThoughtsFeed';
 import Footer from './components/footer/Footer';
 import Navigation from './components/navigation/Navigation';
+import { Thought } from './types';
 import './App.css';
 
 const App: React.FC = () => {
@@ -18,6 +19,7 @@ const App: React.FC = () => {
 
   const [sharedCounter, setSharedCounter] = useState(0);
   const [sharedMessage, setSharedMessage] = useState('Welcome!');
+  const [thoughts, setThoughts] = useState<Thought[]>([]);
 
   return (
     <div className="app">
@@ -55,6 +57,8 @@ const App: React.FC = () => {
             path="/feed" 
             element={
               <ThoughtsFeed 
+                thoughts={thoughts}
+                setThoughts={setThoughts}
                 sharedCounter={sharedCounter}
                 setSharedCounter={setSharedCounter}
                 sharedMessage={sharedMessage}
