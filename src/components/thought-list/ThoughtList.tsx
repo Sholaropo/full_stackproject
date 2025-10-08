@@ -99,7 +99,7 @@ const ThoughtList: React.FC<Props> = ({ thoughts: sharedThoughts, sharedCounter,
       <h2>Latest Thoughts</h2>
       
       {/* Shared state display and controls */}
-      <div style={{ padding: '10px', background: '#f0f0f0', marginBottom: '20px' }}>
+      <div className="shared-controls">
         <p>Counter: {sharedCounter}</p>
         <button onClick={() => setSharedCounter(sharedCounter + 1)}>Increment</button>
         <button onClick={() => setSharedCounter(sharedCounter - 1)}>Decrement</button>
@@ -107,31 +107,25 @@ const ThoughtList: React.FC<Props> = ({ thoughts: sharedThoughts, sharedCounter,
       </div>
 
       {/* INDIVIDUAL TASK: Task Manager Feature */}
-      <div style={{ 
-        padding: '20px', 
-        background: '#fff', 
-        marginBottom: '20px', 
-        borderRadius: '8px', 
-        border: '2px solid #007bff' 
-      }}>
+      <div className="task-manager">
         <h3>My Task Manager</h3>
-        <div style={{ marginBottom: '15px' }}>
+        <div className="task-input-container">
           <input 
             type="text"
             value={taskInput}
             onChange={(e) => setTaskInput(e.target.value)}
             placeholder="Enter a new task..."
-            style={{ padding: '8px', marginRight: '10px', width: '300px' }}
+            className="task-input"
           />
           <button 
             onClick={handleAddTask} 
-            style={{ padding: '8px 16px', background: '#007bff', color: 'white', border: 'none', cursor: 'pointer', borderRadius: '4px' }}
+            className="add-task-button"
           >
             Add Task
           </button>
         </div>
         
-        <div>
+        <div className="task-list">
           <h4>Tasks ({tasks.length})</h4>
           {tasks.length === 0 ? (
             <p>No tasks yet. Add one above!</p>
@@ -139,12 +133,12 @@ const ThoughtList: React.FC<Props> = ({ thoughts: sharedThoughts, sharedCounter,
             tasks.map((task, index) => (
               <div 
                 key={index} 
-                style={{ padding: '10px', background: '#f9f9f9', marginBottom: '5px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderRadius: '4px' }}
+                className="task-item"
               >
                 <span>{task}</span>
                 <button 
                   onClick={() => handleRemoveTask(index)} 
-                  style={{ background: '#dc3545', color: 'white', border: 'none', padding: '5px 10px', cursor: 'pointer', borderRadius: '4px' }}
+                  className="remove-task-button"
                 >
                   Remove
                 </button>
