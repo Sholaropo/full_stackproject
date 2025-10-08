@@ -1,15 +1,16 @@
 // src/App.tsx
 import React, { useState } from 'react';
 import ThoughtList from './components/thought-list/ThoughtList';
-import { Routes, Route, Link } from 'react-router-dom';
+import { Routes, Route } from 'react-router-dom';
 import PostThoughts from './components/post-thoughts/PostThoughts';
 import ThoughtsFeed from './components/thoughts-feed/ThoughtsFeed';
 import Footer from './components/footer/Footer';
 import Navigation from './components/navigation/Navigation';
-import { Thought } from './types';  
+import { Thought } from './types';
 import './App.css';
 
 const App: React.FC = () => {
+  // Team information displayed in the Footer
   const teamName = "The page turners";
   const teamMembers = [
     "Olusola Ropo",
@@ -17,23 +18,24 @@ const App: React.FC = () => {
     "Amandeep Kaur"
   ];
 
-  //  Shared/global state
+  // Shared/global state
   const [sharedCounter, setSharedCounter] = useState(0);
   const [sharedMessage, setSharedMessage] = useState('Welcome!');
-  const [thoughts, setThoughts] = useState<Thought[]>([]); 
+  const [thoughts, setThoughts] = useState<Thought[]>([]);
 
   return (
     <div className="app">
+      {/* App header section with title, subtitle, and navigation bar */}
       <header className="app-header">
         <h1>ThoughtShare</h1>
         <p>Share your thoughts with the world</p>
         <Navigation />
-
       </header>
 
-      {/* Define the routes */}
+      {/* Define all app routes using React Router */}
       <main className="app-main">
         <Routes>
+          {/* Home page showing list of thoughts */}
           <Route 
             path="/" 
             element={
@@ -46,6 +48,7 @@ const App: React.FC = () => {
               />
             } 
           />
+          {/* Page for posting a new thought */}
           <Route 
             path="/post" 
             element={
@@ -59,6 +62,7 @@ const App: React.FC = () => {
               />
             } 
           />
+          {/* Community feed page showing shared posts */}
           <Route 
             path="/feed" 
             element={
@@ -75,7 +79,11 @@ const App: React.FC = () => {
         </Routes>
       </main>
 
-      <Footer teamName={teamName} teamMembers={teamMembers} />
+      {/* Footer displaying team name and members */}
+      <Footer 
+        teamName={teamName}
+        teamMembers={teamMembers}
+      />
     </div>
   );
 };
