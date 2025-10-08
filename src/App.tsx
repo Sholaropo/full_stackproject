@@ -1,9 +1,7 @@
-// src/App.tsx file
-
-import React from "react";
-// Import main components used in the app
+// src/App.tsx
+import React, { useState } from 'react';
 import ThoughtList from './components/thought-list/ThoughtList';
-import { Routes, Route } from 'react-router-dom'; // Used to define navigation routes
+import { Routes, Route, Link } from 'react-router-dom';
 import PostThoughts from './components/post-thoughts/PostThoughts';
 import ThoughtsFeed from './components/thoughts-feed/ThoughtsFeed';
 import Footer from './components/footer/Footer';
@@ -19,8 +17,10 @@ const App: React.FC = () => {
     "Amandeep Kaur"
   ];
 
+  //  Shared/global state
   const [sharedCounter, setSharedCounter] = useState(0);
   const [sharedMessage, setSharedMessage] = useState('Welcome!');
+  const [thoughts, setThoughts] = useState<Thought[]>([]); 
 
   return (
     <div className="app">
