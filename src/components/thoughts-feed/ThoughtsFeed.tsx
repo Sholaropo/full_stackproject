@@ -1,17 +1,14 @@
 import React, { useState } from 'react';
 import './ThoughtsFeed.css';
 import type { Thought } from '../../types';
+import { communityPosts } from '../../data/mockData';
 
 interface Props {
   thoughts: Thought[];  
-  setThoughts: React.Dispatch<React.SetStateAction<Thought[]>>; 
-  sharedCounter: number;
-  setSharedCounter: (n: number) => void;
-  sharedMessage: string;
-  setSharedMessage: (s: string) => void;
+  setThoughts: React.Dispatch<React.SetStateAction<Thought[]>>;
 }
 
-function ThoughtsFeed({ thoughts, sharedCounter, setSharedCounter, sharedMessage, setSharedMessage }: Props) {
+function ThoughtsFeed({ thoughts }: Props) {
   const [sortBy, setSortBy] = useState('popular');
   
   // New state for search and filters
@@ -281,13 +278,6 @@ function ThoughtsFeed({ thoughts, sharedCounter, setSharedCounter, sharedMessage
             </div>
           </div>
         </div>
-      </div>
-
-      {/* Shared state demo */}
-      <div style={{ padding: '10px', background: '#f0f0f0', marginBottom: '20px' }}>
-        <p>Counter: {sharedCounter} | Message: {sharedMessage}</p>
-        <button onClick={() => setSharedCounter(sharedCounter + 1)}>+</button>
-        <button onClick={() => setSharedCounter(sharedCounter - 1)}>-</button>
       </div>
 
       <div className="feed-content">
