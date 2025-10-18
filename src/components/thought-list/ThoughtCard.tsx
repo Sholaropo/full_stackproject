@@ -1,4 +1,5 @@
 import React from 'react';
+import * as thoughtService from '../../services/thoughtService';
 import type { Thought } from '../../types';
 
 interface Props {
