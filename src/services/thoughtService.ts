@@ -9,7 +9,7 @@ export function createThought(content: string, author: string, existingThoughts:
     likes: 0
   };
 }
-
+// Validates the content and author of a thought
 export function validateThought(content: string, author: string) {
   const validationErrors = new Map<string, string>();
 
