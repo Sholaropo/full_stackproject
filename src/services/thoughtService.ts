@@ -1,4 +1,5 @@
 import type { Thought } from '../types';
+import * as thoughtRepo from '../repositories/thoughtRepository';
 
 export function createThought(content: string, author: string, existingThoughts: Thought[]): Thought {
   return {
@@ -9,6 +10,23 @@ export function createThought(content: string, author: string, existingThoughts:
     likes: 0
   };
 }
+
+export function createAndSaveThought(content: string, author: string): Thought {
+  const newThought: Thought = {
+    id: Date.now().toString(),
+    content: content.trim(),
+    author: author.trim(),
+    timestamp: new Date(),
+    likes: 0
+  };
+  
+  return thoughtRepo.createThought(newThought);
+}
+
+export function fetchAllThoughts(): Thought[] {
+  return thoughtRepo.getAllThoughts();
+}
+
 export function validateThought(content: string, author: string) {
   const validationErrors = new Map<string, string>();
 

@@ -1,6 +1,25 @@
-import React, { useState } from 'react';
+/**
+ * ThoughtList Component - Demonstrates Repository Architecture (I.1 & I.3)
+ * 
+ * Architecture Flow:
+ * ThoughtList (Component) → thoughtService (Service) → thoughtRepository (Repository) → mockData (Test Data)
+ * 
+ * This component uses:
+ * - thoughtService.fetchAllThoughts() - Fetches data through repository layer
+ * - thoughtService.searchThoughts() - Business logic for filtering
+ * - thoughtService.sortByPopularity/sortByTimestamp() - Business logic for sorting
+ * 
+ * Why this architecture?
+ * - Repository handles data access (where data comes from)
+ * - Service handles business logic (how to process data)
+ * - Component handles presentation (what user sees)
+ * 
+ * This separation allows us to easily swap data sources (test data → API → database)
+ * without changing component or service code.
+ */
+
+import React, { useState, useEffect } from 'react';
 import type { Thought } from '../../types';
-import { partnerPosts } from '../../data/mockData';
 import ThoughtCard from './ThoughtCard';
 import TaskItem from './TaskItem';
 import * as thoughtService from '../../services/thoughtService';
@@ -16,6 +35,15 @@ const ThoughtList: React.FC<Props> = ({ thoughts: sharedThoughts }) => {
   const [likedPosts, setLikedPosts] = useState<Set<string>>(new Set());
   const [searchTerm, setSearchTerm] = useState('');
   const [sortBy, setSortBy] = useState<'timestamp' | 'popularity'>('timestamp');
+  
+  // Fetch thoughts from repository
+  const [repositoryThoughts, setRepositoryThoughts] = useState<Thought[]>([]);
+
+  useEffect(() => {
+    // Fetch all thoughts from repository on component mount
+    const fetchedThoughts = thoughtService.fetchAllThoughts();
+    setRepositoryThoughts(fetchedThoughts);
+  }, []);
 
   const handleAddTask = () => {
     if (taskInput.trim()) {
@@ -37,7 +65,8 @@ const ThoughtList: React.FC<Props> = ({ thoughts: sharedThoughts }) => {
     });
   };
 
-  const allThoughts = [...partnerPosts, ...sharedThoughts];
+  // Combine repository thoughts with shared thoughts
+  const allThoughts = [...repositoryThoughts, ...sharedThoughts];
 
   const searchedThoughts = thoughtService.searchThoughts(allThoughts, searchTerm);
   
@@ -63,13 +92,13 @@ const ThoughtList: React.FC<Props> = ({ thoughts: sharedThoughts }) => {
             onClick={() => setSortBy('timestamp')}
             className={sortBy === 'timestamp' ? 'active' : ''}
           >
-             Latest
+            Latest
           </button>
           <button 
             onClick={() => setSortBy('popularity')}
             className={sortBy === 'popularity' ? 'active' : ''}
           >
-            ❤️ Most Liked
+             Most Liked
           </button>
         </div>
       </div>
