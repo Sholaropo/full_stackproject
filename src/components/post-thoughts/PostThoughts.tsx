@@ -18,6 +18,14 @@ const PostThoughts: React.FC<Props> = ({
     e.preventDefault();
     if (!content.trim()) return;
 
+    const errors = thoughtService.validateThought(content, "You");
+    if (errors.size > 0) {
+      alert(errors.get("content") || "Validation error!");
+      return;
+    }
+
+    const newThoughtFromService = thoughtService.createThought(content, "You", thoughts);
+
     const newThought: Thought = {
       id: (thoughts.length + 1).toString(),
       content,
@@ -26,7 +34,8 @@ const PostThoughts: React.FC<Props> = ({
       likes: 0,
     };
 
-    setThoughts([newThought, ...thoughts]);
+  
+    setThoughts([newThoughtFromService, ...thoughts]);
     setContent("");
   };
 
@@ -51,7 +60,8 @@ const PostThoughts: React.FC<Props> = ({
           <article key={thought.id} className="thought-card">
             <header className="thought-header">
               <h4>@{thought.author}</h4>
-              <time>{thought.timestamp.toLocaleString()}</time>
+    
+              <time>{thoughtService.formatTimestamp(thought.timestamp)}</time>
             </header>
             <p>{thought.content}</p>
           </article>

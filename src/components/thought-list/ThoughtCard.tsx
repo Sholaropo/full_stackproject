@@ -9,25 +9,12 @@ interface Props {
 }
 
 const ThoughtCard: React.FC<Props> = ({ thought, isLiked, onLike }) => {
-  const formatTimestamp = (timestamp: Date): string => {
-    const now = new Date();
-    const diffInMinutes = Math.floor((now.getTime() - timestamp.getTime()) / (1000 * 60));
-    
-    if (diffInMinutes < 60) {
-      return `${diffInMinutes}m ago`;
-    } else if (diffInMinutes < 1440) {
-      return `${Math.floor(diffInMinutes / 60)}h ago`;
-    } else {
-      return `${Math.floor(diffInMinutes / 1440)}d ago`;
-    }
-  };
-
   return (
     <article className="thought-card">
       <header className="thought-header">
         <h3 className="thought-author">@{thought.author}</h3>
         <time className="thought-timestamp" dateTime={thought.timestamp.toISOString()}>
-          {formatTimestamp(thought.timestamp)}
+          {thoughtService.formatTimestamp(thought.timestamp)}
         </time>
       </header>
       <div className="thought-content">
