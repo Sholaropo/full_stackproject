@@ -18,18 +18,18 @@ const PostThoughts: React.FC<Props> = ({
     e.preventDefault();
     if (!content.trim()) return;
 
-    const errors = thoughtService.validateThought(content, "You");
+    const errors = thoughtService.validateThought(content, "Olusola");
     if (errors.size > 0) {
       alert(errors.get("content") || "Validation error!");
       return;
     }
 
-    const newThoughtFromService = thoughtService.createThought(content, "You", thoughts);
+    const newThoughtFromService = thoughtService.createThought(content, "Olusola", thoughts);
 
     const newThought: Thought = {
       id: (thoughts.length + 1).toString(),
       content,
-      author: "You",
+      author: "Olusola",
       timestamp: new Date(),
       likes: 0,
     };
