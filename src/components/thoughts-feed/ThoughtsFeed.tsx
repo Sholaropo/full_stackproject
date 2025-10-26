@@ -29,6 +29,11 @@ function ThoughtsFeed({ thoughts, sharedCounter, setSharedCounter, sharedMessage
   // use custom hook for user data management
   const { users, getUserByUsernameHook, getUserCount } = useUserData(); // get user data from hook
   
+  // just in case
+  if (users.length > 0) {
+    console.log('we have users');
+  }
+  
   // search and filter states
   const [searchTerm, setSearchTerm] = useState(''); // search input value
   const [selectedAuthor, setSelectedAuthor] = useState('all'); // selected author filter
@@ -122,12 +127,15 @@ function ThoughtsFeed({ thoughts, sharedCounter, setSharedCounter, sharedMessage
     });
   }, []); // empty dependency array - runs once on mount
 
-  // get user info using service layer
+  // get user by name
   function getUserInfo(username: string) {
-    return UserService.getUserByUsername(username); // use service instead of direct repo call
+    return UserService.getUserByUsername(username); // this calls the service
   }
+  
+  // const oldWay = getAllUsers(); // old way before hook
+  // console.log('old users:', oldWay);
 
-  // format time display - convert timestamp to readable format
+  // format time - make it readable
   function formatTime(timestamp: Date) {
     const now = new Date(); // get current time
     const diff = now.getTime() - timestamp.getTime(); // calculate difference in milliseconds
