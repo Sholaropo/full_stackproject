@@ -1,150 +1,160 @@
-import React, { useState } from 'react';
-import { Thought } from '../../types';
-import { getAllUsers, getUserByUsername } from '../../repositories/userRepository';
-import './ThoughtsFeed.css';
+import React, { useState } from 'react'; // import React and useState hook
+import { Thought } from '../../types'; // import Thought type definition
+import { useUserData } from '../../hooks/useUserData'; // custom hook for user data
+import { UserService } from '../../services/userService'; // service layer for business logic
+import './ThoughtsFeed.css'; // import CSS styles
 
+// define props interface for the component
 interface Props {
-  thoughts: Thought[];
-  setThoughts: React.Dispatch<React.SetStateAction<Thought[]>>;
-  sharedCounter: number;
-  setSharedCounter: (n: number) => void;
-  sharedMessage: string;
-  setSharedMessage: (s: string) => void;
+  thoughts: Thought[]; // array of thoughts from parent
+  setThoughts: React.Dispatch<React.SetStateAction<Thought[]>>; // function to update thoughts
+  sharedCounter: number; // shared counter value
+  setSharedCounter: (n: number) => void; // function to update counter
+  sharedMessage: string; // shared message value
+  setSharedMessage: (s: string) => void; // function to update message
 }
 
 function ThoughtsFeed({ thoughts, sharedCounter, setSharedCounter, sharedMessage, setSharedMessage }: Props) {
-  const [sortBy, setSortBy] = useState('popular');
+  const [sortBy, setSortBy] = useState('popular'); // state for sorting posts
   
-  // get users from repository
-  const [users] = useState(getAllUsers()); // should use useEffect
+  // ARCHITECTURE IMPLEMENTATION:
+  // This component demonstrates layered architecture:
+  // 1. COMPONENT (this file) - handles UI and user interactions
+  // 2. CUSTOM HOOK (useUserData) - manages reusable state logic
+  // 3. SERVICE LAYER (UserService) - handles business rules and validation
+  // 4. REPOSITORY LAYER (UserRepository) - handles data access and storage
+  // 
+  // Flow: Component → Hook → Service → Repository
+  
+  // use custom hook for user data management
+  const { users, getUserByUsernameHook, getUserCount } = useUserData(); // get user data from hook
   
   // search and filter states
-  const [searchTerm, setSearchTerm] = useState('');
-  const [selectedAuthor, setSelectedAuthor] = useState('all');
-  const [minLikes, setMinLikes] = useState(0);
-  const [likedPosts, setLikedPosts] = useState<Set<string>>(new Set());
+  const [searchTerm, setSearchTerm] = useState(''); // search input value
+  const [selectedAuthor, setSelectedAuthor] = useState('all'); // selected author filter
+  const [minLikes, setMinLikes] = useState(0); // minimum likes filter
+  const [likedPosts, setLikedPosts] = useState<Set<string>>(new Set()); // set of liked post IDs
   
   // bookmark states
-  const [bookmarkedPosts, setBookmarkedPosts] = useState<Set<string>>(new Set());
-  const [showBookmarks, setShowBookmarks] = useState(false);
+  const [bookmarkedPosts, setBookmarkedPosts] = useState<Set<string>>(new Set()); // set of bookmarked post IDs
+  const [showBookmarks, setShowBookmarks] = useState(false); // toggle bookmark view
   
   // comment states
-  const [expandedComments, setExpandedComments] = useState<Set<string>>(new Set());
-  const [comments, setComments] = useState<{[postId: string]: Array<{id: string, author: string, content: string}>}>({});
-  const [newComment, setNewComment] = useState('');
+  const [expandedComments, setExpandedComments] = useState<Set<string>>(new Set()); // set of expanded comment post IDs
+  const [comments, setComments] = useState<{[postId: string]: Array<{id: string, author: string, content: string}>}>({}); // comments object
+  const [newComment, setNewComment] = useState(''); // new comment input value
   
   // hide/show states
-  const [hiddenPosts, setHiddenPosts] = useState<Set<string>>(new Set());
-  const [showHiddenPosts, setShowHiddenPosts] = useState(false);
+  const [hiddenPosts, setHiddenPosts] = useState<Set<string>>(new Set()); // set of hidden post IDs
+  const [showHiddenPosts, setShowHiddenPosts] = useState(false); // toggle hidden posts view
   
   // rating states
-  const [postRatings, setPostRatings] = useState<{[postId: string]: number}>({});
-  const [userRatings, setUserRatings] = useState<{[postId: string]: number}>({});
+  const [postRatings, setPostRatings] = useState<{[postId: string]: number}>({}); // post ratings object
+  const [userRatings, setUserRatings] = useState<{[postId: string]: number}>({}); // user ratings object
 
-  // sample posts
+  // sample posts - hardcoded community posts
   const communityPosts: Thought[] = [
     {
-      id: '1',
-      content: 'Just discovered an amazing productivity technique! The Pomodoro method really works for coding sessions.',
-      author: 'ProductivityPro',
-      timestamp: new Date(Date.now() - 0 * 24 * 60 * 60 * 1000),
-      likes: 45
+      id: '1', // unique post ID
+      content: 'Just discovered an amazing productivity technique! The Pomodoro method really works for coding sessions.', // post content
+      author: 'ProductivityPro', // author username
+      timestamp: new Date(Date.now() - 0 * 24 * 60 * 60 * 1000), // current time
+      likes: 45 // number of likes
     },
     {
       id: '2',
       content: 'Built my first full-stack application today! React frontend with Node.js backend. Feeling accomplished!',
       author: 'FullStackDev',
-      timestamp: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000),
+      timestamp: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000), // 1 day ago
       likes: 32
     },
     {
       id: '3',
       content: 'Git merge conflicts are the worst! But finally figured out how to resolve them properly.',
       author: 'GitLearner',
-      timestamp: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000),
+      timestamp: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000), // 2 days ago
       likes: 28
     },
     {
       id: '4',
       content: 'CSS Grid vs Flexbox - still learning when to use which. Both are powerful tools!',
       author: 'CSSExplorer',
-      timestamp: new Date(Date.now() - 3 * 24 * 60 * 60 * 1000),
+      timestamp: new Date(Date.now() - 3 * 24 * 60 * 60 * 1000), // 3 days ago
       likes: 19
     },
     {
       id: '5',
       content: 'Debugging JavaScript can be frustrating, but console.log is my best friend right now!',
       author: 'DebugMaster',
-      timestamp: new Date(Date.now() - 4 * 24 * 60 * 60 * 1000),
+      timestamp: new Date(Date.now() - 4 * 24 * 60 * 60 * 1000), // 4 days ago
       likes: 24
     },
     {
       id: '6',
       content: 'API integration is tricky but rewarding. Successfully connected my app to a weather API!',
       author: 'APINewbie',
-      timestamp: new Date(Date.now() - 5 * 24 * 60 * 60 * 1000),
+      timestamp: new Date(Date.now() - 5 * 24 * 60 * 60 * 1000), // 5 days ago
       likes: 31
     }
   ];
 
-  const allPosts = [...thoughts, ...communityPosts];
+  const allPosts = [...thoughts, ...communityPosts]; // combine user thoughts with community posts
 
-  // setup sample data
+  // setup sample data - initialize comments and ratings
   React.useEffect(() => {
-    setComments({
+    setComments({ // set sample comments for posts
       '1': [
-        { id: 'c1', author: 'TechGuru', content: 'Great tip! I use this technique too.' },
-        { id: 'c2', author: 'CodeMaster', content: 'Thanks for sharing!' }
+        { id: 'c1', author: 'TechGuru', content: 'Great tip! I use this technique too.' }, // comment 1
+        { id: 'c2', author: 'CodeMaster', content: 'Thanks for sharing!' } // comment 2
       ],
       '2': [
-        { id: 'c3', author: 'DevLearner', content: 'Congratulations! What tech stack did you use?' }
+        { id: 'c3', author: 'DevLearner', content: 'Congratulations! What tech stack did you use?' } // comment 3
       ]
     });
     
-    setPostRatings({
-      '1': 4.2,
-      '2': 3.8,
-      '3': 4.5,
-      '4': 3.2,
-      '5': 4.0,
-      '6': 3.9
+    setPostRatings({ // set sample ratings for posts
+      '1': 4.2, // rating for post 1
+      '2': 3.8, // rating for post 2
+      '3': 4.5, // rating for post 3
+      '4': 3.2, // rating for post 4
+      '5': 4.0, // rating for post 5
+      '6': 3.9  // rating for post 6
     });
-  }, []);
+  }, []); // empty dependency array - runs once on mount
 
-  // get user info from repository
+  // get user info using service layer
   function getUserInfo(username: string) {
-    const user = getUserByUsername(username);
-    return user; // might return undefined
+    return UserService.getUserByUsername(username); // use service instead of direct repo call
   }
 
-  // format time display
+  // format time display - convert timestamp to readable format
   function formatTime(timestamp: Date) {
-    const now = new Date();
-    const diff = now.getTime() - timestamp.getTime();
-    const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+    const now = new Date(); // get current time
+    const diff = now.getTime() - timestamp.getTime(); // calculate difference in milliseconds
+    const days = Math.floor(diff / (1000 * 60 * 60 * 24)); // convert to days
 
-    if (days === 0) return 'Today';
-    if (days === 1) return '1 day ago';
-    return `${days} days ago`; 
+    if (days === 0) return 'Today'; // if same day
+    if (days === 1) return '1 day ago'; // if yesterday
+    return `${days} days ago`; // if more than 1 day ago
   }
 
-  // filter posts
+  // filter posts - apply search and filter criteria
   const filteredPosts = allPosts.filter(post => {
-    const matchesSearch = searchTerm === '' || 
-      post.content.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      post.author.toLowerCase().includes(searchTerm.toLowerCase());
-    const matchesAuthor = selectedAuthor === 'all' || post.author === selectedAuthor;
-    const matchesLikes = post.likes >= minLikes;
-    const matchesBookmark = showBookmarks ? bookmarkedPosts.has(post.id) : true;
-    const matchesHidden = showHiddenPosts ? hiddenPosts.has(post.id) : !hiddenPosts.has(post.id);
-    return matchesSearch && matchesAuthor && matchesLikes && matchesBookmark && matchesHidden;
+    const matchesSearch = searchTerm === '' || // if no search term
+      post.content.toLowerCase().includes(searchTerm.toLowerCase()) || // content matches search
+      post.author.toLowerCase().includes(searchTerm.toLowerCase()); // author matches search
+    const matchesAuthor = selectedAuthor === 'all' || post.author === selectedAuthor; // author filter
+    const matchesLikes = post.likes >= minLikes; // minimum likes filter
+    const matchesBookmark = showBookmarks ? bookmarkedPosts.has(post.id) : true; // bookmark filter
+    const matchesHidden = showHiddenPosts ? hiddenPosts.has(post.id) : !hiddenPosts.has(post.id); // hidden filter
+    return matchesSearch && matchesAuthor && matchesLikes && matchesBookmark && matchesHidden; // all filters must match
   });
 
-  // sort posts - creates new array every time
+  // sort posts - order posts by selected criteria
   const sortedPosts = [...filteredPosts].sort((a, b) => {
-    if (sortBy === 'popular') return b.likes - a.likes;
-    if (sortBy === 'recent') return b.timestamp.getTime() - a.timestamp.getTime();
-    return 0;
+    if (sortBy === 'popular') return b.likes - a.likes; // sort by likes descending
+    if (sortBy === 'recent') return b.timestamp.getTime() - a.timestamp.getTime(); // sort by time descending
+    return 0; // no sorting
   });
 
   // like button handler - not optimized
@@ -260,7 +270,7 @@ function ThoughtsFeed({ thoughts, sharedCounter, setSharedCounter, sharedMessage
         
         {/* show user count from repository - inline styles */}
         <div style={{ padding: '10px', background: '#e0e0e0', marginBottom: '10px' }}>
-          <p>Total Users: {users.length}</p>
+          <p>Total Users: {getUserCount()}</p>
         </div>
         
         <div className="toggle-buttons">
