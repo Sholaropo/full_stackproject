@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import type { Thought } from "../../types";
 import "./PostThoughts.css";
-
+ 
 interface Props {
   thoughts: Thought[];
   setThoughts: React.Dispatch<React.SetStateAction<Thought[]>>;
@@ -10,7 +10,7 @@ interface Props {
   sharedMessage: string;
   setSharedMessage: React.Dispatch<React.SetStateAction<string>>;
 }
-
+ 
 const PostThoughts: React.FC<Props> = ({
   thoughts,
   setThoughts,
@@ -20,11 +20,11 @@ const PostThoughts: React.FC<Props> = ({
   setSharedMessage,
 }) => {
   const [content, setContent] = useState("");
-
+ 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!content.trim()) return;
-
+ 
     const newThought: Thought = {
       id: (thoughts.length + 1).toString(),
       content,
@@ -32,19 +32,19 @@ const PostThoughts: React.FC<Props> = ({
       timestamp: new Date(),
       likes: 0,
     };
-
+ 
     // update parent state
     setThoughts([newThought, ...thoughts]);
     setSharedCounter(sharedCounter + 1);
     setSharedMessage(content);
-
+ 
     setContent("");
   };
-
+ 
   return (
     <section className="post-thoughts">
       <h2>Share Your Thoughts</h2>
-
+ 
       {/* Shared area */}
       <div style={{ padding: "10px", background: "#f0f0f0", marginBottom: "20px" }}>
         <p><strong>Shared Message:</strong> {sharedMessage}</p>
@@ -55,7 +55,7 @@ const PostThoughts: React.FC<Props> = ({
         />
         <p><strong>Total Shared Posts:</strong> {sharedCounter}</p>
       </div>
-
+ 
       {/* Form */}
       <form className="thought-form" onSubmit={handleSubmit}>
         <textarea
@@ -67,7 +67,7 @@ const PostThoughts: React.FC<Props> = ({
         />
         <button type="submit">Post</button>
       </form>
-
+ 
       {/* List */}
       <div className="posted-thoughts">
         {thoughts.length > 0 && <h3>Your Posts</h3>}
@@ -84,5 +84,5 @@ const PostThoughts: React.FC<Props> = ({
     </section>
   );
 };
-
+ 
 export default PostThoughts;
