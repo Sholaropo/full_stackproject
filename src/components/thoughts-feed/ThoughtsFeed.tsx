@@ -56,14 +56,14 @@ function ThoughtsFeed({ thoughts, sharedCounter, setSharedCounter, sharedMessage
     console.log('we have users');
   }
   
-  // search and filter states
-  const [searchTerm, setSearchTerm] = useState(''); // search input value
-  const [selectedAuthor, setSelectedAuthor] = useState('all'); // selected author filter
-  const [minLikes, setMinLikes] = useState(0); // minimum likes filter
-  
-  // bookmark and hide states
-  const [showBookmarks, setShowBookmarks] = useState(false); // toggle bookmark view
-  const [showHiddenPosts, setShowHiddenPosts] = useState(false); // toggle hidden posts view
+  // combined filter and view states
+  const [filters, setFilters] = useState({
+    searchTerm: '', // search input value
+    selectedAuthor: 'all', // selected author filter
+    minLikes: 0, // minimum likes filter
+    showBookmarks: false, // toggle bookmark view
+    showHiddenPosts: false // toggle hidden posts view
+  });
   
   // rating states
   const [postRatings, setPostRatings] = useState<{[postId: string]: number}>({}); // post ratings object
@@ -159,13 +159,13 @@ function ThoughtsFeed({ thoughts, sharedCounter, setSharedCounter, sharedMessage
 
   // filter posts - apply search and filter criteria
   const filteredPosts = allPosts.filter(post => {
-    const matchesSearch = searchTerm === '' || // if no search term
-      post.content.toLowerCase().includes(searchTerm.toLowerCase()) || // content matches search
-      post.author.toLowerCase().includes(searchTerm.toLowerCase()); // author matches search
-    const matchesAuthor = selectedAuthor === 'all' || post.author === selectedAuthor; // author filter
-    const matchesLikes = post.likes >= minLikes; // minimum likes filter
-    const matchesBookmark = showBookmarks ? bookmarkedPosts.has(post.id) : true; // bookmark filter
-    const matchesHidden = showHiddenPosts ? hiddenPosts.has(post.id) : !hiddenPosts.has(post.id); // hidden filter
+    const matchesSearch = filters.searchTerm === '' || // if no search term
+      post.content.toLowerCase().includes(filters.searchTerm.toLowerCase()) || // content matches search
+      post.author.toLowerCase().includes(filters.searchTerm.toLowerCase()); // author matches search
+    const matchesAuthor = filters.selectedAuthor === 'all' || post.author === filters.selectedAuthor; // author filter
+    const matchesLikes = post.likes >= filters.minLikes; // minimum likes filter
+    const matchesBookmark = filters.showBookmarks ? bookmarkedPosts.has(post.id) : true; // bookmark filter
+    const matchesHidden = filters.showHiddenPosts ? hiddenPosts.has(post.id) : !hiddenPosts.has(post.id); // hidden filter
     return matchesSearch && matchesAuthor && matchesLikes && matchesBookmark && matchesHidden; // all filters must match
   });
 
@@ -190,7 +190,7 @@ function ThoughtsFeed({ thoughts, sharedCounter, setSharedCounter, sharedMessage
     <section className="thoughts-feed">
       <div className="feed-header">
         <h2>
-          {showBookmarks ? 'My Bookmarks' : showHiddenPosts ? 'Hidden Posts' : 'Community Feed'}
+          {filters.showBookmarks ? 'My Bookmarks' : filters.showHiddenPosts ? 'Hidden Posts' : 'Community Feed'}
         </h2>
         
         {/* show user count from repository - inline styles */}
@@ -199,11 +199,11 @@ function ThoughtsFeed({ thoughts, sharedCounter, setSharedCounter, sharedMessage
         </div>
         
         <div className="toggle-buttons">
-          <button onClick={() => setShowBookmarks(!showBookmarks)}>
-            {showBookmarks ? 'Show All Posts' : 'Show Bookmarks'}
+          <button onClick={() => setFilters(prev => ({ ...prev, showBookmarks: !prev.showBookmarks }))}>
+            {filters.showBookmarks ? 'Show All Posts' : 'Show Bookmarks'}
           </button>
-          <button onClick={() => setShowHiddenPosts(!showHiddenPosts)}>
-            {showHiddenPosts ? 'Show Visible Posts' : 'Show Hidden Posts'}
+          <button onClick={() => setFilters(prev => ({ ...prev, showHiddenPosts: !prev.showHiddenPosts }))}>
+            {filters.showHiddenPosts ? 'Show Visible Posts' : 'Show Hidden Posts'}
           </button>
         </div>
 
@@ -212,8 +212,8 @@ function ThoughtsFeed({ thoughts, sharedCounter, setSharedCounter, sharedMessage
             <input
               type="text"
               placeholder="Search posts..."
-              value={searchTerm}
-              onChange={e => setSearchTerm(e.target.value)}
+              value={filters.searchTerm}
+              onChange={e => setFilters(prev => ({ ...prev, searchTerm: e.target.value }))}
               className="search-input"
             />
           </div>
@@ -221,7 +221,7 @@ function ThoughtsFeed({ thoughts, sharedCounter, setSharedCounter, sharedMessage
           <div className="filter-controls">
             <div className="filter-group">
               <label>Author:</label>
-              <select value={selectedAuthor} onChange={e => setSelectedAuthor(e.target.value)} className="author-filter">
+              <select value={filters.selectedAuthor} onChange={e => setFilters(prev => ({ ...prev, selectedAuthor: e.target.value }))} className="author-filter">
                 {authors.map(author => (
                   <option key={author} value={author}>{author === 'all' ? 'All Authors' : author}</option>
                 ))}
@@ -233,8 +233,8 @@ function ThoughtsFeed({ thoughts, sharedCounter, setSharedCounter, sharedMessage
               <input
                 type="number"
                 min="0"
-                value={minLikes}
-                onChange={(e) => setMinLikes(parseInt(e.target.value) || 0)}
+                value={filters.minLikes}
+                onChange={(e) => setFilters(prev => ({ ...prev, minLikes: parseInt(e.target.value) || 0 }))}
                 className="likes-filter"
                 placeholder="0"
               />
@@ -261,7 +261,7 @@ function ThoughtsFeed({ thoughts, sharedCounter, setSharedCounter, sharedMessage
       <div className="feed-content">
         {sortedPosts.length === 0 ? (
           <div className="empty-state">
-            <p>{showBookmarks ? 'No bookmarked posts yet!' : showHiddenPosts ? 'No hidden posts!' : 'No posts found matching your criteria.'}</p>
+            <p>{filters.showBookmarks ? 'No bookmarked posts yet!' : filters.showHiddenPosts ? 'No hidden posts!' : 'No posts found matching your criteria.'}</p>
           </div>
         ) : (
           sortedPosts.map(thought => {
