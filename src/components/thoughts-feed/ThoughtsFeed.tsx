@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { Thought } from '../../types';
 import './ThoughtsFeed.css';
 import type { Thought } from '../../types';
 import { communityPosts } from '../../data/mockData';
@@ -268,7 +269,19 @@ function ThoughtsFeed({ thoughts }: Props) {
                 ))}
               </select>
             </div>
-
+            
+            <div className="filter-group">
+              <label>Min Likes:</label>
+              <input
+                type="number"
+                min="0"
+                value={minLikes}
+                onChange={(e) => setMinLikes(parseInt(e.target.value) || 0)}
+                className="likes-filter"
+                placeholder="0"
+              />
+            </div>
+            
             <div className="sort-group">
               <label>Sort:</label>
               <select value={sortBy} onChange={e => setSortBy(e.target.value)}>
@@ -281,98 +294,104 @@ function ThoughtsFeed({ thoughts }: Props) {
       </div>
 
       <div className="feed-content">
-        {sortedPosts.map(thought => (
-          <div key={thought.id} className="feed-item">
-            <div className="item-header">
-              <span className="author">@{thought.author}</span>
-              <span className="time">{formatTime(thought.timestamp)}</span>
-            </div>
-
-            <div className="content">
-              <p>{thought.content}</p>
-              <div className="post-meta">
-                <span className="reading-time">📖 {calculateReadingTime(thought.content)} min read</span>
-                <div className="rating-display">
-                  <span className="rating-label">Rating:</span>
-                  <div className="stars">
-                    {[1, 2, 3, 4, 5].map((star) => (
-                      <span
-                        key={star}
-                        className={`star ${star <= (userRatings[thought.id] || postRatings[thought.id] || 0) ? 'filled' : ''}`}
-                        onClick={() => handleRatePost(thought.id, star)}
-                      >
-                        ⭐
-                      </span>
-                    ))}
-                    <span className="rating-number">
-                      ({(userRatings[thought.id] || postRatings[thought.id] || 0).toFixed(1)})
-                    </span>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <div className="actions">
-              <div className="left-actions">
-                <button
-                  className={`like-btn ${likedPosts.has(thought.id) ? 'liked' : ''}`}
-                  onClick={() => handleLike(thought.id)}
-                >
-                  {likedPosts.has(thought.id) ? '❤️' : '🤍'} {thought.likes + (likedPosts.has(thought.id) ? 1 : 0)}
-                </button>
-                
-                <button onClick={() => toggleComments(thought.id)}>
-                  💬 ({comments[thought.id]?.length || 0})
-                </button>
-                
-                <button onClick={() => handleShare(thought.content, thought.author)}>Share</button>
-              </div>
-              
-              <div className="right-actions">
-                <button
-                  onClick={() => handleBookmark(thought.id)}
-                >
-                  {bookmarkedPosts.has(thought.id) ? 'Bookmarked' : 'Bookmark'}
-                </button>
-                
-                <button
-                  onClick={() => handleHidePost(thought.id)}
-                >
-                  {hiddenPosts.has(thought.id) ? 'Show' : 'Hide'}
-                </button>
-              </div>
-            </div>
-
-            {expandedComments.has(thought.id) && (
-              <div className="comments-section">
-                <h4>Comments</h4>
-                {comments[thought.id]?.map(comment => (
-                  <div key={comment.id} className="comment">
-                    <div className="comment-header">
-                      <span>@{comment.author}</span>
-                      {comment.author === 'You' && (
-                        <button onClick={() => removeComment(thought.id, comment.id)}>
-                          Delete
-                        </button>
-                      )}
-                    </div>
-                    <p>{comment.content}</p>
-                  </div>
-                ))}
-                
-                <div className="add-comment">
-                  <input
-                    type="text"
-                    placeholder="Add a comment..."
-                    value={newComment}
-                    onChange={(e) => setNewComment(e.target.value)}
-                  />
-                  <button onClick={() => addComment(thought.id)}>Post</button>
-                </div>
-              </div>
-            )}
+        {sortedPosts.length === 0 ? (
+          <div className="empty-state">
+            <p>{showBookmarks ? 'No bookmarked posts yet!' : showHiddenPosts ? 'No hidden posts!' : 'No posts found matching your criteria.'}</p>
           </div>
-        ))}
+        ) : (
+          sortedPosts.map(thought => (
+            <div key={thought.id} className="feed-item">
+              <div className="item-header">
+                <span className="author">@{thought.author}</span>
+                <span className="time">{formatTime(thought.timestamp)}</span>
+              </div>
+
+              <div className="content">
+                <p>{thought.content}</p>
+                <div className="post-meta">
+                  <span className="reading-time">📖 {calculateReadingTime(thought.content)} min read</span>
+                  <div className="rating-display">
+                    <span className="rating-label">Rating:</span>
+                    <div className="stars">
+                      {[1, 2, 3, 4, 5].map((star) => (
+                        <span
+                          key={star}
+                          className={`star ${star <= (userRatings[thought.id] || postRatings[thought.id] || 0) ? 'filled' : ''}`}
+                          onClick={() => handleRatePost(thought.id, star)}
+                        >
+                          ⭐
+                        </span>
+                      ))}
+                      <span className="rating-number">
+                        ({(userRatings[thought.id] || postRatings[thought.id] || 0).toFixed(1)})
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div className="actions">
+                <div className="left-actions">
+                  <button
+                    className={`like-btn ${likedPosts.has(thought.id) ? 'liked' : ''}`}
+                    onClick={() => handleLike(thought.id)}
+                  >
+                    {likedPosts.has(thought.id) ? '❤️' : '🤍'} {thought.likes + (likedPosts.has(thought.id) ? 1 : 0)}
+                  </button>
+                  
+                  <button onClick={() => toggleComments(thought.id)}>
+                    💬 ({comments[thought.id]?.length || 0})
+                  </button>
+                  
+                  <button onClick={() => handleShare(thought.content, thought.author)}>Share</button>
+                </div>
+                
+                <div className="right-actions">
+                  <button
+                    onClick={() => handleBookmark(thought.id)}
+                  >
+                    {bookmarkedPosts.has(thought.id) ? 'Bookmarked' : 'Bookmark'}
+                  </button>
+                  
+                  <button
+                    onClick={() => handleHidePost(thought.id)}
+                  >
+                    {hiddenPosts.has(thought.id) ? 'Show' : 'Hide'}
+                  </button>
+                </div>
+              </div>
+
+              {expandedComments.has(thought.id) && (
+                <div className="comments-section">
+                  <h4>Comments</h4>
+                  {comments[thought.id]?.map(comment => (
+                    <div key={comment.id} className="comment">
+                      <div className="comment-header">
+                        <span>@{comment.author}</span>
+                        {comment.author === 'You' && (
+                          <button onClick={() => removeComment(thought.id, comment.id)}>
+                            Delete
+                          </button>
+                        )}
+                      </div>
+                      <p>{comment.content}</p>
+                    </div>
+                  ))}
+                  
+                  <div className="add-comment">
+                    <input
+                      type="text"
+                      placeholder="Add a comment..."
+                      value={newComment}
+                      onChange={(e) => setNewComment(e.target.value)}
+                    />
+                    <button onClick={() => addComment(thought.id)}>Post</button>
+                  </div>
+                </div>
+              )}
+            </div>
+          ))
+        )}
       </div>
     </section>
   );
