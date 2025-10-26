@@ -73,7 +73,7 @@ Created `UserRepository` to handle all data operations.
 - Components don't know where data comes from
 - Can easily switch from test data to real database later
 - Repository handles all CRUD operations
-- I used an array instead of a real database because I don't know how to set that up yet
+- I used an array instead of a real database because I don't know how to set that up.
 
 ### Functions I Added
 - `createUser()` - Add new user

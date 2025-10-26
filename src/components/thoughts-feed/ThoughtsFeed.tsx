@@ -1,6 +1,7 @@
 import React, { useState } from 'react'; // import React and useState hook
 import { Thought } from '../../types'; // import Thought type definition
 import { useUserData } from '../../hooks/useUserData'; // custom hook for user data
+import { usePostActions } from '../../hooks/usePostActions'; // custom hook for post actions
 import { UserService } from '../../services/userService'; // service layer for business logic
 import './ThoughtsFeed.css'; // import CSS styles
 
@@ -29,6 +30,27 @@ function ThoughtsFeed({ thoughts, sharedCounter, setSharedCounter, sharedMessage
   // use custom hook for user data management
   const { users, getUserByUsernameHook, getUserCount } = useUserData(); // get user data from hook
   
+  // use custom hook for post actions
+  const {
+    likedPosts,
+    bookmarkedPosts,
+    expandedComments,
+    hiddenPosts,
+    userRatings,
+    comments,
+    newComment,
+    setComments,
+    setNewComment,
+    handleLike,
+    handleBookmark,
+    toggleComments,
+    addComment,
+    removeComment,
+    handleHidePost,
+    handleRatePost,
+    handleShare
+  } = usePostActions(); // get post action handlers from hook
+  
   // just in case
   if (users.length > 0) {
     console.log('we have users');
@@ -38,24 +60,13 @@ function ThoughtsFeed({ thoughts, sharedCounter, setSharedCounter, sharedMessage
   const [searchTerm, setSearchTerm] = useState(''); // search input value
   const [selectedAuthor, setSelectedAuthor] = useState('all'); // selected author filter
   const [minLikes, setMinLikes] = useState(0); // minimum likes filter
-  const [likedPosts, setLikedPosts] = useState<Set<string>>(new Set()); // set of liked post IDs
   
-  // bookmark states
-  const [bookmarkedPosts, setBookmarkedPosts] = useState<Set<string>>(new Set()); // set of bookmarked post IDs
+  // bookmark and hide states
   const [showBookmarks, setShowBookmarks] = useState(false); // toggle bookmark view
-  
-  // comment states
-  const [expandedComments, setExpandedComments] = useState<Set<string>>(new Set()); // set of expanded comment post IDs
-  const [comments, setComments] = useState<{[postId: string]: Array<{id: string, author: string, content: string}>}>({}); // comments object
-  const [newComment, setNewComment] = useState(''); // new comment input value
-  
-  // hide/show states
-  const [hiddenPosts, setHiddenPosts] = useState<Set<string>>(new Set()); // set of hidden post IDs
   const [showHiddenPosts, setShowHiddenPosts] = useState(false); // toggle hidden posts view
   
   // rating states
   const [postRatings, setPostRatings] = useState<{[postId: string]: number}>({}); // post ratings object
-  const [userRatings, setUserRatings] = useState<{[postId: string]: number}>({}); // user ratings object
 
   // sample posts - hardcoded community posts
   const communityPosts: Thought[] = [
@@ -165,106 +176,12 @@ function ThoughtsFeed({ thoughts, sharedCounter, setSharedCounter, sharedMessage
     return 0; // no sorting
   });
 
-  // like button handler - not optimized
-  function handleLike(postId: string) {
-    setLikedPosts(prev => {
-      const newLikedPosts = new Set(prev);
-      if (newLikedPosts.has(postId)) {
-        newLikedPosts.delete(postId);
-      } else {
-        newLikedPosts.add(postId);
-      }
-      return newLikedPosts;
-    });
-  }
-
-  // bookmark handler - duplicate code
-  function handleBookmark(postId: string) {
-    setBookmarkedPosts(prev => {
-      const newBookmarkedPosts = new Set(prev);
-      if (newBookmarkedPosts.has(postId)) {
-        newBookmarkedPosts.delete(postId);
-      } else {
-        newBookmarkedPosts.add(postId);
-      }
-      return newBookmarkedPosts;
-    });
-  }
-
-  // toggle comments - same pattern repeated
-  function toggleComments(postId: string) {
-    setExpandedComments(prev => {
-      const newExpanded = new Set(prev);
-      if (newExpanded.has(postId)) {
-        newExpanded.delete(postId);
-      } else {
-        newExpanded.add(postId);
-      }
-      return newExpanded;
-    });
-  }
-
-  // add comment
-  function addComment(postId: string) {
-    if (newComment.trim()) {
-      const comment = {
-        id: Date.now().toString(),
-        author: 'You',
-        content: newComment.trim()
-      };
-      
-      setComments(prev => ({
-        ...prev,
-        [postId]: [...(prev[postId] || []), comment]
-      }));
-      
-      setNewComment(''); // forgot to clear input
-    }
-  }
-
-  // remove comment - could be optimized
-  function removeComment(postId: string, commentId: string) {
-    setComments(prev => ({
-      ...prev,
-      [postId]: prev[postId]?.filter(comment => comment.id !== commentId) || []
-    }));
-  }
-
-  // hide post - same pattern again
-  function handleHidePost(postId: string) {
-    setHiddenPosts(prev => {
-      const newHidden = new Set(prev);
-      if (newHidden.has(postId)) {
-        newHidden.delete(postId);
-      } else {
-        newHidden.add(postId);
-      }
-      return newHidden;
-    });
-  }
-
-  // rate post - simple implementation
-  function handleRatePost(postId: string, rating: number) {
-    setUserRatings(prev => ({
-      ...prev,
-      [postId]: rating
-    }));
-  }
-
   // calculate reading time - basic calculation
   function calculateReadingTime(content: string) {
     const wordsPerMinute = 200;
     const words = content.split(' ').length;
     const minutes = Math.ceil(words / wordsPerMinute);
     return minutes || 1; // fallback but not ideal
-  }
-
-  // share post - basic error handling
-  function handleShare(content: string, author: string) {
-    const shareText = `"${content}" - @${author}`;
-    navigator.clipboard.writeText(shareText)
-      .then(() => alert('Post copied to clipboard!')) // basic alert
-      .catch(() => alert('Unable to copy. Please try again.'));
   }
 
   const authors = ['all', ...new Set(allPosts.map(post => post.author))];

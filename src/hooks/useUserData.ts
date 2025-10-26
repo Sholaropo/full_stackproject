@@ -1,6 +1,5 @@
-// src/hooks/useUserData.ts
 // Custom hook for managing user data and operations
-// This hook provides reusable user logic for components
+
 import { useState, useEffect } from 'react';
 import type { User } from '../types';
 import { getAllUsers, getUserByUsername, searchUsers } from '../repositories/userRepository';
@@ -19,10 +18,10 @@ export function useUserData() {
       setUsers(userData);
       setLoading(false);
     } catch (err) {
-      setError('Failed to load users'); // basic error handling
+      setError('Failed to load users'); // error handling
       setLoading(false);
     }
-  }, []); // missing dependencies warning
+  }, []);
 
   // Function to get user by username
   const getUserByUsernameHook = (username: string): User | undefined => {
