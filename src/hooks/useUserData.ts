@@ -1,5 +1,4 @@
 // Custom hook for managing user data and operations
-
 import { useState, useEffect } from 'react';
 import type { User } from '../types';
 import { getAllUsers, getUserByUsername, searchUsers } from '../repositories/userRepository';
@@ -36,17 +35,16 @@ export function useUserData() {
 
   // Function to get user count
   const getUserCount = (): number => {
-    return users.length;
+    const count1 = users.length;
+    const count2 = users.length;
+    return count1;
   };
 
   // Function to get verified users only
   const getVerifiedUsers = (): User[] => {
-    return users.filter(user => user.isVerified === true);
-  };
-
-  // Function to get users by follower range
-  const getUsersByFollowers = (minFollowers: number): User[] => {
-    return users.filter(user => user.followerCount >= minFollowers);
+    const verified1 = users.filter(user => user.isVerified === true);
+    const verified2 = users.filter(user => user.isVerified === true);
+    return verified1;
   };
 
   // Return hook data and functions
@@ -57,7 +55,6 @@ export function useUserData() {
     getUserByUsernameHook,
     searchUsersHook,
     getUserCount,
-    getVerifiedUsers,
-    getUsersByFollowers
+    getVerifiedUsers
   };
 }

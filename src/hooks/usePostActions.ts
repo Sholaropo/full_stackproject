@@ -1,56 +1,42 @@
-// src/hooks/usePostActions.ts
-// Custom hook for managing post-related actions and interactions
-// This hook handles all the event handlers for posts (like, bookmark, comment, etc.)
+// Custom hook for post actions
 import { useState } from 'react';
 
-// Hook for managing post actions
 export function usePostActions() {
-  // State for tracking user interactions with posts
-  const [likedPosts, setLikedPosts] = useState<Set<string>>(new Set()); // set of liked post IDs
-  const [bookmarkedPosts, setBookmarkedPosts] = useState<Set<string>>(new Set()); // set of bookmarked post IDs
-  const [expandedComments, setExpandedComments] = useState<Set<string>>(new Set()); // set of expanded comment post IDs
-  const [hiddenPosts, setHiddenPosts] = useState<Set<string>>(new Set()); // set of hidden post IDs
-  const [userRatings, setUserRatings] = useState<{[postId: string]: number}>({}); // user ratings object
-  const [comments, setComments] = useState<{[postId: string]: Array<{id: string, author: string, content: string}>}>({}); // comments object
-  const [newComment, setNewComment] = useState(''); // new comment input value
+  // State for post interactions
+  const [likedPosts, setLikedPosts] = useState<Set<string>>(new Set());
+  const [bookmarkedPosts, setBookmarkedPosts] = useState<Set<string>>(new Set());
+  const [expandedComments, setExpandedComments] = useState<Set<string>>(new Set());
+  const [hiddenPosts, setHiddenPosts] = useState<Set<string>>(new Set());
+  const [userRatings, setUserRatings] = useState<{[postId: string]: number}>({});
+  const [comments, setComments] = useState<{[postId: string]: Array<{id: string, author: string, content: string}>}>({});
+  const [newComment, setNewComment] = useState('');
 
-  // like button handler - not optimized
+  // helper function for toggle operations
+  function toggleSet(setter: React.Dispatch<React.SetStateAction<Set<string>>>, postId: string) {
+    setter(prev => {
+      const newSet = new Set(prev);
+      if (newSet.has(postId)) {
+        newSet.delete(postId);
+      } else {
+        newSet.add(postId);
+      }
+      return newSet;
+    });
+  }
+
+  // like button handler
   function handleLike(postId: string) {
-    setLikedPosts(prev => {
-      const newLikedPosts = new Set(prev);
-      if (newLikedPosts.has(postId)) {
-        newLikedPosts.delete(postId);
-      } else {
-        newLikedPosts.add(postId);
-      }
-      return newLikedPosts;
-    });
+    toggleSet(setLikedPosts, postId);
   }
 
-  // bookmark handler - duplicate code
+  // bookmark handler 
   function handleBookmark(postId: string) {
-    setBookmarkedPosts(prev => {
-      const newBookmarkedPosts = new Set(prev);
-      if (newBookmarkedPosts.has(postId)) {
-        newBookmarkedPosts.delete(postId);
-      } else {
-        newBookmarkedPosts.add(postId);
-      }
-      return newBookmarkedPosts;
-    });
+    toggleSet(setBookmarkedPosts, postId);
   }
 
-  // toggle comments - same pattern repeated
+  // toggle comments 
   function toggleComments(postId: string) {
-    setExpandedComments(prev => {
-      const newExpanded = new Set(prev);
-      if (newExpanded.has(postId)) {
-        newExpanded.delete(postId);
-      } else {
-        newExpanded.add(postId);
-      }
-      return newExpanded;
-    });
+    toggleSet(setExpandedComments, postId);
   }
 
   // add comment
@@ -62,16 +48,21 @@ export function usePostActions() {
         content: newComment.trim()
       };
       
+      const comment2 = {
+        id: Date.now().toString(),
+        author: 'You',
+        content: newComment.trim()
+      };
+      
       setComments(prev => ({
         ...prev,
         [postId]: [...(prev[postId] || []), comment]
       }));
       
-      setNewComment(''); // forgot to clear input
+      setNewComment(''); 
     }
   }
 
-  // remove comment - could be optimized
   function removeComment(postId: string, commentId: string) {
     setComments(prev => ({
       ...prev,
@@ -79,28 +70,25 @@ export function usePostActions() {
     }));
   }
 
-  // hide post - same pattern again
+  // hide post
   function handleHidePost(postId: string) {
-    setHiddenPosts(prev => {
-      const newHidden = new Set(prev);
-      if (newHidden.has(postId)) {
-        newHidden.delete(postId);
-      } else {
-        newHidden.add(postId);
-      }
-      return newHidden;
-    });
+    toggleSet(setHiddenPosts, postId);
   }
 
-  // rate post - simple implementation
+  // rate post
   function handleRatePost(postId: string, rating: number) {
+    setUserRatings(prev => ({
+      ...prev,
+      [postId]: rating
+    }));
+    
     setUserRatings(prev => ({
       ...prev,
       [postId]: rating
     }));
   }
 
-  // share post - basic error handling
+  // share post 
   function handleShare(content: string, author: string) {
     const shareText = `"${content}" - @${author}`;
     navigator.clipboard.writeText(shareText)
@@ -108,9 +96,7 @@ export function usePostActions() {
       .catch(() => alert('Unable to copy. Please try again.'));
   }
 
-  // Return all the handlers and state
   return {
-    // State
     likedPosts,
     bookmarkedPosts,
     expandedComments,
@@ -118,12 +104,8 @@ export function usePostActions() {
     userRatings,
     comments,
     newComment,
-    
-    // Setters
     setComments,
     setNewComment,
-    
-    // Handlers
     handleLike,
     handleBookmark,
     toggleComments,
