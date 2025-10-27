@@ -4,6 +4,7 @@ import { partnerPosts } from '../../data/mockData';
 import ThoughtCard from './ThoughtCard';
 import TaskItem from './TaskItem';
 import './ThoughtList.css';
+import { useLikes } from "../../hooks/useLikes";
 
 interface Props {
   thoughts: Thought[];
@@ -13,6 +14,8 @@ const ThoughtList: React.FC<Props> = ({ thoughts: sharedThoughts }) => {
   const [tasks, setTasks] = useState<string[]>([]);
   const [taskInput, setTaskInput] = useState('');
   const [likedPosts, setLikedPosts] = useState<Set<string>>(new Set());
+
+  const { likedItems, toggleLike } = useLikes();
 
   const handleAddTask = () => {
     if (taskInput.trim()) {
@@ -77,12 +80,20 @@ const ThoughtList: React.FC<Props> = ({ thoughts: sharedThoughts }) => {
 
       <div className="thoughts-container">
         {allThoughts.map((thought) => (
-          <ThoughtCard
-            key={thought.id + thought.author}
-            thought={thought}
-            isLiked={likedPosts.has(thought.id + thought.author)}
-            onLike={handleLike}
-          />
+          <div key={thought.id + thought.author} className="thought-card">
+            <ThoughtCard
+              thought={thought}
+              isLiked={likedPosts.has(thought.id + thought.author)}
+              onLike={handleLike}
+            />
+
+            <button
+              onClick={() => toggleLike(thought.id + thought.author)}
+              style={{ marginTop: "5px", fontSize: "0.9rem" }}
+            >
+              🔹 Hook Like ❤️ {likedItems.has(thought.id + thought.author) ? "Liked" : "Like"}
+            </button>
+          </div>
         ))}
       </div>
     </section>
