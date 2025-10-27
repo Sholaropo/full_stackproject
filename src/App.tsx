@@ -1,4 +1,3 @@
-// src/App.tsx
 import React, { useState } from 'react';
 import ThoughtList from './components/thought-list/ThoughtList';
 import { Routes, Route, Link } from 'react-router-dom';
@@ -6,6 +5,7 @@ import PostThoughts from './components/post-thoughts/PostThoughts';
 import ThoughtsFeed from './components/thoughts-feed/ThoughtsFeed';
 import Footer from './components/footer/Footer';
 import Navigation from './components/navigation/Navigation';
+import SharedCounter from './shared/SharedCounter';
 import { Thought } from './types';  
 import './App.css';
  
@@ -17,9 +17,6 @@ const App: React.FC = () => {
     "Amandeep Kaur"
   ];
  
-  //  Shared/global state
-  const [sharedCounter, setSharedCounter] = useState(0);
-  const [sharedMessage, setSharedMessage] = useState('Welcome!');
   const [thoughts, setThoughts] = useState<Thought[]>([]);
  
   return (
@@ -28,27 +25,18 @@ const App: React.FC = () => {
         <h1>ThoughtShare</h1>
         <p>Share your thoughts with the world</p>
         <Navigation />
- 
-        {/* Navigation links */}
-        <nav>
-          <Link to="/">Home</Link> |{" "}
-          <Link to="/post">Post</Link> |{" "}
-          <Link to="/feed">Feed</Link>
-        </nav>
       </header>
  
-      {/* Define the routes */}
+      {/* Add SharedCounter here to display on all pages */}
+      <SharedCounter />
+ 
       <main className="app-main">
         <Routes>
           <Route
             path="/"
             element={
               <ThoughtList
-                thoughts={thoughts}                
-                sharedCounter={sharedCounter}
-                setSharedCounter={setSharedCounter}
-                sharedMessage={sharedMessage}
-                setSharedMessage={setSharedMessage}
+                thoughts={thoughts}
               />
             }
           />
@@ -57,11 +45,7 @@ const App: React.FC = () => {
             element={
               <PostThoughts
                 thoughts={thoughts}              
-                setThoughts={setThoughts}          
-                sharedCounter={sharedCounter}
-                setSharedCounter={setSharedCounter}
-                sharedMessage={sharedMessage}
-                setSharedMessage={setSharedMessage}
+                setThoughts={setThoughts}
               />
             }
           />
@@ -70,11 +54,7 @@ const App: React.FC = () => {
             element={
               <ThoughtsFeed
                 thoughts={thoughts}  
-                setThoughts={setThoughts}              
-                sharedCounter={sharedCounter}
-                setSharedCounter={setSharedCounter}
-                sharedMessage={sharedMessage}
-                setSharedMessage={setSharedMessage}
+                setThoughts={setThoughts}
               />
             }
           />
@@ -87,3 +67,4 @@ const App: React.FC = () => {
 };
  
 export default App;
+ 
