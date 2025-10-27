@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
 import type { Thought } from '../../types';
-import { partnerPosts } from '../../data/mockData';
 import ThoughtCard from './ThoughtCard';
 import TaskItem from './TaskItem';
+import { useThoughts } from '../../hooks/useThoughtsList'; 
+import * as thoughtService from '../../services/thoughtService';
 import './ThoughtList.css';
 
 interface Props {
@@ -13,6 +14,10 @@ const ThoughtList: React.FC<Props> = ({ thoughts: sharedThoughts }) => {
   const [tasks, setTasks] = useState<string[]>([]);
   const [taskInput, setTaskInput] = useState('');
   const [likedPosts, setLikedPosts] = useState<Set<string>>(new Set());
+  const [searchTerm, setSearchTerm] = useState('');
+  const [sortBy, setSortBy] = useState<'timestamp' | 'popularity'>('timestamp');
+
+  const { thoughts: repositoryThoughts, loading, error } = useThoughts();
 
   const handleAddTask = () => {
     if (taskInput.trim()) {
@@ -34,11 +39,58 @@ const ThoughtList: React.FC<Props> = ({ thoughts: sharedThoughts }) => {
     });
   };
 
-  const allThoughts = [...partnerPosts, ...sharedThoughts];
+  const allThoughts = [...repositoryThoughts, ...sharedThoughts];
+
+  const searchedThoughts = thoughtService.searchThoughts(allThoughts, searchTerm);
+  
+  const sortedThoughts = sortBy === 'popularity'
+    ? thoughtService.sortByPopularity(searchedThoughts)
+    : thoughtService.sortByTimestamp(searchedThoughts);
+
+  if (loading) {
+    return (
+      <section className="thought-list">
+        <p>Loading thoughts...</p>
+      </section>
+    );
+  }
+
+  if (error) {
+    return (
+      <section className="thought-list">
+        <p>Error: {error}</p>
+      </section>
+    );
+  }
 
   return (
     <section className="thought-list">
       <h2>Latest Thoughts</h2>
+
+      <div className="search-sort-controls">
+        <input
+          type="text"
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+          placeholder="Search by content or author..."
+          className="search-input"
+        />
+        
+        <div className="sort-buttons">
+          <button 
+            onClick={() => setSortBy('timestamp')}
+            className={sortBy === 'timestamp' ? 'active' : ''}
+          >
+            Latest
+          </button>
+          <button 
+            onClick={() => setSortBy('popularity')}
+            className={sortBy === 'popularity' ? 'active' : ''}
+          >
+            Most Liked
+          </button>
+        </div>
+      </div>
 
       <div className="task-manager">
         <h3>My Task Manager</h3>
@@ -76,14 +128,20 @@ const ThoughtList: React.FC<Props> = ({ thoughts: sharedThoughts }) => {
       </div>
 
       <div className="thoughts-container">
-        {allThoughts.map((thought) => (
-          <ThoughtCard
-            key={thought.id + thought.author}
-            thought={thought}
-            isLiked={likedPosts.has(thought.id + thought.author)}
-            onLike={handleLike}
-          />
-        ))}
+        {sortedThoughts.length === 0 ? (
+          <p className="no-results">
+            No thoughts found matching "{searchTerm}"
+          </p>
+        ) : (
+          sortedThoughts.map((thought) => (
+            <ThoughtCard
+              key={thought.id + thought.author}
+              thought={thought}
+              isLiked={likedPosts.has(thought.id + thought.author)}
+              onLike={handleLike}
+            />
+          ))
+        )}
       </div>
     </section>
   );
