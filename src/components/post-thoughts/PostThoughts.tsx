@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useThoughts } from "../../hooks/usePostThought";
+import * as thoughtService from '../../services/thoughtService';
 import type { Thought } from "../../types";
 import "./PostThoughts.css";
 
@@ -15,7 +16,7 @@ const PostThoughts: React.FC = () => {
   const { thoughts, addThought, like: likeThought, error } = useThoughts();
   const [content, setContent] = useState("");
 
-useEffect(() => {
+  useEffect(() => {
     console.log("Current thoughts:", thoughts);
   }, [thoughts]);
 
@@ -29,20 +30,7 @@ useEffect(() => {
       return;
     }
 
-    const newThoughtFromService = thoughtService.createThought(content, "Olusola", thoughts);
-
-    const newThought: Thought = {
-      id: (thoughts.length + 1).toString(),
-      content,
-      author: "Olusola",
-      timestamp: new Date(),
-      likes: 0,
-    };
-
-  
-    setThoughts([newThoughtFromService, ...thoughts]);
-=======
-    await addThought(content, "You");
+    await addThought(content, "Olusola");
     setContent("");
   };
 
@@ -69,17 +57,16 @@ useEffect(() => {
           <article key={thought.id} className="thought-card">
             <header className="thought-header">
               <h4>@{thought.author}</h4>
-    
               <time>{thoughtService.formatTimestamp(thought.timestamp)}</time>
             </header>
             <p>{thought.content}</p>
             
-      <button
-         className="like-btn"
-         onClick={() => likeThought(thought.id)}
-         aria-label="Like this post"
-        >
-        ❤️ {thought.likes} Likes
+            <button
+              className="like-btn"
+              onClick={() => likeThought(thought.id)}
+              aria-label="Like this post"
+            >
+              ❤️ {thought.likes} Likes
             </button>
           </article>
         ))}
