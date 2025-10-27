@@ -1,23 +1,23 @@
 import React, { useState } from 'react';
+import { Routes, Route } from 'react-router-dom';
 import ThoughtList from './components/thought-list/ThoughtList';
-import { Routes, Route, Link } from 'react-router-dom';
 import PostThoughts from './components/post-thoughts/PostThoughts';
 import ThoughtsFeed from './components/thoughts-feed/ThoughtsFeed';
 import Footer from './components/footer/Footer';
 import Navigation from './components/navigation/Navigation';
-import SharedCounter from './shared/SharedCounter'; 
-import { Thought } from './types';  
+import SharedCounter from './shared/SharedCounter';
+import { Thought } from './types';
 import './App.css';
 
 const App: React.FC = () => {
   const teamName = "The page turners";
   const teamMembers = [
     "Olusola Ropo",
-    "Vandana Bhangu", 
+    "Vandana Bhangu",
     "Amandeep Kaur"
   ];
 
-  const [thoughts, setThoughts] = useState<Thought[]>([]); 
+  const [thoughts, setThoughts] = useState<Thought[]>([]);
 
   return (
     <div className="app">
@@ -32,31 +32,26 @@ const App: React.FC = () => {
 
       <main className="app-main">
         <Routes>
-          <Route 
-            path="/" 
+          <Route
+            path="/"
             element={
-              <ThoughtList 
+              <ThoughtList
                 thoughts={thoughts}
               />
-            } 
+            }
           />
-          <Route 
-            path="/post" 
-            element={
-              <PostThoughts 
-                thoughts={thoughts}              
-                setThoughts={setThoughts}
-              />
-            } 
+          <Route
+            path="/post"
+            element={<PostThoughts />} 
           />
-          <Route 
-            path="/feed" 
+          <Route
+            path="/feed"
             element={
-              <ThoughtsFeed 
+              <ThoughtsFeed
                 thoughts={thoughts}  
                 setThoughts={setThoughts}
               />
-            } 
+            }
           />
         </Routes>
       </main>
@@ -67,3 +62,4 @@ const App: React.FC = () => {
 };
 
 export default App;
+
