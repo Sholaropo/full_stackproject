@@ -86,3 +86,160 @@ body {
     padding: 1rem 0.5rem;
   }
 }
+
+/* ============================================ */
+/* SharedCounter Component Styles */
+/* ============================================ */
+
+.shared-counter {
+  max-width: 600px;
+  margin: 20px auto;
+  padding: 20px;
+  background-color: #f7fafc;
+  border: 2px solid #e2e8f0;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.shared-counter h2 {
+  color: #1a365d;
+  font-size: 24px;
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+.counter-display {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.counter-value {
+  font-size: 32px;
+  font-weight: bold;
+  color: #2d3748;
+  margin: 0;
+}
+
+.counter-controls {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin-bottom: 30px;
+}
+
+.counter-controls button {
+  padding: 10px 20px;
+  font-size: 16px;
+  font-weight: bold;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.btn-increment {
+  background-color: #48bb78;
+  color: white;
+}
+
+.btn-increment:hover {
+  background-color: #38a169;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(72, 187, 120, 0.3);
+}
+
+.btn-decrement {
+  background-color: #f56565;
+  color: white;
+}
+
+.btn-decrement:hover {
+  background-color: #e53e3e;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(245, 101, 101, 0.3);
+}
+
+.btn-reset {
+  background-color: #4299e1;
+  color: white;
+}
+
+.btn-reset:hover {
+  background-color: #3182ce;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(66, 153, 225, 0.3);
+}
+
+.message-section {
+  border-top: 2px solid #e2e8f0;
+  padding-top: 20px;
+}
+
+.message-section label {
+  display: block;
+  font-size: 16px;
+  font-weight: 600;
+  color: #2d3748;
+  margin-bottom: 10px;
+}
+
+.message-input {
+  width: 100%;
+  padding: 12px;
+  font-size: 14px;
+  border: 2px solid #cbd5e0;
+  border-radius: 6px;
+  background-color: white;
+  color: #2d3748;
+  transition: border-color 0.3s ease;
+  box-sizing: border-box;
+}
+
+.message-input:focus {
+  outline: none;
+  border-color: #4299e1;
+  box-shadow: 0 0 0 3px rgba(66, 153, 225, 0.1);
+}
+
+.message-input::placeholder {
+  color: #a0aec0;
+}
+
+.message-display {
+  margin-top: 15px;
+  padding: 12px;
+  background-color: white;
+  border: 1px solid #e2e8f0;
+  border-radius: 6px;
+  color: #2d3748;
+  font-size: 14px;
+  min-height: 45px;
+}
+
+.message-display strong {
+  color: #1a365d;
+}
+
+/* Responsive Design for SharedCounter */
+@media (max-width: 768px) {
+  .shared-counter {
+    padding: 15px;
+    margin: 15px;
+  }
+
+  .shared-counter h2 {
+    font-size: 20px;
+  }
+
+  .counter-value {
+    font-size: 28px;
+  }
+
+  .counter-controls {
+    flex-direction: column;
+  }
+
+  .counter-controls button {
+    width: 100%;
+  }
+}

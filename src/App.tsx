@@ -1,4 +1,3 @@
-// src/App.tsx
 import React, { useState } from 'react';
 import ThoughtList from './components/thought-list/ThoughtList';
 import { Routes, Route, Link } from 'react-router-dom';
@@ -6,78 +5,66 @@ import PostThoughts from './components/post-thoughts/PostThoughts';
 import ThoughtsFeed from './components/thoughts-feed/ThoughtsFeed';
 import Footer from './components/footer/Footer';
 import Navigation from './components/navigation/Navigation';
+import SharedCounter from './shared/SharedCounter';
 import { Thought } from './types';  
 import './App.css';
-
+ 
 const App: React.FC = () => {
   const teamName = "The page turners";
   const teamMembers = [
     "Olusola Ropo",
-    "Vandana Bhangu", 
+    "Vandana Bhangu",
     "Amandeep Kaur"
   ];
-
-  //  Shared/global state
-  const [sharedCounter, setSharedCounter] = useState(0);
-  const [sharedMessage, setSharedMessage] = useState('Welcome!');
-  const [thoughts, setThoughts] = useState<Thought[]>([]); 
-
+ 
+  const [thoughts, setThoughts] = useState<Thought[]>([]);
+ 
   return (
     <div className="app">
       <header className="app-header">
         <h1>ThoughtShare</h1>
         <p>Share your thoughts with the world</p>
         <Navigation />
-
       </header>
-
-      {/* Define the routes */}
+ 
+      {/* Add SharedCounter here to display on all pages */}
+      <SharedCounter />
+ 
       <main className="app-main">
         <Routes>
-          <Route 
-            path="/" 
+          <Route
+            path="/"
             element={
-              <ThoughtList 
-                thoughts={thoughts}                 
-                sharedCounter={sharedCounter}
-                setSharedCounter={setSharedCounter}
-                sharedMessage={sharedMessage}
-                setSharedMessage={setSharedMessage}
+              <ThoughtList
+                thoughts={thoughts}
               />
-            } 
+            }
           />
-          <Route 
-            path="/post" 
+          <Route
+            path="/post"
             element={
-              <PostThoughts 
+              <PostThoughts
                 thoughts={thoughts}              
-                setThoughts={setThoughts}           
-                sharedCounter={sharedCounter}
-                setSharedCounter={setSharedCounter}
-                sharedMessage={sharedMessage}
-                setSharedMessage={setSharedMessage}
+                setThoughts={setThoughts}
               />
-            } 
+            }
           />
-          <Route 
-            path="/feed" 
+          <Route
+            path="/feed"
             element={
-              <ThoughtsFeed 
+              <ThoughtsFeed
                 thoughts={thoughts}  
-                setThoughts={setThoughts}               
-                sharedCounter={sharedCounter}
-                setSharedCounter={setSharedCounter}
-                sharedMessage={sharedMessage}
-                setSharedMessage={setSharedMessage}
+                setThoughts={setThoughts}
               />
-            } 
+            }
           />
         </Routes>
       </main>
-
+ 
       <Footer teamName={teamName} teamMembers={teamMembers} />
     </div>
   );
 };
-
+ 
 export default App;
+ 

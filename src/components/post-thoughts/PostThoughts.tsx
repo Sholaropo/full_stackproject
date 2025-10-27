@@ -5,19 +5,11 @@ import "./PostThoughts.css";
 interface Props {
   thoughts: Thought[];
   setThoughts: React.Dispatch<React.SetStateAction<Thought[]>>;
-  sharedCounter: number;
-  setSharedCounter: React.Dispatch<React.SetStateAction<number>>;
-  sharedMessage: string;
-  setSharedMessage: React.Dispatch<React.SetStateAction<string>>;
 }
 
 const PostThoughts: React.FC<Props> = ({
   thoughts,
   setThoughts,
-  sharedCounter,
-  setSharedCounter,
-  sharedMessage,
-  setSharedMessage,
 }) => {
   const [content, setContent] = useState("");
 
@@ -33,11 +25,7 @@ const PostThoughts: React.FC<Props> = ({
       likes: 0,
     };
 
-    // update parent state
     setThoughts([newThought, ...thoughts]);
-    setSharedCounter(sharedCounter + 1);
-    setSharedMessage(content);
-
     setContent("");
   };
 
@@ -45,18 +33,6 @@ const PostThoughts: React.FC<Props> = ({
     <section className="post-thoughts">
       <h2>Share Your Thoughts</h2>
 
-      {/* Shared area */}
-      <div style={{ padding: "10px", background: "#f0f0f0", marginBottom: "20px" }}>
-        <p><strong>Shared Message:</strong> {sharedMessage}</p>
-        <input
-          value={sharedMessage}
-          onChange={(e) => setSharedMessage(e.target.value)}
-          placeholder="Update shared message"
-        />
-        <p><strong>Total Shared Posts:</strong> {sharedCounter}</p>
-      </div>
-
-      {/* Form */}
       <form className="thought-form" onSubmit={handleSubmit}>
         <textarea
           value={content}
@@ -68,7 +44,6 @@ const PostThoughts: React.FC<Props> = ({
         <button type="submit">Post</button>
       </form>
 
-      {/* List */}
       <div className="posted-thoughts">
         {thoughts.length > 0 && <h3>Your Posts</h3>}
         {thoughts.map((thought) => (
