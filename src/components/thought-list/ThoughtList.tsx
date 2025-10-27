@@ -1,7 +1,8 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import type { Thought } from '../../types';
 import ThoughtCard from './ThoughtCard';
 import TaskItem from './TaskItem';
+import { useThoughts } from '../../hooks/useThoughtsList'; 
 import * as thoughtService from '../../services/thoughtService';
 import './ThoughtList.css';
 
@@ -15,13 +16,8 @@ const ThoughtList: React.FC<Props> = ({ thoughts: sharedThoughts }) => {
   const [likedPosts, setLikedPosts] = useState<Set<string>>(new Set());
   const [searchTerm, setSearchTerm] = useState('');
   const [sortBy, setSortBy] = useState<'timestamp' | 'popularity'>('timestamp');
-  
-  const [repositoryThoughts, setRepositoryThoughts] = useState<Thought[]>([]);
 
-  useEffect(() => {
-    const fetchedThoughts = thoughtService.fetchAllThoughts();
-    setRepositoryThoughts(fetchedThoughts);
-  }, []);
+  const { thoughts: repositoryThoughts, loading, error } = useThoughts();
 
   const handleAddTask = () => {
     if (taskInput.trim()) {
@@ -51,6 +47,22 @@ const ThoughtList: React.FC<Props> = ({ thoughts: sharedThoughts }) => {
     ? thoughtService.sortByPopularity(searchedThoughts)
     : thoughtService.sortByTimestamp(searchedThoughts);
 
+  if (loading) {
+    return (
+      <section className="thought-list">
+        <p>Loading thoughts...</p>
+      </section>
+    );
+  }
+
+  if (error) {
+    return (
+      <section className="thought-list">
+        <p>Error: {error}</p>
+      </section>
+    );
+  }
+
   return (
     <section className="thought-list">
       <h2>Latest Thoughts</h2>
@@ -75,7 +87,7 @@ const ThoughtList: React.FC<Props> = ({ thoughts: sharedThoughts }) => {
             onClick={() => setSortBy('popularity')}
             className={sortBy === 'popularity' ? 'active' : ''}
           >
-             Most Liked
+            Most Liked
           </button>
         </div>
       </div>
