@@ -1,8 +1,6 @@
 import React, { useState } from 'react';
 import { Thought } from '../../types';
 import './ThoughtsFeed.css';
-import type { Thought } from '../../types';
-import { communityPosts } from '../../data/mockData';
 
 interface Props {
   thoughts: Thought[];  
