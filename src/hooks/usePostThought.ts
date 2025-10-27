@@ -31,7 +31,7 @@ export function useThoughts(dependencies: unknown[] = []) {
   const addThought = async (content: string, author: string) => {
     try {
       const newThought = await ThoughtService.createThought(content, author);
-      setThoughts([...thoughts, newThought]);
+      setThoughts(prev => [newThought, ...prev]); 
       return newThought;
     } catch (err) {
       setError(`Failed to add thought: ${err}`);
@@ -41,7 +41,7 @@ export function useThoughts(dependencies: unknown[] = []) {
   const like = async (id: string) => {
     try {
       const updated = await ThoughtService.likeThought(id);
-      setThoughts(thoughts.map(t => t.id === id ? updated : t));
+      setThoughts(prev => prev.map(t => t.id === id ? updated : t));
       return updated;
     } catch (err) {
       setError(`Failed to like thought: ${err}`);
@@ -51,7 +51,7 @@ export function useThoughts(dependencies: unknown[] = []) {
   const removeThought = async (id: string) => {
     try {
       await ThoughtService.deleteThought(id);
-      setThoughts(thoughts.filter(t => t.id !== id));
+      setThoughts(prev => prev.filter(t => t.id !== id));
     } catch (err) {
       setError(`Failed to delete thought: ${err}`);
     }
