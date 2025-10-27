@@ -8,7 +8,7 @@ import Navigation from './components/navigation/Navigation';
 import SharedCounter from './shared/SharedCounter';
 import { Thought } from './types';
 import './App.css';
- 
+
 const App: React.FC = () => {
   const teamName = "The page turners";
   const teamMembers = [
@@ -16,7 +16,9 @@ const App: React.FC = () => {
     "Vandana Bhangu",
     "Amandeep Kaur"
   ];
+
   const [thoughts, setThoughts] = useState<Thought[]>([]);
+
   return (
     <div className="app">
       <header className="app-header">
@@ -27,6 +29,7 @@ const App: React.FC = () => {
 
       {/* Add SharedCounter here to display on all pages */}
       <SharedCounter />
+
       <main className="app-main">
         <Routes>
           <Route
@@ -57,11 +60,10 @@ const App: React.FC = () => {
           />
         </Routes>
       </main>
- 
+
       <Footer teamName={teamName} teamMembers={teamMembers} />
     </div>
   );
 };
- 
+
 export default App;
- 
