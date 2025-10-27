@@ -42,12 +42,7 @@ const App: React.FC = () => {
           />
           <Route
             path="/post"
-            element={
-              <PostThoughts
-                thoughts={thoughts}              
-                setThoughts={setThoughts}
-              />
-            }
+            element={<PostThoughts />} 
           />
           <Route
             path="/feed"
@@ -67,3 +62,4 @@ const App: React.FC = () => {
 };
 
 export default App;
+
