@@ -30,9 +30,7 @@ const PostThoughts: React.FC = () => {
       return;
     }
 
-    const newThoughtFromService = thoughtService.createThought(content, "Olusola", thoughts);
-
-    await addThought(content, "You");
+    await addThought(content, "Olusola");
     setContent("");
   };
 
@@ -59,7 +57,6 @@ const PostThoughts: React.FC = () => {
           <article key={thought.id} className="thought-card">
             <header className="thought-header">
               <h4>@{thought.author}</h4>
-    
               <time>{thoughtService.formatTimestamp(thought.timestamp)}</time>
             </header>
             <p>{thought.content}</p>
