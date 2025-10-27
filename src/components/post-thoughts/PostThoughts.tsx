@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import type { Thought } from "../../types";
 import "./PostThoughts.css";
-import * as thoughtService from "../../services/thoughtService";
 
 interface Props {
   thoughts: Thought[];
