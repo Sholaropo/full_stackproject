@@ -12,7 +12,7 @@ import "./PostThoughts.css";
  * - Demonstrates separation of concerns: UI logic is separate from data logic.
  */
 const PostThoughts: React.FC = () => {
-  const { thoughts, addThought, error } = useThoughts();
+  const { thoughts, addThought, like: likeThought, error } = useThoughts();
   const [content, setContent] = useState("");
 
 useEffect(() => {
@@ -53,6 +53,14 @@ useEffect(() => {
               <time>{thought.timestamp.toLocaleString()}</time>
             </header>
             <p>{thought.content}</p>
+            
+      <button
+         className="like-btn"
+         onClick={() => likeThought(thought.id)}
+         aria-label="Like this post"
+        >
+        ❤️ {thought.likes} Likes
+            </button>
           </article>
         ))}
       </div>
