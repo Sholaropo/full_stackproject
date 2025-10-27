@@ -23,6 +23,25 @@ useEffect(() => {
     e.preventDefault();
     if (!content.trim()) return;
 
+    const errors = thoughtService.validateThought(content, "Olusola");
+    if (errors.size > 0) {
+      alert(errors.get("content") || "Validation error!");
+      return;
+    }
+
+    const newThoughtFromService = thoughtService.createThought(content, "Olusola", thoughts);
+
+    const newThought: Thought = {
+      id: (thoughts.length + 1).toString(),
+      content,
+      author: "Olusola",
+      timestamp: new Date(),
+      likes: 0,
+    };
+
+  
+    setThoughts([newThoughtFromService, ...thoughts]);
+=======
     await addThought(content, "You");
     setContent("");
   };
@@ -50,7 +69,8 @@ useEffect(() => {
           <article key={thought.id} className="thought-card">
             <header className="thought-header">
               <h4>@{thought.author}</h4>
-              <time>{thought.timestamp.toLocaleString()}</time>
+    
+              <time>{thoughtService.formatTimestamp(thought.timestamp)}</time>
             </header>
             <p>{thought.content}</p>
             
