@@ -1,7 +1,6 @@
 import React from 'react';
 import type { Thought } from '../../types';
-import { thoughtService } from '../../services/thoughtService';
-
+import * as thoughtService from '../../services/thoughtService';
 interface Props {
   thought: Thought;
   isLiked: boolean;

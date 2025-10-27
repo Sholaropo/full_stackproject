@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useThoughts } from "../../hooks/usePostThought";
-import { thoughtService } from "../../services/thoughtService";
+import * as thoughtService from '../../services/thoughtService';
 import type { Thought } from "../../types";
 import "./PostThoughts.css";
 
