@@ -5,20 +5,20 @@ import PostThoughts from './components/post-thoughts/PostThoughts';
 import ThoughtsFeed from './components/thoughts-feed/ThoughtsFeed';
 import Footer from './components/footer/Footer';
 import Navigation from './components/navigation/Navigation';
-import SharedCounter from './shared/SharedCounter'; 
+import SharedCounter from './shared/SharedCounter';
 import { Thought } from './types';  
 import './App.css';
-
+ 
 const App: React.FC = () => {
   const teamName = "The page turners";
   const teamMembers = [
     "Olusola Ropo",
-    "Vandana Bhangu", 
+    "Vandana Bhangu",
     "Amandeep Kaur"
   ];
-
-  const [thoughts, setThoughts] = useState<Thought[]>([]); 
-
+ 
+  const [thoughts, setThoughts] = useState<Thought[]>([]);
+ 
   return (
     <div className="app">
       <header className="app-header">
@@ -26,44 +26,45 @@ const App: React.FC = () => {
         <p>Share your thoughts with the world</p>
         <Navigation />
       </header>
-
+ 
       {/* Add SharedCounter here to display on all pages */}
       <SharedCounter />
-
+ 
       <main className="app-main">
         <Routes>
-          <Route 
-            path="/" 
+          <Route
+            path="/"
             element={
-              <ThoughtList 
+              <ThoughtList
                 thoughts={thoughts}
               />
-            } 
+            }
           />
-          <Route 
-            path="/post" 
+          <Route
+            path="/post"
             element={
-              <PostThoughts 
+              <PostThoughts
                 thoughts={thoughts}              
                 setThoughts={setThoughts}
               />
-            } 
+            }
           />
-          <Route 
-            path="/feed" 
+          <Route
+            path="/feed"
             element={
-              <ThoughtsFeed 
+              <ThoughtsFeed
                 thoughts={thoughts}  
                 setThoughts={setThoughts}
               />
-            } 
+            }
           />
         </Routes>
       </main>
-
+ 
       <Footer teamName={teamName} teamMembers={teamMembers} />
     </div>
   );
 };
-
+ 
 export default App;
+ 
