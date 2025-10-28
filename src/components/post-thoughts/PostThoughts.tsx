@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useThoughts } from "../../hooks/usePostThought";
+import * as thoughtService from '../../services/thoughtService';
 import type { Thought } from "../../types";
 import "./PostThoughts.css";
 
@@ -15,7 +16,7 @@ const PostThoughts: React.FC = () => {
   const { thoughts, addThought, like: likeThought, error } = useThoughts();
   const [content, setContent] = useState("");
 
-useEffect(() => {
+  useEffect(() => {
     console.log("Current thoughts:", thoughts);
   }, [thoughts]);
 
@@ -23,7 +24,13 @@ useEffect(() => {
     e.preventDefault();
     if (!content.trim()) return;
 
-    await addThought(content, "You");
+    const errors = thoughtService.validateThought(content, "Olusola");
+    if (errors.size > 0) {
+      alert(errors.get("content") || "Validation error!");
+      return;
+    }
+
+    await addThought(content, "Olusola");
     setContent("");
   };
 
@@ -50,16 +57,16 @@ useEffect(() => {
           <article key={thought.id} className="thought-card">
             <header className="thought-header">
               <h4>@{thought.author}</h4>
-              <time>{thought.timestamp.toLocaleString()}</time>
+              <time>{thoughtService.formatTimestamp(thought.timestamp)}</time>
             </header>
             <p>{thought.content}</p>
             
-      <button
-         className="like-btn"
-         onClick={() => likeThought(thought.id)}
-         aria-label="Like this post"
-        >
-        ❤️ {thought.likes} Likes
+            <button
+              className="like-btn"
+              onClick={() => likeThought(thought.id)}
+              aria-label="Like this post"
+            >
+              ❤️ {thought.likes} Likes
             </button>
           </article>
         ))}
