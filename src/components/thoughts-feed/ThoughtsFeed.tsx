@@ -113,7 +113,7 @@ function ThoughtsFeed({ thoughts, setThoughts }: Props) {
                 onClick={() => toggleLike(thought.id)}
                 style={{ marginTop: '5px', fontSize: '0.9rem' }}
               >
-                Hook Like ❤️ {likedItems.has(thought.id) ? 'Liked' : 'Like'}
+                 ❤️ {likedItems.has(thought.id) ? 'Liked' : 'Like'}
               </button>
             </div>
           ))
