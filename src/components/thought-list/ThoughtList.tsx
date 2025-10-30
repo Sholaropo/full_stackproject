@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import type { Thought } from '../../types';
 import ThoughtCard from './ThoughtCard';
 import TaskItem from './TaskItem';
 import { useThoughts } from '../../hooks/useThoughtsList';
@@ -7,11 +6,7 @@ import * as thoughtService from '../../services/thoughtService';
 import './ThoughtList.css';
 import { useLikes } from "../../hooks/useLikes";
 
-interface Props {
-  thoughts: Thought[];
-}
-
-const ThoughtList: React.FC<Props> = ({ thoughts: sharedThoughts }) => {
+const ThoughtList: React.FC = () => {
   const [tasks, setTasks] = useState<string[]>([]);
   const [taskInput, setTaskInput] = useState('');
   const [likedPosts, setLikedPosts] = useState<Set<string>>(new Set());
@@ -41,7 +36,7 @@ const ThoughtList: React.FC<Props> = ({ thoughts: sharedThoughts }) => {
     });
   };
 
-  const allThoughts = [...repositoryThoughts, ...sharedThoughts];
+  const allThoughts = repositoryThoughts;
   const searchedThoughts = thoughtService.searchThoughts(allThoughts, searchTerm);
   const sortedThoughts =
     sortBy === 'popularity'

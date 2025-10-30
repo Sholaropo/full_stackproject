@@ -8,13 +8,9 @@ import { samplePosts, sampleComments, sampleRatings } from '../../data/samplePos
 import { getUserInfo, formatTime, calculateReadingTime } from '../../utils/helpers';
 import './ThoughtsFeed.css';
 import { useLikes } from '../../hooks/useLikes';
+import { useThoughts } from '../../hooks/useThoughtsList';
 
-interface Props {
-  thoughts: Thought[];
-  setThoughts: React.Dispatch<React.SetStateAction<Thought[]>>;
-}
-
-function ThoughtsFeed({ thoughts, setThoughts }: Props) {
+function ThoughtsFeed() {
   const [sortBy, setSortBy] = useState('popular');
   const [filters, setFilters] = useState({
     searchTerm: '',
@@ -33,8 +29,8 @@ function ThoughtsFeed({ thoughts, setThoughts }: Props) {
   } = usePostActions();
 
   const { likedItems, toggleLike } = useLikes();
-
-  const allPosts = [...thoughts, ...samplePosts];
+  const { thoughts: repositoryThoughts } = useThoughts();
+  const allPosts = [...repositoryThoughts, ...samplePosts];
 
   // Initialize sample data
   useEffect(() => {
