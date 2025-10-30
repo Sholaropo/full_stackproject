@@ -7,6 +7,7 @@ import PostItem from './PostItem';
 import { samplePosts, sampleComments, sampleRatings } from '../../data/samplePosts';
 import { getUserInfo, formatTime, calculateReadingTime } from '../../utils/helpers';
 import './ThoughtsFeed.css';
+import { useLikes } from '../../hooks/useLikes';
 
 interface Props {
   thoughts: Thought[];
@@ -31,6 +32,8 @@ function ThoughtsFeed({ thoughts, setThoughts }: Props) {
     handleHidePost, handleRatePost, handleShare 
   } = usePostActions();
 
+  const { likedItems, toggleLike } = useLikes();
+
   const allPosts = [...thoughts, ...samplePosts];
 
   // Initialize sample data
@@ -38,7 +41,6 @@ function ThoughtsFeed({ thoughts, setThoughts }: Props) {
     setComments(sampleComments);
   }, [setComments]);
 
-  // Data processing
   const filteredPosts = allPosts.filter(post => {
     const search = filters.searchTerm.toLowerCase();
     return (!search || post.content.toLowerCase().includes(search) || post.author.toLowerCase().includes(search)) &&
@@ -82,30 +84,38 @@ function ThoughtsFeed({ thoughts, setThoughts }: Props) {
           </div>
         ) : (
           sortedPosts.map(thought => (
-            <PostItem
-              key={thought.id}
-              thought={thought}
-              userInfo={getUserInfo(thought.author)}
-              likedPosts={likedPosts}
-              bookmarkedPosts={bookmarkedPosts}
-              expandedComments={expandedComments}
-              hiddenPosts={hiddenPosts}
-              userRatings={userRatings}
-              postRatings={sampleRatings}
-              comments={comments}
-              newComment={newComment}
-              setNewComment={setNewComment}
-              formatTime={formatTime}
-              calculateReadingTime={calculateReadingTime}
-              handleLike={handleLike}
-              handleBookmark={handleBookmark}
-              toggleComments={toggleComments}
-              addComment={addComment}
-              removeComment={removeComment}
-              handleHidePost={handleHidePost}
-              handleRatePost={handleRatePost}
-              handleShare={handleShare}
-            />
+            <div key={thought.id} style={{ marginBottom: '10px' }}>
+              <PostItem
+                thought={thought}
+                userInfo={getUserInfo(thought.author)}
+                likedPosts={likedPosts}
+                bookmarkedPosts={bookmarkedPosts}
+                expandedComments={expandedComments}
+                hiddenPosts={hiddenPosts}
+                userRatings={userRatings}
+                postRatings={sampleRatings}
+                comments={comments}
+                newComment={newComment}
+                setNewComment={setNewComment}
+                formatTime={formatTime}
+                calculateReadingTime={calculateReadingTime}
+                handleLike={handleLike}
+                handleBookmark={handleBookmark}
+                toggleComments={toggleComments}
+                addComment={addComment}
+                removeComment={removeComment}
+                handleHidePost={handleHidePost}
+                handleRatePost={handleRatePost}
+                handleShare={handleShare}
+              />
+
+              <button
+                onClick={() => toggleLike(thought.id)}
+                style={{ marginTop: '5px', fontSize: '0.9rem' }}
+              >
+                 ❤️ {likedItems.has(thought.id) ? 'Liked' : 'Like'}
+              </button>
+            </div>
           ))
         )}
       </div>
