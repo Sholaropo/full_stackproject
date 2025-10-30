@@ -35,9 +35,7 @@ const App: React.FC = () => {
           <Route
             path="/"
             element={
-              <ThoughtList
-                thoughts={thoughts}
-              />
+              <ThoughtList />
             }
           />
           <Route
