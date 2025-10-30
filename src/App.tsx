@@ -45,10 +45,7 @@ const App: React.FC = () => {
           <Route
             path="/feed"
             element={
-              <ThoughtsFeed
-                thoughts={thoughts}  
-                setThoughts={setThoughts}
-              />
+              <ThoughtsFeed />
             }
           />
         </Routes>
