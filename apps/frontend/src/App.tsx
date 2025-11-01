@@ -6,8 +6,7 @@ import ThoughtsFeed from './components/thoughts-feed/ThoughtsFeed';
 import Footer from './components/footer/Footer';
 import Navigation from './components/navigation/Navigation';
 import SharedCounter from './shared/SharedCounter';
-import { Thought } from './types';
-import './App.css';
+import type { Thought } from './types';import './App.css';
 
 const App: React.FC = () => {
   const teamName = "The page turners";
