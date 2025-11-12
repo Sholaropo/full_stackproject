@@ -1,8 +1,5 @@
 /**
- * @file database.ts
- * @description Prisma Client initialization and export
  * @author Olusola Ropo
- * @team The Page Turners
  */
 
 import { PrismaClient } from '@prisma/client';
