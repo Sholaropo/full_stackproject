@@ -1,33 +1,30 @@
 import type { Thought } from '../types';
 import * as thoughtRepo from '../repositories/thoughtRepository';
 
-export function createThought(content: string, author: string, existingThoughts: Thought[]): Thought {
-  return {
-    id: (existingThoughts.length + 1).toString(),
-    content: content.trim(),
+export async function createThought(content: string, author: string): Promise<Thought> {
+  const thought = {
     author: author.trim(),
-    timestamp: new Date(),
-    likes: 0
-  };
-}
-
-export function createAndSaveThought(content: string, author: string): Thought {
-  const newThought: Thought = {
-    id: Date.now().toString(),
     content: content.trim(),
-    author: author.trim(),
-    timestamp: new Date(),
-    likes: 0
   };
   
-  return thoughtRepo.createThought(newThought);
+  return await thoughtRepo.createThought(thought);
 }
 
-export function fetchAllThoughts(): Thought[] {
-  return thoughtRepo.getAllThoughts();
+
+export async function createAndSaveThought(content: string, author: string): Promise<Thought> {
+  const thought = {
+    author: author.trim(),
+    content: content.trim(),
+  };
+  
+  return await thoughtRepo.createThought(thought);
 }
 
-export function validateThought(content: string, author: string) {
+export async function fetchAllThoughts(): Promise<Thought[]> {
+  return await thoughtRepo.getAllThoughts();
+}
+
+export function validateThought(content: string, author: string): Map<string, string> {
   const validationErrors = new Map<string, string>();
 
   if (!content?.trim()) validationErrors.set("content", "Content must not be empty");
@@ -41,6 +38,7 @@ export function formatTimestamp(timestamp: Date): string {
   const now = new Date();
   const diffInMinutes = Math.floor((now.getTime() - timestamp.getTime()) / (1000 * 60));
   
+  if (diffInMinutes < 1) return 'Just now';
   if (diffInMinutes < 60) return `${diffInMinutes}m ago`;
   if (diffInMinutes < 1440) return `${Math.floor(diffInMinutes / 60)}h ago`;
   return `${Math.floor(diffInMinutes / 1440)}d ago`;
@@ -55,7 +53,7 @@ export function sortByTimestamp(thoughts: Thought[]): Thought[] {
 }
 
 export function searchThoughts(thoughts: Thought[], searchTerm: string): Thought[] {
-  const term = searchTerm.toLowerCase().trim();
+  const term = searchTerm.trim().toLowerCase();
   if (!term) return thoughts;
   
   return thoughts.filter(thought => 
