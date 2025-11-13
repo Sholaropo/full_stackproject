@@ -1,5 +1,3 @@
-// Import React for component functionality
-import React from 'react';
 // Import the Thought type definition for type safety
 import { Thought } from '../../types';
 // Import PostComments component for comment functionality
