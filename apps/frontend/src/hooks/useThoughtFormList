@@ -1,0 +1,61 @@
+import { useState } from 'react';
+import { ValidationServiceList } from '../services/validationServiceList';
+
+interface UseThoughtFormListProps {
+  onSubmit: (author: string, content: string) => void;
+}
+
+export const useThoughtFormList = ({ onSubmit }: UseThoughtFormListProps) => {
+  const [author, setAuthor] = useState('');
+  const [content, setContent] = useState('');
+  const [errors, setErrors] = useState<Map<string, string>>(new Map());
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    
+    const validationErrors = ValidationServiceList.validateThought(content, author);
+    setErrors(validationErrors);
+
+    if (!ValidationServiceList.isValid(validationErrors)) {
+      return;
+    }
+
+    setIsSubmitting(true);
+
+    try {
+      onSubmit(author, content);
+      setAuthor('');
+      setContent('');
+      setErrors(new Map());
+    } catch (err) {
+      const errorMap = new Map<string, string>();
+      errorMap.set('submit', err instanceof Error ? err.message : 'Failed to submit');
+      setErrors(errorMap);
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  const resetForm = () => {
+    setAuthor('');
+    setContent('');
+    setErrors(new Map());
+  };
+
+  const getError = (field: string): string | undefined => {
+    return errors.get(field);
+  };
+
+  return {
+    author,
+    content,
+    isSubmitting,
+    errors,
+    setAuthor,
+    setContent,
+    handleSubmit,
+    resetForm,
+    getError,
+  };
+};
