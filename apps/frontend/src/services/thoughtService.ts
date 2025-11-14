@@ -1,20 +1,32 @@
 import type { Thought } from '../types';
 import * as thoughtRepo from '../repositories/thoughtRepository';
+import { ValidationServiceList } from './validationServiceList';
+import { FormatServiceList } from './formatServiceList';
 
-export async function createThought(content: string, author: string): Promise<Thought> {
-  const thought = {
-    author: author.trim(),
-    content: content.trim(),
+export function createThought(content: string, author: string, existingThoughts: Thought[]): Thought {
+  return {
+    id: (existingThoughts.length + 1).toString(),
+    content: ValidationServiceList.sanitizeInput(content),
+    author: ValidationServiceList.sanitizeInput(author),
+    timestamp: new Date(),
+    likes: 0
   };
-  
-  return await thoughtRepo.createThought(thought);
 }
 
 
-export async function createAndSaveThought(content: string, author: string): Promise<Thought> {
-  const thought = {
-    author: author.trim(),
-    content: content.trim(),
+export function createAndSaveThought(content: string, author: string): Thought {
+  const validationErrors = ValidationServiceList.validateThought(content, author);
+  if (!ValidationServiceList.isValid(validationErrors)) {
+    const error = ValidationServiceList.getFirstError(validationErrors);
+    throw new Error(error || 'Validation failed');
+  }
+
+  const newThought: Thought = {
+    id: Date.now().toString(),
+    content: ValidationServiceList.sanitizeInput(content),
+    author: ValidationServiceList.sanitizeInput(author),
+    timestamp: new Date(),
+    likes: 0
   };
   
   return await thoughtRepo.createThought(thought);
@@ -25,23 +37,11 @@ export async function fetchAllThoughts(): Promise<Thought[]> {
 }
 
 export function validateThought(content: string, author: string): Map<string, string> {
-  const validationErrors = new Map<string, string>();
-
-  if (!content?.trim()) validationErrors.set("content", "Content must not be empty");
-  if (content.trim().length > 500) validationErrors.set("content", "Content must be 500 characters or less");
-  if (!author?.trim()) validationErrors.set("author", "Author must be defined");
-
-  return validationErrors;
+  return ValidationServiceList.validateThought(content, author);
 }
 
 export function formatTimestamp(timestamp: Date): string {
-  const now = new Date();
-  const diffInMinutes = Math.floor((now.getTime() - timestamp.getTime()) / (1000 * 60));
-  
-  if (diffInMinutes < 1) return 'Just now';
-  if (diffInMinutes < 60) return `${diffInMinutes}m ago`;
-  if (diffInMinutes < 1440) return `${Math.floor(diffInMinutes / 60)}h ago`;
-  return `${Math.floor(diffInMinutes / 1440)}d ago`;
+  return FormatServiceList.formatTimestamp(timestamp);
 }
 
 export function sortByPopularity(thoughts: Thought[]): Thought[] {
@@ -53,7 +53,7 @@ export function sortByTimestamp(thoughts: Thought[]): Thought[] {
 }
 
 export function searchThoughts(thoughts: Thought[], searchTerm: string): Thought[] {
-  const term = searchTerm.trim().toLowerCase();
+  const term = ValidationServiceList.sanitizeInput(searchTerm).toLowerCase();
   if (!term) return thoughts;
   
   return thoughts.filter(thought => 
