@@ -1,28 +1,31 @@
 {
-  "name": "thoughtshare-monorepo",
+  "name": "@thoughtshare/backend",
   "version": "1.0.0",
-  "private": true,
-  "description": "ThoughtShare Full-Stack Application - Module 4",
-  "workspaces": [
-    "apps/*"
-  ],
+  "description": "ThoughtShare Backend API",
+  "main": "dist/server.js",
   "scripts": {
-    "start:frontend": "npm run dev --workspace=@thoughtshare/frontend",
-    "start:backend": "npm start --workspace=@thoughtshare/backend",
-    "dev": "concurrently \"npm:start:frontend\" \"npm:start:backend\"",
-    "build": "npm run build --workspaces",
-    "db:start": "docker-compose up -d",
-    "db:stop": "docker-compose down",
-    "db:reset": "docker-compose down -v && docker-compose up -d",
-    "db:logs": "docker-compose logs -f postgres",
-    "db:shell": "docker exec -it thoughtshare-db psql -U thoughtshare_user -d thoughtshare_dev",
-    "prisma:migrate": "npm run prisma:migrate --workspace=@thoughtshare/backend",
-    "prisma:studio": "npm run prisma:studio --workspace=@thoughtshare/backend",
-    "prisma:seed": "npm run prisma:seed --workspace=@thoughtshare/backend"
+    "start": "ts-node src/server.ts",
+    "dev": "ts-node src/server.ts",
+    "build": "tsc",
+    "db:generate": "prisma generate",
+    "db:migrate": "prisma migrate dev",
+    "db:studio": "prisma studio"
+  },
+  "keywords": [],
+  "author": "Olusola Ropo",
+  "license": "ISC",
+  "dependencies": {
+    "@prisma/client": "^5.22.0",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.7",
+    "express": "^4.21.1"
   },
   "devDependencies": {
-    "concurrently": "^8.2.2",
-    "typescript": "^5.3.3",
-    "dotenv": "^16.3.1"
+    "@types/cors": "^2.8.17",
+    "@types/express": "^5.0.0",
+    "@types/node": "^22.9.1",
+    "prisma": "^5.22.0",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.6.3"
   }
 }
