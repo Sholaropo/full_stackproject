@@ -57,6 +57,26 @@ const userService = {
       joinDate: user.joinDate,
       isVerified: user.isVerified
     }));
+  },
+
+  async updateUser(username: string, updates: { isVerified?: boolean; displayName?: string }) {
+    try {
+      const user = await prisma.user.update({
+        where: { username },
+        data: updates
+      });
+      
+      return {
+        id: user.id,
+        username: user.username,
+        displayName: user.displayName,
+        email: user.email,
+        joinDate: user.joinDate,
+        isVerified: user.isVerified
+      };
+    } catch (error) {
+      return null;
+    }
   }
 };
 

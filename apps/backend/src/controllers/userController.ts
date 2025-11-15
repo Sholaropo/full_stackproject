@@ -43,6 +43,24 @@ const userController = {
       console.error('Error searching users:', error);
       res.status(500).json({ error: 'Failed to search users' });
     }
+  },
+
+  async updateUser(req: Request, res: Response) {
+    try {
+      const { username } = req.params;
+      const updates = req.body;
+      
+      const user = await userService.updateUser(username, updates);
+      
+      if (!user) {
+        return res.status(404).json({ error: 'User not found' });
+      }
+      
+      res.status(200).json(user);
+    } catch (error) {
+      console.error('Error updating user:', error);
+      res.status(500).json({ error: 'Failed to update user' });
+    }
   }
 };
 

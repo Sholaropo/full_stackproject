@@ -8,3 +8,8 @@ export const usernameParamSchema = z.object({
   username: z.string().min(1, 'Username is required').max(50, 'Username too long')
 });
 
+export const updateUserSchema = z.object({
+  isVerified: z.boolean().optional(),
+  displayName: z.string().min(1).max(100).optional()
+});
+
