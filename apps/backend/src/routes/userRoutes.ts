@@ -4,8 +4,8 @@ import userController from '../controllers/userController';
 const router = express.Router();
 
 router.get('/', userController.getAllUsers);
-router.get('/:username', userController.getUserByUsername);
 router.get('/search', userController.searchUsers);
+router.get('/:username', userController.getUserByUsername);
 
 export default router;
 
