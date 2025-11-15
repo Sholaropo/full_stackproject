@@ -12,25 +12,41 @@ export function useUserData() {
 
   // Load users when component mounts
   useEffect(() => {
-    try {
-      const userData = getAllUsers(); // get from repository
-      setUsers(userData);
-      setLoading(false);
-    } catch (err) {
-      setError('Failed to load users'); // error handling
-      setLoading(false);
+    async function loadUsers() {
+      try {
+        setLoading(true);
+        const userData = await getAllUsers(); // get from repository
+        setUsers(userData);
+        setError(null);
+      } catch (err) {
+        setError('Failed to load users'); // error handling
+        console.error(err);
+      } finally {
+        setLoading(false);
+      }
     }
+    loadUsers();
   }, []);
 
   // Function to get user by username
-  const getUserByUsernameHook = (username: string): User | undefined => {
-    return getUserByUsername(username); // call repository method
+  const getUserByUsernameHook = async (username: string): Promise<User | undefined> => {
+    try {
+      return await getUserByUsername(username); // call repository method
+    } catch (err) {
+      console.error('Error fetching user by username:', err);
+      return undefined;
+    }
   };
 
   // Function to search users
-  const searchUsersHook = (query: string): User[] => {
+  const searchUsersHook = async (query: string): Promise<User[]> => {
     if (!query.trim()) return users; // return all if empty
-    return searchUsers(query); // call repository method
+    try {
+      return await searchUsers(query); // call repository method
+    } catch (err) {
+      console.error('Error searching users:', err);
+      return [];
+    }
   };
 
   // Function to get user count

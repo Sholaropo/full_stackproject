@@ -4,7 +4,7 @@ import { usePostActions } from '../../hooks/usePostActions';
 import PostFilters from './PostFilters';
 import PostItem from './PostItem';
 import { samplePosts, sampleComments, sampleRatings } from '../../data/samplePosts';
-import { getUserInfo, formatTime, calculateReadingTime } from '../../utils/helpers';
+import { formatTime, calculateReadingTime } from '../../utils/helpers';
 import './ThoughtsFeed.css';
 import { useLikes } from '../../hooks/useLikes';
 import { useThoughts } from '../../hooks/useThoughtsList';
@@ -82,7 +82,7 @@ function ThoughtsFeed() {
             <div key={thought.id} style={{ marginBottom: '10px' }}>
               <PostItem
                 thought={thought}
-                userInfo={getUserInfo(thought.author)}
+                userInfo={null}
                 likedPosts={likedPosts}
                 bookmarkedPosts={bookmarkedPosts}
                 expandedComments={expandedComments}

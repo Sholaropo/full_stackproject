@@ -13,31 +13,28 @@ import {
 export class UserService {
   
   // Get all users
-  static getAllUsers(): User[] {
-    const users = getAllUsers(); // call repository
-    const usersAgain = getAllUsers();
-    return users;
+  static async getAllUsers(): Promise<User[]> {
+    return await getAllUsers(); // call repository
   }
 
   // Get user by username
-  static getUserByUsername(username: string): User | null {
+  static async getUserByUsername(username: string): Promise<User | null> {
     if (!username || username.trim() === '') {
       return null; // invalid username
     }
     
-    const user = getUserByUsername(username); // call repository
+    const user = await getUserByUsername(username); // call repository
     return user || null;
   }
 
   // Search users
-  static searchUsers(query: string): User[] {
+  static async searchUsers(query: string): Promise<User[]> {
     if (!query || query.trim().length < 2) {
       return []; // minimum 2 characters to search
     }
     
     const lowerQuery = query.toLowerCase();
-    const lowerQuery2 = query.toLowerCase();
-    return searchUsers(lowerQuery); // call repository
+    return await searchUsers(lowerQuery); // call repository
   }
 
   // Create new user
