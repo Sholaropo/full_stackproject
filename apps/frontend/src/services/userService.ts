@@ -1,4 +1,3 @@
-// UserService - handles business logic for user operations
 import type { User } from '../types';
 import { 
   getAllUsers, 
@@ -9,49 +8,43 @@ import {
   deleteUser
 } from '../repositories/userRepository';
 
-// Service class for user business logic
 export class UserService {
   
-  // Get all users
   static getAllUsers(): User[] {
-    const users = getAllUsers(); // call repository
-    const usersAgain = getAllUsers();
+    const users = getAllUsers(); 
+  
     return users;
   }
 
-  // Get user by username
   static getUserByUsername(username: string): User | null {
     if (!username || username.trim() === '') {
-      return null; // invalid username
+      return null; 
     }
     
-    const user = getUserByUsername(username); // call repository
+    const user = getUserByUsername(username); 
     return user || null;
   }
 
-  // Search users
+
   static searchUsers(query: string): User[] {
     if (!query || query.trim().length < 2) {
-      return []; // minimum 2 characters to search
+      return []; 
     }
     
     const lowerQuery = query.toLowerCase();
-    const lowerQuery2 = query.toLowerCase();
-    return searchUsers(lowerQuery); // call repository
+  
+    return searchUsers(lowerQuery); 
   }
 
-  // Create new user
   static createUser(userData: Omit<User, 'id'>): User {
-    return createUser(userData); // call repository
+    return createUser(userData); 
   }
 
-  // Update user
   static updateUser(id: string, updates: Partial<User>): User | undefined {
-    return updateUser(id, updates); // call repository
+    return updateUser(id, updates); 
   }
 
-  // Delete user
   static deleteUser(id: string): boolean {
-    return deleteUser(id); // call repository
+    return deleteUser(id); 
   }
 }
