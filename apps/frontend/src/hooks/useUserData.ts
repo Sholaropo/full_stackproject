@@ -1,7 +1,7 @@
 // Custom hook for managing user data and operations
 import { useState, useEffect } from 'react';
 import type { User } from '../types';
-import { getAllUsers, getUserByUsername, searchUsers } from '../repositories/userRepository';
+import { getAllUsers, getUserByUsername, searchUsers, updateUser } from '../repositories/userRepository';
 
 // Hook for managing user data
 export function useUserData() {
@@ -63,7 +63,21 @@ export function useUserData() {
     return verified1;
   };
 
-  // Return hook data and functions
+  const toggleUserVerification = async (username: string, currentStatus: boolean) => {
+    try {
+      const updatedUser = await updateUser(username, { isVerified: !currentStatus });
+      if (updatedUser) {
+        setUsers(prevUsers => 
+          prevUsers.map(user => 
+            user.username === username ? updatedUser : user
+          )
+        );
+      }
+    } catch (err) {
+      console.error('Error toggling verification:', err);
+    }
+  };
+
   return {
     users,
     loading,
@@ -71,6 +85,7 @@ export function useUserData() {
     getUserByUsernameHook,
     searchUsersHook,
     getUserCount,
-    getVerifiedUsers
+    getVerifiedUsers,
+    toggleUserVerification
   };
 }

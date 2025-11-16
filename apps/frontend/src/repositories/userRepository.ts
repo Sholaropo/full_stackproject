@@ -71,8 +71,32 @@ export function getUserById(_id: string): User | undefined {
 }
 
 // update user
-export function updateUser(_id: string, _updates: Partial<User>): User | undefined {
-  throw new Error('not implemented');
+export async function updateUser(username: string, updates: Partial<User>): Promise<User | undefined> {
+  try {
+    const response = await fetch(`${API_BASE_URL}/users/${username}`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(updates)
+    });
+    
+    if (!response.ok) {
+      if (response.status === 404) {
+        return undefined;
+      }
+      throw new Error(`Failed to update user: ${response.statusText}`);
+    }
+    
+    const user = await response.json();
+    return {
+      ...user,
+      joinDate: new Date(user.joinDate)
+    };
+  } catch (error) {
+    console.error('Error updating user from API:', error);
+    throw error;
+  }
 }
 
 // delete user

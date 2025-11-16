@@ -43,8 +43,8 @@ export class UserService {
   }
 
   // Update user
-  static updateUser(id: string, updates: Partial<User>): User | undefined {
-    return updateUser(id, updates); // call repository
+  static async updateUser(username: string, updates: Partial<User>): Promise<User | undefined> {
+    return await updateUser(username, updates); // call repository
   }
 
   // Delete user
