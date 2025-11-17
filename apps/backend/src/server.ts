@@ -1,7 +1,3 @@
-/**
- * @author Olusola Ropo
- */
-
 import app from './app';
 import prisma from './config/database';
 
@@ -14,7 +10,7 @@ async function startServer() {
 
     app.listen(PORT, () => {
       console.log('=================================');
-      console.log(` ThoughtShare API - Olusola Ropo`);
+      console.log(` ThoughtShare API - Olusola Ropo, Amandeep Kaur, Vandana Bhangu `);
       console.log(` Environment: ${process.env.NODE_ENV || 'development'}`);
       console.log(` Server: http://localhost:${PORT}`);
       console.log(` API: http://localhost:${PORT}/api/v1`);
