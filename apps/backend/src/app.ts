@@ -1,7 +1,3 @@
-/**
- * @author Olusola Ropo
- */
-
 import express, { Express } from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
@@ -19,7 +15,7 @@ app.use(express.urlencoded({ extended: true }));
 
 app.get('/', (req, res) => {
   res.json({
-    message: 'ThoughtShare API - Olusola Ropo',
+    message: 'ThoughtShare API - Olusola Ropo, Amandeep Kaur, Vandana Bhangu',
     version: '1.0.0',
     endpoints: {
       health: '/api/v1/health',
