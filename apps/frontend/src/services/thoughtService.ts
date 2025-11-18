@@ -1,5 +1,7 @@
 import type { Thought } from '../types';
 import * as thoughtRepo from '../repositories/thoughtRepository';
+import { ValidationServiceList } from './validationServiceList';
+import { FormatServiceList } from './formatServiceList';
 
 export async function createThought(content: string, author: string): Promise<Thought> {
   const thought = {
