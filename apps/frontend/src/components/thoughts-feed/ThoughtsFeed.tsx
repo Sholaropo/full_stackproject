@@ -1,4 +1,5 @@
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
+import { Thought } from '../../types';
 import { useUserData } from '../../hooks/useUserData';
 import { usePostActions } from '../../hooks/usePostActions';
 import PostFilters from './PostFilters';

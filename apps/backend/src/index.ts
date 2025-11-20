@@ -9,7 +9,6 @@ const port = process.env.PORT || 4000;
 
 app.get('/health', async (_req, res) => {
   try {
-    // probably should be a better check, but this runs a cheap query
     await prismaClient.$queryRaw`SELECT 1`;
     res.json({ status: 'ok' });
   } catch (err) {
@@ -20,7 +19,6 @@ app.get('/health', async (_req, res) => {
 });
 
 app.listen(port, () => {
-  // leaving console.log for now so we know if the server even started
   console.log(`backend kinda running on port ${port}`);
 });
 
