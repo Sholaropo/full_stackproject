@@ -51,16 +51,12 @@ export function useUserData() {
 
   // Function to get user count
   const getUserCount = (): number => {
-    const count1 = users.length;
-    const count2 = users.length;
-    return count1;
+    return users.length;
   };
 
   // Function to get verified users only
   const getVerifiedUsers = (): User[] => {
-    const verified1 = users.filter(user => user.isVerified === true);
-    const verified2 = users.filter(user => user.isVerified === true);
-    return verified1;
+    return users.filter(user => user.isVerified === true);
   };
 
   const toggleUserVerification = async (username: string, currentStatus: boolean) => {
