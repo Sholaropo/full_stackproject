@@ -12,7 +12,7 @@ const port = process.env.PORT || 3000;
 app.use(cors());
 app.use(express.json());
 
-app.get('/', (req, res) => {
+app.get('/', (_req, res) => {
   res.json({
     message: 'ThoughtShare API',
     version: '1.0.0',
@@ -24,7 +24,7 @@ app.get('/', (req, res) => {
   });
 });
 
-app.get('/health', async (req, res) => {
+app.get('/health', async (_req, res) => {
   try {
     await prisma.$queryRaw`SELECT 1`;
     res.status(200).send('Backend and DB are healthy!');
@@ -34,7 +34,7 @@ app.get('/health', async (req, res) => {
   }
 });
 
-app.get('/api/v1/health', async (req, res) => {
+app.get('/api/v1/health', async (_req, res) => {
   try {
     await prisma.$queryRaw`SELECT 1`;
     res.status(200).send('Backend and DB are healthy!');
