@@ -1,7 +1,7 @@
 // user repository for managing user data
 import type { User } from '../types';
 
-const API_BASE_URL = 'http://localhost:4000/api';
+const API_BASE_URL = 'http://localhost:3000/api';
 
 // get all users
 export async function getAllUsers(): Promise<User[]> {
