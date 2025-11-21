@@ -5,7 +5,15 @@ import { prismaClient } from './lib/prisma';
 dotenv.config();
 
 const app = express();
-const port = process.env.PORT || 4000;
+const port = process.env.PORT || 3000;
+
+app.get('/', (_req, res) => {
+  res.json({
+    message: 'ThoughtShare API',
+    health: '/health',
+    version: '0.0.1',
+  });
+});
 
 app.get('/health', async (_req, res) => {
   try {
