@@ -1,28 +1,28 @@
 {
-  "name": "thoughtshare-monorepo",
-  "version": "1.0.0",
+  "name": "@thoughtshare/backend",
+  "version": "0.0.1",
   "private": true,
-  "description": "ThoughtShare Full-Stack Application - Module 4",
-  "workspaces": [
-    "apps/*"
-  ],
+  "description": "Backend API server for ThoughtShare",
+  "main": "dist/index.js",
   "scripts": {
-    "start:frontend": "npm run dev --workspace=@thoughtshare/frontend",
-    "start:backend": "npm start --workspace=@thoughtshare/backend",
-    "dev": "concurrently \"npm:start:frontend\" \"npm:start:backend\"",
-    "build": "npm run build --workspaces",
-    "db:start": "docker-compose up -d",
-    "db:stop": "docker-compose down",
-    "db:reset": "docker-compose down -v && docker-compose up -d",
-    "db:logs": "docker-compose logs -f postgres",
-    "db:shell": "docker exec -it thoughtshare-db psql -U thoughtshare_user -d thoughtshare_dev",
-    "prisma:migrate": "npm run prisma:migrate --workspace=@thoughtshare/backend",
-    "prisma:studio": "npm run prisma:studio --workspace=@thoughtshare/backend",
-    "prisma:seed": "npm run prisma:seed --workspace=@thoughtshare/backend"
+    "dev": "ts-node src/index.ts",
+    "start": "node dist/index.js",
+    "build": "tsc",
+    "lint": "echo todo later",
+    "prisma:generate": "prisma generate",
+    "prisma:migrate": "prisma migrate dev",
+    "prisma:studio": "prisma studio"
+  },
+  "dependencies": {
+    "@prisma/client": "^5.14.0",
+    "dotenv": "^16.3.1",
+    "express": "^4.19.2"
   },
   "devDependencies": {
-    "concurrently": "^8.2.2",
-    "typescript": "^5.3.3",
-    "dotenv": "^16.3.1"
+    "@types/express": "^4.17.21",
+    "@types/node": "^20.11.5",
+    "prisma": "^5.14.0",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.3.3"
   }
 }
