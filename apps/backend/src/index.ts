@@ -12,6 +12,18 @@ const port = process.env.PORT || 4000;
 app.use(cors());
 app.use(express.json());
 
+app.get('/', (req, res) => {
+  res.json({
+    message: 'ThoughtShare API',
+    version: '1.0.0',
+    endpoints: {
+      health: '/health',
+      apiHealth: '/api/v1/health',
+      users: '/api/users'
+    }
+  });
+});
+
 app.get('/health', async (req, res) => {
   try {
     await prisma.$queryRaw`SELECT 1`;
