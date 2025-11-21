@@ -1,32 +1,52 @@
 import express from 'express';
+import cors from 'cors';
 import dotenv from 'dotenv';
-import { prismaClient } from './lib/prisma';
+import prisma from './lib/prisma';
+import userRoutes from './routes/userRoutes';
 
 dotenv.config();
 
 const app = express();
 const port = process.env.PORT || 3000;
 
+app.use(cors());
+app.use(express.json());
+
 app.get('/', (_req, res) => {
   res.json({
     message: 'ThoughtShare API',
-    health: '/health',
-    version: '0.0.1',
+    version: '1.0.0',
+    endpoints: {
+      health: '/health',
+      apiHealth: '/api/v1/health',
+      users: '/api/users'
+    }
   });
 });
 
 app.get('/health', async (_req, res) => {
   try {
-    await prismaClient.$queryRaw`SELECT 1`;
-    res.json({ status: 'ok' });
-  } catch (err) {
-    console.error('health check blew up', err);
-    const message = err instanceof Error ? err.message : 'unknown crash';
-    res.status(500).json({ status: 'broken', message });
+    await prisma.$queryRaw`SELECT 1`;
+    res.status(200).send('Backend and DB are healthy!');
+  } catch (error) {
+    console.error('Health check failed:', error);
+    res.status(500).send('Backend is running, but DB connection failed.');
   }
 });
 
+app.get('/api/v1/health', async (_req, res) => {
+  try {
+    await prisma.$queryRaw`SELECT 1`;
+    res.status(200).send('Backend and DB are healthy!');
+  } catch (error) {
+    console.error('Health check failed:', error);
+    res.status(500).send('Backend is running, but DB connection failed.');
+  }
+});
+
+app.use('/api/users', userRoutes);
+
 app.listen(port, () => {
-  console.log(`backend kinda running on port ${port}`);
+  console.log(`Backend server running on http://localhost:${port}`);
 });
 
