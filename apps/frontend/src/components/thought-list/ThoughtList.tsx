@@ -4,7 +4,6 @@ import TaskItem from './TaskItem';
 import { useThoughts } from '../../hooks/useThoughtsList';
 import * as thoughtService from '../../services/thoughtService';
 import './ThoughtList.css';
-import { useLikes } from "../../hooks/useLikes";
 
 const ThoughtList: React.FC = () => {
   const [tasks, setTasks] = useState<string[]>([]);
@@ -13,8 +12,7 @@ const ThoughtList: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [sortBy, setSortBy] = useState<'timestamp' | 'popularity'>('timestamp');
 
-  const { thoughts: repositoryThoughts, loading, error } = useThoughts();
-  const { likedItems, toggleLike } = useLikes();
+  const { thoughts: repositoryThoughts, loading, error, likeThought } = useThoughts();
 
   const handleAddTask = () => {
     if (taskInput.trim()) {
@@ -27,13 +25,19 @@ const ThoughtList: React.FC = () => {
     setTasks(tasks.filter((_, i) => i !== index));
   };
 
-  const handleLike = (id: string) => {
-    setLikedPosts(prev => {
-      const newSet = new Set(prev);
-      if (newSet.has(id)) newSet.delete(id);
-      else newSet.add(id);
-      return newSet;
-    });
+  const handleLike = async (id: string) => {
+    try {
+      await likeThought(id);
+      
+      setLikedPosts(prev => {
+        const newSet = new Set(prev);
+        if (newSet.has(id)) newSet.delete(id);
+        else newSet.add(id);
+        return newSet;
+      });
+    } catch (error) {
+      console.error('Failed to like thought:', error);
+    }
   };
 
   const allThoughts = repositoryThoughts;
@@ -128,19 +132,12 @@ const ThoughtList: React.FC = () => {
           </p>
         ) : (
           sortedThoughts.map((thought) => (
-            <div key={thought.id + thought.author}>
+            <div key={thought.id}>
               <ThoughtCard
                 thought={thought}
-                isLiked={likedPosts.has(thought.id + thought.author)}
-                onLike={handleLike}
+                isLiked={likedPosts.has(thought.id)}
+                onLike={() => handleLike(thought.id)}
               />
-
-              <button
-                onClick={() => toggleLike(thought.id + thought.author)}
-                style={{ marginTop: "5px", fontSize: "0.9rem" }}
-              >
-                 ❤️ {likedItems.has(thought.id + thought.author) ? "Liked" : "Like"}
-              </button>
             </div>
           ))
         )}
