@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { SignedIn, SignedOut, SignInButton } from "@clerk/clerk-react";
 import { useThoughts } from "../../hooks/usePostThought";
 import * as thoughtService from '../../services/thoughtService';
 import type { Thought } from "../../types";
@@ -38,39 +39,52 @@ const PostThoughts: React.FC = () => {
     <section className="post-thoughts">
       <h2>Share Your Thoughts</h2>
 
-      {error && <p style={{ color: "red" }}>{error}</p>}
-
-      <form className="thought-form" onSubmit={handleSubmit}>
-        <textarea
-          value={content}
-          onChange={(e) => setContent(e.target.value)}
-          placeholder="What's on your mind?"
-          aria-label="Write a new thought"
-          rows={3}
-        />
-        <button type="submit">Post</button>
-      </form>
-
-      <div className="posted-thoughts">
-        {thoughts.length > 0 && <h3>Your Posts</h3>}
-        {thoughts.map((thought: Thought) => (
-          <article key={thought.id} className="thought-card">
-            <header className="thought-header">
-              <h4>@{thought.author}</h4>
-              <time>{thoughtService.formatTimestamp(thought.timestamp)}</time>
-            </header>
-            <p>{thought.content}</p>
-            
-            <button
-              className="like-btn"
-              onClick={() => likeThought(thought.id)}
-              aria-label="Like this post"
-            >
-              ❤️ {thought.likes} Likes
+      <SignedOut>
+        <div className="auth-message">
+          <p>Please sign in to post thoughts</p>
+          <SignInButton mode="modal">
+            <button className="sign-in-to-post-button">
+              Sign In to Post
             </button>
-          </article>
-        ))}
-      </div>
+          </SignInButton>
+        </div>
+      </SignedOut>
+
+      <SignedIn>
+        {error && <p style={{ color: "red" }}>{error}</p>}
+
+        <form className="thought-form" onSubmit={handleSubmit}>
+          <textarea
+            value={content}
+            onChange={(e) => setContent(e.target.value)}
+            placeholder="What's on your mind?"
+            aria-label="Write a new thought"
+            rows={3}
+          />
+          <button type="submit">Post</button>
+        </form>
+
+        <div className="posted-thoughts">
+          {thoughts.length > 0 && <h3>Your Posts</h3>}
+          {thoughts.map((thought: Thought) => (
+            <article key={thought.id} className="thought-card">
+              <header className="thought-header">
+                <h4>@{thought.author}</h4>
+                <time>{thoughtService.formatTimestamp(thought.timestamp)}</time>
+              </header>
+              <p>{thought.content}</p>
+              
+              <button
+                className="like-btn"
+                onClick={() => likeThought(thought.id)}
+                aria-label="Like this post"
+              >
+                ❤️ {thought.likes} Likes
+              </button>
+            </article>
+          ))}
+        </div>
+      </SignedIn>
     </section>
   );
 };

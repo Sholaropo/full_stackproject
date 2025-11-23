@@ -15,6 +15,7 @@
   "author": "Olusola Ropo",
   "license": "ISC",
   "dependencies": {
+    "@clerk/express": "^1.7.52",
     "@prisma/client": "^5.22.0",
     "cors": "^2.8.5",
     "dotenv": "^16.6.1",
