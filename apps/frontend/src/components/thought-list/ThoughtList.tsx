@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { SignedIn, SignedOut, SignInButton } from '@clerk/clerk-react';
 import ThoughtCard from './ThoughtCard';
 import TaskItem from './TaskItem';
 import { useThoughts } from '../../hooks/useThoughtsList';
@@ -133,11 +134,27 @@ const ThoughtList: React.FC = () => {
         ) : (
           sortedThoughts.map((thought) => (
             <div key={thought.id}>
-              <ThoughtCard
-                thought={thought}
-                isLiked={likedPosts.has(thought.id)}
-                onLike={() => handleLike(thought.id)}
-              />
+              <SignedIn>
+                <ThoughtCard
+                  thought={thought}
+                  isLiked={likedPosts.has(thought.id)}
+                  onLike={() => handleLike(thought.id)}
+                />
+              </SignedIn>
+              <SignedOut>
+                <ThoughtCard
+                  thought={thought}
+                  isLiked={false}
+                  onLike={() => {}}
+                />
+                <div className="auth-prompt">
+                  <SignInButton mode="modal">
+                    <button className="sign-in-to-like-button">
+                      Sign in to like this thought
+                    </button>
+                  </SignInButton>
+                </div>
+              </SignedOut>
             </div>
           ))
         )}
