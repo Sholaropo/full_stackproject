@@ -1,11 +1,13 @@
 import { Router } from 'express';
 import thoughtRoutesList from './thoughtRoutesList';
 import postthoughtRoutes from './postthoughtRoutes';
+import userRoutes from './userRoutes';
 
 const router = Router();
 
 router.use('/thoughts', thoughtRoutesList);
 router.use('/myThoughts', postthoughtRoutes);
+router.use('/users', userRoutes);
 
 router.get('/health', (req, res) => {
   res.json({
@@ -20,7 +22,8 @@ router.get('/', (req, res) => {
     endpoints: {
       health: '/api/v1/health',
       thoughts: '/api/v1/thoughts',
-      myThoughts: '/api/v1/myThoughts'
+      myThoughts: '/api/v1/myThoughts',
+      users: '/api/v1/users'
     }
   });
 });

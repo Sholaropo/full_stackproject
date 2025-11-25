@@ -2,7 +2,7 @@ import dotenv from 'dotenv';
 dotenv.config();
 
 import app from './app';
-import prisma from './config/database';
+import prisma from './lib/prisma';
 
 const PORT = process.env.PORT || 3000;
 
@@ -19,6 +19,7 @@ async function startServer() {
       console.log(` API: http://localhost:${PORT}/api/v1`);
       console.log(` Health: http://localhost:${PORT}/api/v1/health`);
       console.log(` Thoughts: http://localhost:${PORT}/api/v1/thoughts`);
+      console.log(` Users: http://localhost:${PORT}/api/v1/users`);
       console.log('=================================');
     });
   } catch (error) {

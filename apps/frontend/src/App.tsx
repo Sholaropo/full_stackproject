@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Routes, Route } from 'react-router-dom';
 import ThoughtList from './components/thought-list/ThoughtList';
 import PostThoughts from './components/post-thoughts/PostThoughts';
@@ -8,6 +8,7 @@ import Navigation from './components/navigation/Navigation';
 import SharedCounter from './shared/SharedCounter';
 import Auth from './components/Auth/Auth';  // ← ADD THIS
 import './App.css';
+import type { Thought } from './types';import './App.css';
 
 const App: React.FC = () => {
   const teamName = "The page turners";
@@ -15,8 +16,8 @@ const App: React.FC = () => {
     "Olusola Ropo",
     "Vandana Bhangu",
     "Amandeep Kaur"
-  ];
-
+    
+  const [thoughts, setThoughts] = useState<Thought[]>([]);
   return (
     <div className="app">
       <Auth />  {/* ← ADD THIS ONE LINE */}
