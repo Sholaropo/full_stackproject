@@ -6,6 +6,7 @@ import ThoughtsFeed from './components/thoughts-feed/ThoughtsFeed';
 import Footer from './components/footer/Footer';
 import Navigation from './components/navigation/Navigation';
 import SharedCounter from './shared/SharedCounter';
+import Auth from './components/Auth/Auth';
 import './App.css';
 
 const App: React.FC = () => {
@@ -16,9 +17,11 @@ const App: React.FC = () => {
     "Amandeep Kaur"
   ];
 
-
   return (
     <div className="app">
+      {/* Add Auth component at the very top */}
+      <Auth />
+      
       <header className="app-header">
         <h1>ThoughtShare</h1>
         <p>Share your thoughts with the world</p>
@@ -55,4 +58,3 @@ const App: React.FC = () => {
 };
 
 export default App;
-
