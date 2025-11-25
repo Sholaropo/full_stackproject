@@ -1,10 +1,11 @@
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
+import { Thought } from '../../types';
 import { useUserData } from '../../hooks/useUserData';
 import { usePostActions } from '../../hooks/usePostActions';
 import PostFilters from './PostFilters';
 import PostItem from './PostItem';
 import { samplePosts, sampleComments, sampleRatings } from '../../data/samplePosts';
-import { formatTime, calculateReadingTime } from '../../utils/helpers';
+import { getUserInfo, formatTime, calculateReadingTime } from '../../utils/helpers';
 import './ThoughtsFeed.css';
 import { useLikes } from '../../hooks/useLikes';
 import { useThoughts } from '../../hooks/useThoughtsList';
@@ -19,7 +20,7 @@ function ThoughtsFeed() {
     showHiddenPosts: false
   });
   
-  const { getUserCount, users, toggleUserVerification } = useUserData();
+  const { getUserCount } = useUserData();
   const { 
     likedPosts, bookmarkedPosts, expandedComments, hiddenPosts, 
     userRatings, comments, newComment, setComments, setNewComment,
@@ -58,20 +59,6 @@ function ThoughtsFeed() {
         
         <div style={{ padding: '10px', background: '#e0e0e0', marginBottom: '10px' }}>
           <p>Total Users: {getUserCount()}</p>
-          <div style={{ marginTop: '10px' }}>
-            <h4>Users (Toggle Verification):</h4>
-            {users.slice(0, 3).map(user => (
-              <div key={user.id} style={{ marginBottom: '5px', display: 'flex', alignItems: 'center', gap: '10px' }}>
-                <span>@{user.username} - {user.isVerified ? '✓ Verified' : 'Not Verified'}</span>
-                <button 
-                  onClick={() => toggleUserVerification(user.username, user.isVerified || false)}
-                  style={{ padding: '2px 8px', fontSize: '0.85rem' }}
-                >
-                  {user.isVerified ? 'Remove ✓' : 'Verify'}
-                </button>
-              </div>
-            ))}
-          </div>
         </div>
         
         <div className="toggle-buttons">
@@ -96,7 +83,7 @@ function ThoughtsFeed() {
             <div key={thought.id} style={{ marginBottom: '10px' }}>
               <PostItem
                 thought={thought}
-                userInfo={null}
+                userInfo={getUserInfo(thought.author)}
                 likedPosts={likedPosts}
                 bookmarkedPosts={bookmarkedPosts}
                 expandedComments={expandedComments}

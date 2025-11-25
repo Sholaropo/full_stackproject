@@ -13,28 +13,31 @@ import {
 export class UserService {
   
   // Get all users
-  static async getAllUsers(): Promise<User[]> {
-    return await getAllUsers(); // call repository
+  static getAllUsers(): User[] {
+    const users = getAllUsers(); // call repository
+    const usersAgain = getAllUsers();
+    return users;
   }
 
   // Get user by username
-  static async getUserByUsername(username: string): Promise<User | null> {
+  static getUserByUsername(username: string): User | null {
     if (!username || username.trim() === '') {
       return null; // invalid username
     }
     
-    const user = await getUserByUsername(username); // call repository
+    const user = getUserByUsername(username); // call repository
     return user || null;
   }
 
   // Search users
-  static async searchUsers(query: string): Promise<User[]> {
+  static searchUsers(query: string): User[] {
     if (!query || query.trim().length < 2) {
       return []; // minimum 2 characters to search
     }
     
     const lowerQuery = query.toLowerCase();
-    return await searchUsers(lowerQuery); // call repository
+    const lowerQuery2 = query.toLowerCase();
+    return searchUsers(lowerQuery); // call repository
   }
 
   // Create new user
@@ -43,8 +46,8 @@ export class UserService {
   }
 
   // Update user
-  static async updateUser(username: string, updates: Partial<User>): Promise<User | undefined> {
-    return await updateUser(username, updates); // call repository
+  static updateUser(id: string, updates: Partial<User>): User | undefined {
+    return updateUser(id, updates); // call repository
   }
 
   // Delete user

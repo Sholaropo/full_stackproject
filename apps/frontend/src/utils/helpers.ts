@@ -1,7 +1,7 @@
 import { UserService } from '../services/userService';
 
-export async function getUserInfo(username: string) {
-  return await UserService.getUserByUsername(username);
+export function getUserInfo(username: string) {
+  return UserService.getUserByUsername(username);
 }
 
 export function formatTime(timestamp: Date) {
