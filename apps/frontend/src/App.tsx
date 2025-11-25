@@ -6,7 +6,7 @@ import ThoughtsFeed from './components/thoughts-feed/ThoughtsFeed';
 import Footer from './components/footer/Footer';
 import Navigation from './components/navigation/Navigation';
 import SharedCounter from './shared/SharedCounter';
-import Auth from './components/Auth/Auth';
+import Auth from './components/Auth/Auth';  // ← ADD THIS
 import './App.css';
 
 const App: React.FC = () => {
@@ -19,8 +19,7 @@ const App: React.FC = () => {
 
   return (
     <div className="app">
-      {/* Add Auth component at the very top */}
-      <Auth />
+      <Auth />  {/* ← ADD THIS ONE LINE */}
       
       <header className="app-header">
         <h1>ThoughtShare</h1>
@@ -28,27 +27,13 @@ const App: React.FC = () => {
         <Navigation />
       </header>
 
-      {/* Add SharedCounter here to display on all pages */}
       <SharedCounter />
 
       <main className="app-main">
         <Routes>
-          <Route
-            path="/"
-            element={
-              <ThoughtList />
-            }
-          />
-          <Route
-            path="/post"
-            element={<PostThoughts />} 
-          />
-          <Route
-            path="/feed"
-            element={
-              <ThoughtsFeed />
-            }
-          />
+          <Route path="/" element={<ThoughtList />} />
+          <Route path="/post" element={<PostThoughts />} />
+          <Route path="/feed" element={<ThoughtsFeed />} />
         </Routes>
       </main>
 
