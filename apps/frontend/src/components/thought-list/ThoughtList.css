@@ -51,3 +51,24 @@
   padding: 20px;
   font-style: italic;
 }
+
+/* Authentication styles - ADDED */
+.auth-prompt {
+  text-align: center;
+  margin-top: 0.5rem;
+}
+
+.sign-in-to-like-button {
+  padding: 0.5rem 1rem;
+  background-color: #4F46E5;
+  color: white;
+  border: none;
+  border-radius: 0.375rem;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.sign-in-to-like-button:hover {
+  background-color: #4338CA;
+}
