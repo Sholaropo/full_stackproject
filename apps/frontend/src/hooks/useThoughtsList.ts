@@ -12,21 +12,32 @@ export function useThoughts() {
       setLoading(true);
       setError(null);
       const data = await thoughtService.fetchAllThoughts();
+      console.log('📥 Loaded thoughts:', data);
       setThoughts(data);
     } catch (err) {
       setError('Failed to load thoughts');
-      console.error(err);
+      console.error('❌ Load error:', err);
     } finally {
       setLoading(false);
     }
   };
 
   const likeThought = async (id: string) => {
+    console.log('🔥 Starting like for thought:', id);
     try {
-      await thoughtService.likeThought(id);
-      await loadThoughts();
+      console.log('📡 Calling thoughtService.likeThought...');
+      const updatedThought = await thoughtService.likeThought(id);
+      console.log('✅ Like successful! Updated thought:', updatedThought);
+      
+      setThoughts(prevThoughts => {
+        const newThoughts = prevThoughts.map(thought =>
+          thought.id === id ? updatedThought : thought
+        );
+        console.log('🔄 Updated thoughts state:', newThoughts);
+        return newThoughts;
+      });
     } catch (err) {
-      console.error('Failed to like thought:', err);
+      console.error('❌ Failed to like thought:', err);
       throw err;
     }
   };
