@@ -5,6 +5,7 @@ import * as thoughtService from '../services/thoughtService';
 
 export function useThoughts() {
   const { getToken } = useAuth();
+
   const [thoughts, setThoughts] = useState<Thought[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -27,17 +28,23 @@ export function useThoughts() {
     try {
       const token = await getToken();
       const updatedThought = await thoughtService.likeThought(id, token || undefined);
+  useEffect(() => {
+    try {
+      setLoading(true);
       
-      setThoughts(prevThoughts =>
-        prevThoughts.map(thought =>
-          thought.id === id ? updatedThought : thought
-        )
-      );
+      const fetchedThoughts = thoughtService.fetchAllThoughts();
+      
+      setThoughts(fetchedThoughts);
+      setError(null);
     } catch (err) {
       console.error('Failed to like thought:', err);
       throw err;
+      setError('Failed to load thoughts');
+      console.error(err);
+    } finally {
+      setLoading(false);
     }
-  };
+  }, []);
 
   useEffect(() => {
     loadThoughts();

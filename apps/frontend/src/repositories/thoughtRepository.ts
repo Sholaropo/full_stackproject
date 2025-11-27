@@ -1,6 +1,7 @@
 import type { Thought } from '../types';
+import { partnerPosts, communityPosts } from '../data/mockData';
 
-const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000/api/v1';
+let thoughtsDatabase: Thought[] = [...partnerPosts, ...communityPosts];
 
 function safeDate(dateValue: any): Date {
   if (!dateValue) return new Date();
@@ -56,12 +57,19 @@ export async function getAllThoughts(): Promise<Thought[]> {
     likes: thought.likes || 0,
     timestamp: safeDate(thought.createdAt || thought.timestamp),
   }));
+export function createThought(thought: Thought): Thought {
+  thoughtsDatabase = [thought, ...thoughtsDatabase];
+  return thought;
 }
 
-export async function getThoughtById(id: string): Promise<Thought> {
-  const response = await fetch(`${API_BASE_URL}/thoughts/${id}`);
+export function getAllThoughts(): Thought[] {
+  return [...thoughtsDatabase];
+}
 
-  if (!response.ok) {
+export function getThoughtById(id: string): Thought {
+  const foundThought = thoughtsDatabase.find(thought => thought.id === id);
+  
+  if (!foundThought) {
     throw new Error(`Failed to fetch thought with id: ${id}`);
   }
 
@@ -73,21 +81,14 @@ export async function getThoughtById(id: string): Promise<Thought> {
     likes: data.likes || 0,
     timestamp: safeDate(data.createdAt || data.timestamp),
   };
+  
+  return foundThought;
 }
 
-export async function updateThought(id: string, updatedThought: Partial<Thought>): Promise<Thought> {
-  const response = await fetch(`${API_BASE_URL}/thoughts/${id}`, {
-    method: 'PUT',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({
-      content: updatedThought.content,
-      likes: updatedThought.likes,
-    }),
-  });
-
-  if (!response.ok) {
+export function updateThought(id: string, updatedThought: Partial<Thought>): Thought {
+  const foundThoughtIndex = thoughtsDatabase.findIndex(thought => thought.id === id);
+  
+  if (foundThoughtIndex === -1) {
     throw new Error(`Failed to update thought with id: ${id}`);
   }
 
@@ -98,18 +99,23 @@ export async function updateThought(id: string, updatedThought: Partial<Thought>
     content: data.content,
     likes: data.likes || 0,
     timestamp: safeDate(data.createdAt || data.timestamp),
+  
+  thoughtsDatabase[foundThoughtIndex] = { 
+    ...thoughtsDatabase[foundThoughtIndex], 
+    ...updatedThought 
   };
+  
+  return thoughtsDatabase[foundThoughtIndex];
 }
 
-export async function deleteThought(id: string): Promise<boolean> {
-  const response = await fetch(`${API_BASE_URL}/thoughts/${id}`, {
-    method: 'DELETE',
-  });
-
-  if (!response.ok) {
+export function deleteThought(id: string): boolean {
+  const initialLength = thoughtsDatabase.length;
+  thoughtsDatabase = thoughtsDatabase.filter(thought => thought.id !== id);
+  
+  if (thoughtsDatabase.length === initialLength) {
     throw new Error(`Failed to delete thought with id: ${id}`);
   }
-
+  
   return true;
 }
 
@@ -139,4 +145,13 @@ export async function updateThoughtLikes(id: string, token?: string): Promise<Th
     likes: data.likes || 0,
     timestamp: safeDate(data.createdAt || data.timestamp),
   };
+export function updateThoughtLikes(id: string, likes: number): Thought {
+  const foundThought = thoughtsDatabase.find(thought => thought.id === id);
+  
+  if (!foundThought) {
+    throw new Error(`Failed to fetch thought with id: ${id}`);
+  }
+  
+  foundThought.likes = likes;
+  return foundThought;
 }
