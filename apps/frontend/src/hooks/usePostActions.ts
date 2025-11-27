@@ -48,12 +48,6 @@ export function usePostActions() {
         content: newComment.trim()
       };
       
-      const comment2 = {
-        id: Date.now().toString(),
-        author: 'You',
-        content: newComment.trim()
-      };
-      
       setComments(prev => ({
         ...prev,
         [postId]: [...(prev[postId] || []), comment]

@@ -1,31 +1,31 @@
 {
   "name": "@thoughtshare/backend",
-  "version": "1.0.0",
-  "description": "ThoughtShare Backend API",
+  "version": "0.0.1",
+  "private": true,
+  "description": "Backend API server for ThoughtShare",
   "main": "dist/server.js",
   "scripts": {
-    "start": "ts-node src/server.ts",
-    "dev": "ts-node src/server.ts",
+    "dev": "npx ts-node src/server.ts",
+    "start": "node dist/server.js",
     "build": "tsc",
-    "db:generate": "prisma generate",
-    "db:migrate": "prisma migrate dev",
-    "db:studio": "prisma studio"
+    "lint": "echo todo later",
+    "prisma:generate": "prisma generate",
+    "prisma:migrate": "prisma migrate dev",
+    "prisma:studio": "prisma studio"
   },
-  "keywords": [],
-  "author": "Olusola Ropo",
-  "license": "ISC",
   "dependencies": {
-    "@prisma/client": "^5.22.0",
+    "@prisma/client": "^5.14.0",
     "cors": "^2.8.5",
-    "dotenv": "^16.6.1",
-    "express": "^4.21.2"
+    "dotenv": "^16.3.1",
+    "express": "^4.19.2",
+    "zod": "^3.23.8"
   },
   "devDependencies": {
     "@types/cors": "^2.8.17",
-    "@types/express": "^5.0.0",
-    "@types/node": "^22.9.1",
-    "prisma": "^5.22.0",
+    "@types/express": "^4.17.21",
+    "@types/node": "^20.11.5",
+    "prisma": "^5.14.0",
     "ts-node": "^10.9.2",
-    "typescript": "^5.6.3"
+    "typescript": "^5.3.3"
   }
 }
