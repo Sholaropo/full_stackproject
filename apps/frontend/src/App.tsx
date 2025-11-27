@@ -16,7 +16,6 @@ const App: React.FC = () => {
     "Amandeep Kaur"
   ];
 
-
   return (
     <div className="app">
       <header className="app-header">

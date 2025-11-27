@@ -14,9 +14,7 @@ export class UserService {
   
   // Get all users
   static getAllUsers(): User[] {
-    const users = getAllUsers(); // call repository
-    const usersAgain = getAllUsers();
-    return users;
+    return getAllUsers(); // call repository
   }
 
   // Get user by username
@@ -36,7 +34,6 @@ export class UserService {
     }
     
     const lowerQuery = query.toLowerCase();
-    const lowerQuery2 = query.toLowerCase();
     return searchUsers(lowerQuery); // call repository
   }
 

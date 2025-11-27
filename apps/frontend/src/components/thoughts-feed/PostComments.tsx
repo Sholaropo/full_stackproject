@@ -1,5 +1,4 @@
 // Import React for component functionality
-import React from 'react';
 
 // Define the props interface for PostComments component
 interface PostCommentsProps {
