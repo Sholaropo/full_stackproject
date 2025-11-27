@@ -113,37 +113,30 @@ export async function deleteThought(id: string): Promise<boolean> {
   return true;
 }
 
-export async function updateThoughtLikes(id: string): Promise<Thought> {
-  console.log('🌐 Fetching like for ID:', id);
-  console.log('🌐 URL:', `${API_BASE_URL}/thoughts/${id}/like`);
+export async function updateThoughtLikes(id: string, token?: string): Promise<Thought> {
+  const headers: HeadersInit = {
+    'Content-Type': 'application/json',
+  };
+  
+  if (token) {
+    headers['Authorization'] = `Bearer ${token}`;
+  }
   
   const response = await fetch(`${API_BASE_URL}/thoughts/${id}/like`, {
     method: 'POST',
+    headers,
   });
 
-  console.log('📨 Response status:', response.status);
-  
   if (!response.ok) {
     throw new Error(`Failed to like thought with id: ${id}`);
   }
 
   const data = await response.json();
-  console.log('📦 Raw backend response:', data);
-  console.log('📦 data.id:', data.id);
-  console.log('📦 data.author:', data.author);
-  console.log('📦 data.content:', data.content);
-  console.log('📦 data.likes:', data.likes);
-  console.log('📦 data.createdAt:', data.createdAt);
-  
-  const mappedThought = {
+  return {
     id: data.id,
     author: data.author,
     content: data.content,
     likes: data.likes || 0,
     timestamp: safeDate(data.createdAt || data.timestamp),
   };
-  
-  console.log('✨ Mapped thought:', mappedThought);
-  
-  return mappedThought;
 }
