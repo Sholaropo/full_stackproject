@@ -1,8 +1,10 @@
 import { useEffect, useState } from 'react';
+import { useAuth } from '@clerk/clerk-react';
 import type { Thought } from '../types';
 import * as thoughtService from '../services/thoughtService';
 
 export function useThoughts() {
+  const { getToken } = useAuth();
   const [thoughts, setThoughts] = useState<Thought[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -23,8 +25,14 @@ export function useThoughts() {
 
   const likeThought = async (id: string) => {
     try {
-      await thoughtService.likeThought(id);
-      await loadThoughts();
+      const token = await getToken();
+      const updatedThought = await thoughtService.likeThought(id, token || undefined);
+      
+      setThoughts(prevThoughts =>
+        prevThoughts.map(thought =>
+          thought.id === id ? updatedThought : thought
+        )
+      );
     } catch (err) {
       console.error('Failed to like thought:', err);
       throw err;

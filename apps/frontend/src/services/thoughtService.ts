@@ -3,8 +3,8 @@ import * as thoughtRepo from '../repositories/thoughtRepository';
 import { ValidationServiceList } from './validationServiceList';
 import { FormatServiceList } from './formatServiceList';
 
-export async function likeThought(id: string): Promise<Thought> {
-  return await thoughtRepo.updateThoughtLikes(id);
+export async function likeThought(id: string, token?: string): Promise<Thought> {
+  return await thoughtRepo.updateThoughtLikes(id, token);
 }
 
 export async function createThought(content: string, author: string): Promise<Thought> {
