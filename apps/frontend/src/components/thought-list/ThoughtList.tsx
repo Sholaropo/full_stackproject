@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
+import { SignedIn, SignedOut, SignInButton } from '@clerk/clerk-react';
 import ThoughtCard from './ThoughtCard';
 import TaskItem from './TaskItem';
 import { useThoughts } from '../../hooks/useThoughtsList';
 import * as thoughtService from '../../services/thoughtService';
 import './ThoughtList.css';
-import { useLikes } from "../../hooks/useLikes";
 
 const ThoughtList: React.FC = () => {
   const [tasks, setTasks] = useState<string[]>([]);
@@ -13,8 +13,7 @@ const ThoughtList: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [sortBy, setSortBy] = useState<'timestamp' | 'popularity'>('timestamp');
 
-  const { thoughts: repositoryThoughts, loading, error } = useThoughts();
-  const { likedItems, toggleLike } = useLikes();
+  const { thoughts: repositoryThoughts, loading, error, likeThought } = useThoughts();
 
   const handleAddTask = () => {
     if (taskInput.trim()) {
@@ -27,13 +26,19 @@ const ThoughtList: React.FC = () => {
     setTasks(tasks.filter((_, i) => i !== index));
   };
 
-  const handleLike = (id: string) => {
-    setLikedPosts(prev => {
-      const newSet = new Set(prev);
-      if (newSet.has(id)) newSet.delete(id);
-      else newSet.add(id);
-      return newSet;
-    });
+  const handleLike = async (id: string) => {
+    try {
+      await likeThought(id);
+      
+      setLikedPosts(prev => {
+        const newSet = new Set(prev);
+        if (newSet.has(id)) newSet.delete(id);
+        else newSet.add(id);
+        return newSet;
+      });
+    } catch (error) {
+      console.error('Failed to like thought:', error);
+    }
   };
 
   const allThoughts = repositoryThoughts;
@@ -128,19 +133,28 @@ const ThoughtList: React.FC = () => {
           </p>
         ) : (
           sortedThoughts.map((thought) => (
-            <div key={thought.id + thought.author}>
-              <ThoughtCard
-                thought={thought}
-                isLiked={likedPosts.has(thought.id + thought.author)}
-                onLike={handleLike}
-              />
-
-              <button
-                onClick={() => toggleLike(thought.id + thought.author)}
-                style={{ marginTop: "5px", fontSize: "0.9rem" }}
-              >
-                 ❤️ {likedItems.has(thought.id + thought.author) ? "Liked" : "Like"}
-              </button>
+            <div key={thought.id}>
+              <SignedIn>
+                <ThoughtCard
+                  thought={thought}
+                  isLiked={likedPosts.has(thought.id)}
+                  onLike={() => handleLike(thought.id)}
+                />
+              </SignedIn>
+              <SignedOut>
+                <ThoughtCard
+                  thought={thought}
+                  isLiked={false}
+                  onLike={() => {}}
+                />
+                <div className="auth-prompt">
+                  <SignInButton mode="modal">
+                    <button className="sign-in-to-like-button">
+                      Sign in to like this thought
+                    </button>
+                  </SignInButton>
+                </div>
+              </SignedOut>
             </div>
           ))
         )}

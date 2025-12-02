@@ -1,6 +1,7 @@
 import React from 'react';
 import type { Thought } from '../../types';
 import * as thoughtService from '../../services/thoughtService';
+
 interface Props {
   thought: Thought;
   isLiked: boolean;
@@ -24,9 +25,9 @@ const ThoughtCard: React.FC<Props> = ({ thought, isLiked, onLike }) => {
           className="like-button" 
           type="button" 
           aria-label={`Like thought by ${thought.author}`}
-          onClick={() => onLike(thought.id + thought.author)}
+          onClick={() => onLike(thought.id)}
         >
-          {isLiked ? '❤️' : '🤍'} {thought.likes + (isLiked ? 1 : 0)}
+          {isLiked ? '❤️' : '🤍'} {thought.likes}
         </button>
       </footer>
     </article>
