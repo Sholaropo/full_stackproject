@@ -1,7 +1,5 @@
 import type { Thought } from '../types';
 import * as thoughtRepo from '../repositories/thoughtRepository';
-import { ValidationServiceList } from './validationServiceList';
-import { FormatServiceList } from './formatServiceList';
 
 export async function likeThought(id: string, token?: string): Promise<Thought> {
   return await thoughtRepo.updateThoughtLikes(id, token);
