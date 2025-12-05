@@ -29,3 +29,12 @@ model Thought {
 
   @@map("thoughts")
 }
+
+model Task {
+  id        String   @id @default(uuid())
+  text      String
+  completed Boolean  @default(false)
+  userId    String
+
+  @@map("tasks")
+}
