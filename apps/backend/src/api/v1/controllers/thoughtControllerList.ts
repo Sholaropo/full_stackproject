@@ -31,6 +31,7 @@ export class ThoughtControllerList {
 
   async createThought(req: Request, res: Response, next: NextFunction) {
     try {
+      const clerkUserId = req.auth?.userId;
       const thought = await thoughtServiceList.createThought(req.body);
       res.status(201).json(thought);
     } catch (error) {
@@ -41,6 +42,7 @@ export class ThoughtControllerList {
   async updateThought(req: Request, res: Response, next: NextFunction) {
     try {
       const { id } = req.params;
+      const clerkUserId = req.auth?.userId;
       const thought = await thoughtServiceList.updateThought(id, req.body);
       res.json(thought);
     } catch (error) {
@@ -51,6 +53,7 @@ export class ThoughtControllerList {
   async deleteThought(req: Request, res: Response, next: NextFunction) {
     try {
       const { id } = req.params;
+      const clerkUserId = req.auth?.userId;
       await thoughtServiceList.deleteThought(id);
       res.status(204).send();
     } catch (error) {
@@ -61,6 +64,7 @@ export class ThoughtControllerList {
   async toggleLike(req: Request, res: Response, next: NextFunction) {
     try {
       const { id } = req.params;
+      const clerkUserId = req.auth?.userId;
       const thought = await thoughtServiceList.toggleLike(id);
       res.json(thought);
     } catch (error) {
