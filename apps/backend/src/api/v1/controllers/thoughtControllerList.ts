@@ -32,7 +32,10 @@ export class ThoughtControllerList {
   async createThought(req: Request, res: Response, next: NextFunction) {
     try {
       const clerkUserId = req.auth?.userId;
-      const thought = await thoughtServiceList.createThought(req.body);
+      const thought = await thoughtServiceList.createThought({
+        ...req.body,
+        clerkUserId: clerkUserId || undefined,
+      });
       res.status(201).json(thought);
     } catch (error) {
       next(error);

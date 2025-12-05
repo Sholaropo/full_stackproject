@@ -25,7 +25,10 @@ export class ThoughtController {
   async create(req: Request, res: Response, next: NextFunction) {
     try {
       const clerkUserId = req.auth?.userId;
-      const thought = await thoughtService.createThought(req.body);
+      const thought = await thoughtService.createThought({
+        ...req.body,
+        clerkUserId: clerkUserId || undefined,
+      });
       res.status(201).json(thought);
     } catch (error) {
       next(error);
