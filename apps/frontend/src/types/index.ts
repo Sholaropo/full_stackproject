@@ -3,7 +3,7 @@ export interface Thought {
   content: string;
   author: string;
   timestamp: Date;
-  likes: number;
+  likes: number; 
 }
 
 export interface User {
