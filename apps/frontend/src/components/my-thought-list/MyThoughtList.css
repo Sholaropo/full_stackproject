@@ -1,0 +1,84 @@
+.my-thought-list {
+  max-width: 800px;
+  margin: 2rem auto;
+  padding: 0 1rem;
+}
+
+.my-thoughts-header {
+  text-align: center;
+  margin-bottom: 2rem;
+  padding: 2rem;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  border-radius: 12px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.my-thoughts-header h2 {
+  margin: 0 0 0.5rem 0;
+  font-size: 2rem;
+}
+
+.user-info,
+.thought-count {
+  margin: 0.5rem 0;
+  font-size: 0.95rem;
+  opacity: 0.9;
+}
+
+.auth-required {
+  text-align: center;
+  padding: 3rem 2rem;
+  background-color: #f8f9fa;
+  border-radius: 8px;
+  color: #666;
+}
+
+.auth-required h2 {
+  color: #333;
+  margin-bottom: 1rem;
+}
+
+.no-thoughts {
+  text-align: center;
+  padding: 3rem 2rem;
+  background-color: #f5f7fa;
+  border-radius: 12px;
+  color: #666;
+  margin-top: 2rem;
+}
+
+.no-thoughts p {
+  margin: 0.75rem 0;
+  font-size: 1.05rem;
+}
+
+.no-thoughts a {
+  color: #667eea;
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.no-thoughts a:hover {
+  text-decoration: underline;
+}
+
+.thoughts-container {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+@media (max-width: 768px) {
+  .my-thought-list {
+    padding: 0 0.5rem;
+  }
+  
+  .my-thoughts-header {
+    padding: 1.5rem 1rem;
+  }
+  
+  .my-thoughts-header h2 {
+    font-size: 1.5rem;
+  }
+}

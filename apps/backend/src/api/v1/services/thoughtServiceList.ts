@@ -12,6 +12,7 @@ interface UpdateThoughtDto {
   likes?: number;
 }
 
+import { CreateThoughtDto, UpdateThoughtDto } from '../../../dtos/thought.dto';
 export class ThoughtServiceList {
   async getAllThoughts() {
     return await prisma.thought.findMany({
