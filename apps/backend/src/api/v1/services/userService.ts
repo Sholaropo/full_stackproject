@@ -87,7 +87,7 @@ const userService = {
         where: { clerkUserId } as any
       });
     } catch (error) {
-      // Continue to email lookup
+      // Fallback to email lookup if clerkUserId field doesn't exist
     }
 
     if (!user && userEmail) {
