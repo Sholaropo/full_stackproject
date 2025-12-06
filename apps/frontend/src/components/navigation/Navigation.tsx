@@ -1,4 +1,5 @@
 import { Link, useLocation } from 'react-router-dom';
+import { SignedIn } from '@clerk/clerk-react';
 import { useUser } from '@clerk/clerk-react';
 import './Navigation.css';
 
@@ -41,19 +42,18 @@ const Navigation = () => {
             <span className="nav-label">Community Feed</span>
           </Link>
         </li>
-        
         {/* I.1: Only show My Thoughts when logged in */}
-        {isSignedIn && (
+        <SignedIn>
           <li className="nav-item">
             <Link 
               to="/my-thoughts" 
               className={location.pathname === '/my-thoughts' ? 'nav-link active' : 'nav-link'}
             >
-              <span className="nav-icon">👤</span>
+              <span className="nav-icon">💭</span>
               <span className="nav-label">My Thoughts</span>
             </Link>
           </li>
-        )}
+        </SignedIn>
       </ul>
     </nav>
   );

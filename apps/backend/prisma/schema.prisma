@@ -32,9 +32,9 @@ model Thought {
 }
 
 model Task {
-  id        String   @id @default(uuid())
+  id        String  @id @default(uuid())
   text      String
-  completed Boolean  @default(false)
+  completed Boolean @default(false)
   userId    String
 
   @@map("tasks")
