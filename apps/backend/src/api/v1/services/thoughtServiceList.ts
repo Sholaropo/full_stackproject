@@ -1,15 +1,5 @@
 import prisma from '../../../config/database';
-
-interface CreateThoughtDto {
-  author: string;
-  content: string;
-}
-
-interface UpdateThoughtDto {
-  content?: string;
-  likes?: number;
-}
-
+import { CreateThoughtDto, UpdateThoughtDto } from '../../../dtos/thought.dto';
 export class ThoughtServiceList {
   async getAllThoughts() {
     return await prisma.thought.findMany({
