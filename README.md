@@ -61,115 +61,79 @@ ThoughtShare is a social platform designed to help users express and share their
 
 3. **As a user, I want to be able to like thoughts from other users, so that I can show appreciation for content that resonates with me.**
 
-## Getting Started
+Local Setup (T.5 Requirement)
+1. Create a PostgreSQL Database
 
-### Prerequisites
-- Node.js (v16 or higher)
-- npm or yarn
+Create an empty PostgreSQL database locally.
+Example connection string:
+postgres://username:password@localhost:5432/thoughtshare
 
-### Installation
+2. Create a Clerk Account + Project
 
-1. Clone the repository
-```bash
-git clone [https://github.com/Sholaropo/full_stackproject.git]
-cd thoughtshare
+Go to Clerk.com → create an account
+Make a new project
+Go to Dashboard → Developers → API Keys
+Copy:
 
-# React + TypeScript + Vite
+Publishable Key
+Secret Key
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+3. Environment Variables
+Frontend → apps/frontend/.env
+VITE_CLERK_PUBLISHABLE_KEY=<your-clerk-publishable-key>
+VITE_BACKEND_URL=http://localhost:3000/api/v1
 
-Currently, two official plugins are available:
+Backend → apps/backend/.env
+NODE_ENV=development
+PORT=3000
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+# Frontend URL (CORS)
+FRONTEND_URL=http://localhost:5173
 
-## Expanding the ESLint configuration
+# Database
+DATABASE_URL=postgresql://user:password@localhost:5432/thoughtshare
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+# Clerk
+CLERK_SECRET_KEY=<your-clerk-secret-key>
+CLERK_PUBLISHABLE_KEY=<your-clerk-publishable-key>
 
-```js
-export default tseslint.config([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+4. Install Dependencies
 
-      // Remove tseslint.configs.recommended and replace with this
-      ...tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      ...tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      ...tseslint.configs.stylisticTypeChecked,
+Run this in the project root:
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
- main
-```
-
-2. Install dependencies
-```bash
 npm install
-```
 
-3. Run the development server
-```bash
+5. Start the Backend
+cd apps/backend
+npx prisma migrate dev
 npm run dev
-```
 
-4. Open your browser and navigate to `http://localhost:5173`
+Backend will run at:
 
-## Technologies Used
+http://localhost:3000
 
-- **Frontend Framework:** React 18 with TypeScript
-- **Build Tool:** Vite
-- **Styling:** CSS3 with custom styles
-- **Development:** TypeScript for type safety
+6. Start the Frontend
+cd apps/frontend
+npm run dev
 
-## Project Structure
+Frontend will run at:
 
-```
-src/
-├── components/
-│   ├── thought-list/          # Olusola's Component
-│   │   ├── ThoughtList.tsx
-│   │   └── ThoughtList.css
-│   ├── footer/                # Olusola's Component
-│   │   ├── Footer.tsx
-│   │   └── Footer.css
-│   ├── thoughts-feed/         # Vandana's Component
-│   │   ├── ThoughtsFeed.tsx
-│   │   └── ThoughtsFeed.css
-│   └── post-thoughts/         # Amandeep's Component
-│       ├── PostThoughts.tsx
-│       └── PostThoughts.css
-├── types/                     # Shared TypeScript definitions
-│   └── index.ts
-├── App.tsx                    # Main app integration (Amandeep)
-├── App.css                    # Main app styling (Collaborative)
-├── index.css                  # Global styles (Collaborative)
-└── main.tsx                   # Application entry point
-```
+http://localhost:5173
 
-## Available Scripts
+Technologies Used
 
-- `npm run dev` - Start development server
-- `npm run build` - Build for production
-- `npm run preview` - Preview production build
-- `npm run lint` - Run ESLint
+React + TypeScript
+Vite
+Clerk Authentication
+Node.js + Express
+PostgreSQL + Prisma ORM
 
-## Contributing
-
-1. Create a feature branch from `develop`
-2. Make your changes
-3. Create a pull request to `develop`
-4. Get approval from at least one team member before merging
+Project Structure
+apps/
+  frontend/
+    src/components/
+    src/types/
+    src/services/
+  backend/
+    src/api/
+    prisma/
