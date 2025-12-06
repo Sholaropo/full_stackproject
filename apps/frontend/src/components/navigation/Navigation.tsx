@@ -1,8 +1,10 @@
 import { Link, useLocation } from 'react-router-dom';
+import { useUser } from '@clerk/clerk-react';
 import './Navigation.css';
 
 const Navigation = () => {
   const location = useLocation();
+  const { isSignedIn } = useUser();
 
   return (
     <nav className="main-navigation">
@@ -16,15 +18,20 @@ const Navigation = () => {
             <span className="nav-label">Latest Thoughts</span>
           </Link>
         </li>
-        <li className="nav-item">
-          <Link 
-            to="/post" 
-            className={location.pathname === '/post' ? 'nav-link active' : 'nav-link'}
-          >
-            <span className="nav-icon">✍️</span>
-            <span className="nav-label">Post Thoughts</span>
-          </Link>
-        </li>
+        
+        {/* I.1: Only show Post Thoughts when logged in */}
+        {isSignedIn && (
+          <li className="nav-item">
+            <Link 
+              to="/post" 
+              className={location.pathname === '/post' ? 'nav-link active' : 'nav-link'}
+            >
+              <span className="nav-icon">✍️</span>
+              <span className="nav-label">Post Thoughts</span>
+            </Link>
+          </li>
+        )}
+        
         <li className="nav-item">
           <Link 
             to="/feed" 
@@ -34,6 +41,19 @@ const Navigation = () => {
             <span className="nav-label">Community Feed</span>
           </Link>
         </li>
+        
+        {/* I.1: Only show My Thoughts when logged in */}
+        {isSignedIn && (
+          <li className="nav-item">
+            <Link 
+              to="/my-thoughts" 
+              className={location.pathname === '/my-thoughts' ? 'nav-link active' : 'nav-link'}
+            >
+              <span className="nav-icon">👤</span>
+              <span className="nav-label">My Thoughts</span>
+            </Link>
+          </li>
+        )}
       </ul>
     </nav>
   );
