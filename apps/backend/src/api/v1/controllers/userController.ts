@@ -49,6 +49,7 @@ const userController = {
     try {
       const { username } = req.params;
       const updates = req.body;
+      const clerkUserId = req.auth?.userId;
       
       const user = await userService.updateUser(username, updates);
       

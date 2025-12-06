@@ -24,7 +24,11 @@ export class ThoughtController {
 
   async create(req: Request, res: Response, next: NextFunction) {
     try {
-      const thought = await thoughtService.createThought(req.body);
+      const clerkUserId = req.auth?.userId;
+      const thought = await thoughtService.createThought({
+        ...req.body,
+        clerkUserId: clerkUserId || undefined,
+      });
       res.status(201).json(thought);
     } catch (error) {
       next(error);
@@ -34,6 +38,7 @@ export class ThoughtController {
   async like(req: Request, res: Response, next: NextFunction) {
     try {
       const { id } = req.params;
+      const clerkUserId = req.auth?.userId;
       const thought = await thoughtService.likeThought(id);
       res.json(thought);
     } catch (error) {
