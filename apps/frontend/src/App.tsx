@@ -3,6 +3,7 @@ import { Routes, Route } from 'react-router-dom';
 import ThoughtList from './components/thought-list/ThoughtList';
 import PostThoughts from './components/post-thoughts/PostThoughts';
 import ThoughtsFeed from './components/thoughts-feed/ThoughtsFeed';
+import MyThoughts from './components/my-thoughts/MyThoughts';
 import Footer from './components/footer/Footer';
 import Navigation from './components/navigation/Navigation';
 import SharedCounter from './shared/SharedCounter';
@@ -47,6 +48,10 @@ const App: React.FC = () => {
             element={
               <ThoughtsFeed />
             }
+          />
+          <Route
+            path="/my-thoughts"
+            element={<MyThoughts />}
           />
         </Routes>
       </main>
