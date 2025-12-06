@@ -61,6 +61,24 @@ const userController = {
       console.error('Error updating user:', error);
       res.status(500).json({ error: 'Failed to update user' });
     }
+  },
+
+  async getMyThoughts(req: Request, res: Response) {
+    try {
+      const clerkUserId = req.auth?.userId;
+      
+      if (!clerkUserId) {
+        return res.status(401).json({ error: 'Unauthorized - No user ID found in session' });
+      }
+
+      const userEmail = (req.auth as any)?.sessionClaims?.email as string | undefined;
+      const thoughts = await userService.getUserThoughtsByClerkId(clerkUserId, userEmail);
+
+      res.status(200).json(thoughts);
+    } catch (error) {
+      console.error('Error fetching user thoughts:', error);
+      res.status(500).json({ error: 'Failed to fetch user thoughts' });
+    }
   }
 };
 
