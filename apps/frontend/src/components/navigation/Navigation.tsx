@@ -42,10 +42,8 @@ const Navigation = () => {
             <span className="nav-label">Community Feed</span>
           </Link>
         </li>
-        <SignedIn>
-        
         {/* I.1: Only show My Thoughts when logged in */}
-        {isSignedIn && (
+        <SignedIn>
           <li className="nav-item">
             <Link 
               to="/my-thoughts" 
@@ -56,11 +54,6 @@ const Navigation = () => {
             </Link>
           </li>
         </SignedIn>
-              <span className="nav-icon">👤</span>
-              <span className="nav-label">My Thoughts</span>
-            </Link>
-          </li>
-        )}
       </ul>
     </nav>
   );
