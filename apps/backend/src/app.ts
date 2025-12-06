@@ -5,6 +5,7 @@ import { clerkMiddleware } from '@clerk/express';
 import { corsOptions } from './config/cors';
 import apiRoutes from './api/v1/routes';
 import { errorHandlerList } from './api/v1/middleware/errorHandlerList';
+import prisma from './lib/prisma';
 
 dotenv.config();
 
@@ -14,17 +15,38 @@ app.use(cors(corsOptions));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-app.use(clerkMiddleware());
+// Clerk middleware - only use if CLERK_SECRET_KEY is set
+if (process.env.CLERK_SECRET_KEY) {
+  try {
+    app.use(clerkMiddleware());
+  } catch (error) {
+    console.warn('Clerk middleware setup failed, continuing without it:', error);
+  }
+} else {
+  console.warn('CLERK_SECRET_KEY not set, Clerk middleware disabled');
+}
 
 app.get('/', (req, res) => {
   res.json({
     message: 'ThoughtShare API - Olusola Ropo, Amandeep Kaur, Vandana Bhangu',
     version: '1.0.0',
     endpoints: {
-      health: '/api/v1/health',
+      health: '/health',
+      apiHealth: '/api/v1/health',
       thoughts: '/api/v1/thoughts',
+      users: '/api/v1/users',
     },
   });
+});
+
+app.get('/health', async (req, res) => {
+  try {
+    await prisma.$queryRaw`SELECT 1`;
+    res.status(200).send('Backend and DB are healthy!');
+  } catch (error) {
+    console.error('Health check failed:', error);
+    res.status(500).send('Backend is running, but DB connection failed.');
+  }
 });
 
 app.use('/api/v1', apiRoutes);
@@ -39,3 +61,4 @@ app.use((req, res) => {
 app.use(errorHandlerList);
 
 export default app;
+
