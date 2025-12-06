@@ -1,4 +1,17 @@
 import prisma from '../../../config/database';
+import userService from './userService';
+
+interface CreateThoughtDto {
+  author: string;
+  content: string;
+  clerkUserId?: string;
+}
+
+interface UpdateThoughtDto {
+  content?: string;
+  likes?: number;
+}
+
 import { CreateThoughtDto, UpdateThoughtDto } from '../../../dtos/thought.dto';
 export class ThoughtServiceList {
   async getAllThoughts() {
@@ -16,11 +29,22 @@ export class ThoughtServiceList {
   }
 
   async createThought(data: CreateThoughtDto) {
+    let userId: string | undefined;
+    
+    // If clerkUserId is provided, find the user and link the thought
+    if (data.clerkUserId) {
+      const user = await userService.getUserByClerkId(data.clerkUserId);
+      if (user) {
+        userId = user.id;
+      }
+    }
+    
     return await prisma.thought.create({
       data: {
         author: data.author,
         content: data.content,
         likes: 0,
+        userId: userId,
       },
     });
   }

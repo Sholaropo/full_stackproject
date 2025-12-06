@@ -11,6 +11,7 @@ router.get('/:id', thoughtControllerList.getThoughtById.bind(thoughtControllerLi
 
 router.post(
   '/',
+  requireAuth(),
   validateRequestList(thoughtSchemaList),
   thoughtControllerList.createThought.bind(thoughtControllerList)
 );
