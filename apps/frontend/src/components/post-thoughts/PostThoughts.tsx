@@ -1,43 +1,100 @@
 import React, { useEffect, useState } from "react";
-import { useThoughts } from "../../hooks/usePostThought";
-import * as thoughtService from '../../services/thoughtService';
+import { useAuth, useUser } from "@clerk/clerk-react";
+import * as thoughtService from "../../services/PostThoughtservices";
 import type { Thought } from "../../types";
 import "./PostThoughts.css";
 
-/**
- * PostThoughts Component
- *
- * Purpose:
- * - Allows users to post new thoughts.
- * - Uses `useThoughts` hook for all CRUD operations.
- * - Demonstrates separation of concerns: UI logic is separate from data logic.
- */
 const PostThoughts: React.FC = () => {
-  const { thoughts, addThought, like: likeThought, error } = useThoughts();
+  const { getToken } = useAuth();
+  const { user } = useUser();
+
+  const [thoughts, setThoughts] = useState<Thought[]>([]);
   const [content, setContent] = useState("");
+  const [error, setError] = useState<string | null>(null);
+
+  const mapTimestamps = (data: Thought[]): Thought[] => {
+    return data.map((t) => ({
+      ...t,
+      timestamp: new Date((t as any).createdAt), 
+    }));
+  };
 
   useEffect(() => {
-    console.log("Current thoughts:", thoughts);
-  }, [thoughts]);
+    const fetchAll = async () => {
+      try {
+        const token = await getToken();
+        if (!token) {
+          setError("Failed to get authentication token");
+          return;
+        }
+        const data = await thoughtService.fetchThoughts(token);
+        setThoughts(mapTimestamps(data));
+      } catch (err) {
+        console.error(err);
+        setError("Failed to fetch thoughts");
+      }
+    };
+    fetchAll();
+  }, [getToken]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!content.trim()) return;
 
-    const errors = thoughtService.validateThought(content, "Olusola");
-    if (errors.size > 0) {
-      alert(errors.get("content") || "Validation error!");
-      return;
-    }
+    try {
+      const token = await getToken();
+      if (!token) {
+        setError("Failed to get authentication token");
+        return;
+      }
 
-    await addThought(content, "Olusola");
-    setContent("");
+      const author = user?.username || user?.fullName || "Anonymous";
+
+      const newThought = await thoughtService.createThought(content, token, author);
+      setThoughts([mapTimestamps([newThought])[0], ...thoughts]);
+      setContent("");
+      setError(null);
+    } catch (err: any) {
+      console.error(err);
+      setError(err.message || "Failed to post thought");
+    }
+  };
+
+  const handleLike = async (id: string) => {
+    try {
+      const token = await getToken();
+      if (!token) {
+        setError("Failed to get authentication token");
+        return;
+      }
+
+      const updated = await thoughtService.likeThought(id, token);
+      setThoughts(thoughts.map(t => (t.id === id ? { ...updated, timestamp: t.timestamp } : t)));
+    } catch (err) {
+      console.error(err);
+      setError("Failed to like thought");
+    }
+  };
+
+  const handleDelete = async (id: string) => {
+    try {
+      const token = await getToken();
+      if (!token) {
+        setError("Failed to get authentication token");
+        return;
+      }
+
+      await thoughtService.deleteThought(id, token);
+      setThoughts(thoughts.filter(t => t.id !== id));
+    } catch (err) {
+      console.error(err);
+      setError("Failed to delete thought");
+    }
   };
 
   return (
     <section className="post-thoughts">
       <h2>Share Your Thoughts</h2>
-
       {error && <p style={{ color: "red" }}>{error}</p>}
 
       <form className="thought-form" onSubmit={handleSubmit}>
@@ -45,7 +102,6 @@ const PostThoughts: React.FC = () => {
           value={content}
           onChange={(e) => setContent(e.target.value)}
           placeholder="What's on your mind?"
-          aria-label="Write a new thought"
           rows={3}
         />
         <button type="submit">Post</button>
@@ -53,21 +109,17 @@ const PostThoughts: React.FC = () => {
 
       <div className="posted-thoughts">
         {thoughts.length > 0 && <h3>Your Posts</h3>}
-        {thoughts.map((thought: Thought) => (
+        {thoughts.map((thought) => (
           <article key={thought.id} className="thought-card">
-            <header className="thought-header">
+            <header>
               <h4>@{thought.author}</h4>
-              <time>{thoughtService.formatTimestamp(thought.timestamp)}</time>
+              <time>{thought.timestamp.toLocaleString()}</time>
             </header>
             <p>{thought.content}</p>
-            
-            <button
-              className="like-btn"
-              onClick={() => likeThought(thought.id)}
-              aria-label="Like this post"
-            >
-              ❤️ {thought.likes} Likes
-            </button>
+            <div className="actions">
+              <button onClick={() => handleLike(thought.id)}>❤️ {thought.likes} Likes</button>
+              <button onClick={() => handleDelete(thought.id)}>🗑 Delete</button>
+            </div>
           </article>
         ))}
       </div>
