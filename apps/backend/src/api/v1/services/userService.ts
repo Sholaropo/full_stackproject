@@ -167,6 +167,39 @@ const userService = {
     } catch (error) {
       return null;
     }
+  },
+
+  async getUserThoughtsByClerkId(clerkUserId: string, userEmail?: string) {
+    let user = null;
+    
+    try {
+      user = await prisma.user.findUnique({
+        where: { clerkUserId } as any
+      });
+    } catch (error) {
+      // Fallback to email lookup if clerkUserId field doesn't exist
+    }
+
+    if (!user && userEmail) {
+      user = await prisma.user.findFirst({
+        where: { email: userEmail }
+      });
+    }
+
+    if (!user) {
+      return [];
+    }
+
+    const thoughts = await prisma.thought.findMany({
+      where: {
+        userId: user.id
+      },
+      orderBy: {
+        createdAt: 'desc'
+      }
+    });
+
+    return thoughts;
   }
 };
 

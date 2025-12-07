@@ -8,6 +8,7 @@ const router = express.Router();
 
 router.get('/', userController.getAllUsers);
 router.get('/search', validateQuery(searchUsersSchema), userController.searchUsers);
+router.get('/me/thoughts', requireAuth(), userController.getMyThoughts);
 router.get('/:username', validateParams(usernameParamSchema), userController.getUserByUsername);
 router.put('/:username', requireAuth(), validateParams(usernameParamSchema), validateBody(updateUserSchema), userController.updateUser);
 
