@@ -1,0 +1,83 @@
+.my-thoughts {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.my-thoughts h2 {
+  color: #2d3748;
+  margin-bottom: 20px;
+  font-size: 24px;
+}
+
+.empty-state {
+  text-align: center;
+  padding: 40px 20px;
+  color: #666;
+}
+
+.empty-state p {
+  margin: 10px 0;
+  font-size: 16px;
+}
+
+.error-message {
+  color: #e53e3e;
+  padding: 15px;
+  background: #fed7d7;
+  border-radius: 6px;
+  margin-bottom: 15px;
+}
+
+.retry-button {
+  padding: 10px 20px;
+  background: #3182ce;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: background 0.3s ease;
+}
+
+.retry-button:hover {
+  background: #2c5aa0;
+}
+
+.thoughts-container {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.sign-in-prompt {
+  text-align: center;
+  padding: 40px 20px;
+}
+
+.sign-in-prompt h2 {
+  margin-bottom: 15px;
+}
+
+.sign-in-prompt p {
+  color: #666;
+  margin-bottom: 20px;
+  font-size: 16px;
+}
+
+.sign-in-button {
+  padding: 12px 24px;
+  background: #4F46E5;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+.sign-in-button:hover {
+  background: #4338CA;
+}
+
