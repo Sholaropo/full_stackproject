@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useAuth, useUser } from "@clerk/clerk-react";
+import { useAuth, useUser, SignedIn, SignedOut, SignInButton } from "@clerk/clerk-react";
 import * as thoughtService from "../../services/PostThoughtservices";
 import type { Thought } from "../../types";
 import "./PostThoughts.css";
@@ -15,7 +15,7 @@ const PostThoughts: React.FC = () => {
   const mapTimestamps = (data: Thought[]): Thought[] => {
     return data.map((t) => ({
       ...t,
-      timestamp: new Date((t as any).createdAt), 
+      timestamp: new Date((t as any).createdAt),
     }));
   };
 
@@ -24,9 +24,11 @@ const PostThoughts: React.FC = () => {
       try {
         const token = await getToken();
         if (!token) {
-          setError("Failed to get authentication token");
+          console.log("No token available, skipping fetch");
           return;
         }
+
+        console.log("I.1 REQUIREMENT: Fetching thoughts with session token");
         const data = await thoughtService.fetchThoughts(token);
         setThoughts(mapTimestamps(data));
       } catch (err) {
@@ -34,6 +36,7 @@ const PostThoughts: React.FC = () => {
         setError("Failed to fetch thoughts");
       }
     };
+
     fetchAll();
   }, [getToken]);
 
@@ -50,8 +53,12 @@ const PostThoughts: React.FC = () => {
 
       const author = user?.username || user?.fullName || "Anonymous";
 
-      const newThought = await thoughtService.createThought(content, token, author);
+      console.log("I.1 REQUIREMENT: Creating thought with logged-in user:", author);
+      console.log("I.1 REQUIREMENT: Including session token in request");
+
+      const newThought = await thoughtService.createThought(content, author, token);
       setThoughts([mapTimestamps([newThought])[0], ...thoughts]);
+
       setContent("");
       setError(null);
     } catch (err: any) {
@@ -69,7 +76,11 @@ const PostThoughts: React.FC = () => {
       }
 
       const updated = await thoughtService.likeThought(id, token);
-      setThoughts(thoughts.map(t => (t.id === id ? { ...updated, timestamp: t.timestamp } : t)));
+      setThoughts(
+        thoughts.map((t) =>
+          t.id === id ? { ...updated, timestamp: t.timestamp } : t
+        )
+      );
     } catch (err) {
       console.error(err);
       setError("Failed to like thought");
@@ -85,7 +96,7 @@ const PostThoughts: React.FC = () => {
       }
 
       await thoughtService.deleteThought(id, token);
-      setThoughts(thoughts.filter(t => t.id !== id));
+      setThoughts(thoughts.filter((t) => t.id !== id));
     } catch (err) {
       console.error(err);
       setError("Failed to delete thought");
@@ -93,37 +104,64 @@ const PostThoughts: React.FC = () => {
   };
 
   return (
-    <section className="post-thoughts">
-      <h2>Share Your Thoughts</h2>
-      {error && <p style={{ color: "red" }}>{error}</p>}
+    <>
+      {/* I.1: Show form only when logged in */}
+      <SignedIn>
+        <section className="post-thoughts">
+          <h2>Share Your Thoughts</h2>
 
-      <form className="thought-form" onSubmit={handleSubmit}>
-        <textarea
-          value={content}
-          onChange={(e) => setContent(e.target.value)}
-          placeholder="What's on your mind?"
-          rows={3}
-        />
-        <button type="submit">Post</button>
-      </form>
+          {error && <p style={{ color: "red" }}>{error}</p>}
 
-      <div className="posted-thoughts">
-        {thoughts.length > 0 && <h3>Your Posts</h3>}
-        {thoughts.map((thought) => (
-          <article key={thought.id} className="thought-card">
-            <header>
-              <h4>@{thought.author}</h4>
-              <time>{thought.timestamp.toLocaleString()}</time>
-            </header>
-            <p>{thought.content}</p>
-            <div className="actions">
-              <button onClick={() => handleLike(thought.id)}>❤️ {thought.likes} Likes</button>
-              <button onClick={() => handleDelete(thought.id)}>🗑 Delete</button>
-            </div>
-          </article>
-        ))}
-      </div>
-    </section>
+          <form className="thought-form" onSubmit={handleSubmit}>
+            <textarea
+              value={content}
+              onChange={(e) => setContent(e.target.value)}
+              placeholder="What's on your mind?"
+              rows={3}
+            />
+            <button type="submit">Post</button>
+          </form>
+
+          <div className="posted-thoughts">
+            {thoughts.length > 0 && <h3>Your Posts</h3>}
+
+            {thoughts.map((thought) => (
+              <article key={thought.id} className="thought-card">
+                <header>
+                  <h4>@{thought.author}</h4>
+                  <time>{thought.timestamp.toLocaleString()}</time>
+                </header>
+
+                <p>{thought.content}</p>
+
+                <div className="actions">
+                  <button onClick={() => handleLike(thought.id)}>
+                    ❤️ {thought.likes} Likes
+                  </button>
+                  <button onClick={() => handleDelete(thought.id)}>
+                    🗑 Delete
+                  </button>
+                </div>
+              </article>
+            ))}
+          </div>
+        </section>
+      </SignedIn>
+
+      {/* I.1: Show sign-in prompt for guests */}
+      <SignedOut>
+        <section className="post-thoughts">
+          <div className="auth-required">
+            <h2>Sign In to Share Your Thoughts</h2>
+            <p>You need to be logged in to post and view your thoughts.</p>
+
+            <SignInButton mode="modal">
+              <button className="sign-in-button">Sign In</button>
+            </SignInButton>
+          </div>
+        </section>
+      </SignedOut>
+    </>
   );
 };
 
