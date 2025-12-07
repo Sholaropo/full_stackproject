@@ -1,7 +1,5 @@
 import type { Thought } from '../types';
 import * as thoughtRepo from '../repositories/thoughtRepository';
-//import { ValidationServiceList } from './validationServiceList';
-//import { FormatServiceList } from './formatServiceList';
 
 export async function likeThought(id: string, token?: string): Promise<Thought> {
   return await thoughtRepo.updateThoughtLikes(id, token);
@@ -27,46 +25,6 @@ export async function createAndSaveThought(content: string, author: string): Pro
 
 export async function fetchAllThoughts(): Promise<Thought[]> {
   return await thoughtRepo.getAllThoughts();
-}
-
-export async function fetchMyThoughts(token: string): Promise<Thought[]> {
-  const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000/api/v1';
-  
-  const response = await fetch(`${API_BASE_URL}/users/me/thoughts`, {
-    method: 'GET',
-    headers: {
-      'Content-Type': 'application/json',
-      'Authorization': `Bearer ${token}`,
-    },
-  });
-
-  if (!response.ok) {
-    if (response.status === 401) {
-      throw new Error('Unauthorized - Please sign in to view your thoughts');
-    }
-    throw new Error('Failed to fetch your thoughts');
-  }
-
-  const data = await response.json();
-  
-  function safeDate(dateValue: any): Date {
-    if (!dateValue) return new Date();
-    if (dateValue instanceof Date) return dateValue;
-    try {
-      const date = new Date(dateValue);
-      return isNaN(date.getTime()) ? new Date() : date;
-    } catch {
-      return new Date();
-    }
-  }
-  
-  return data.map((thought: any) => ({
-    id: thought.id,
-    author: thought.author,
-    content: thought.content,
-    likes: thought.likes || 0,
-    timestamp: safeDate(thought.createdAt || thought.timestamp),
-  }));
 }
 
 export function validateThought(content: string, author: string): Map<string, string> {
